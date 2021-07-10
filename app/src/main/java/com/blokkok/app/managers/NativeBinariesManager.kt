@@ -1,6 +1,7 @@
-package com.blokkok.app
+package com.blokkok.app.managers
 
 import android.content.Context
+import com.blokkok.app.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.*
@@ -10,6 +11,8 @@ import kotlin.properties.Delegates
 
 // Use the default extraction to home folder + execute it there
 const val useLegacyMethod = true
+
+// TODO: 7/10/21 Make a test for this class
 
 object NativeBinariesManager {
 
