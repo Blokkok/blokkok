@@ -26,7 +26,7 @@ object ModuleManager {
 
     fun getModule(id: String): ModuleMetadata =
         Json.decodeFromString(
-            File(modulesDir, id).readText()
+            File(modulesDir, "$id/meta.json").readText()
         )
 
     // TODO: 7/10/21 Add import modules
