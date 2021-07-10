@@ -7,7 +7,6 @@ import kotlinx.coroutines.withContext
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
-import kotlin.properties.Delegates
 
 // Use the default extraction to home folder + execute it there
 const val useLegacyMethod = true
@@ -17,7 +16,7 @@ const val useLegacyMethod = true
 object NativeBinariesManager {
 
     private lateinit var nativeLibraryDir: File
-    private lateinit var dataDir: File
+    private lateinit var filesDir: File
     private lateinit var binariesDir: File
 
     /**
@@ -28,8 +27,8 @@ object NativeBinariesManager {
 
     fun initialize(context: Context) {
         nativeLibraryDir = File(context.applicationInfo.nativeLibraryDir)
-        dataDir = File(context.applicationInfo.dataDir)
-        binariesDir = File(context.applicationInfo.dataDir, "binaries")
+        filesDir = context.filesDir
+        binariesDir = File(filesDir, "binaries")
 
         if (useLegacyMethod) {
             // Check if the binaries are already extracted
