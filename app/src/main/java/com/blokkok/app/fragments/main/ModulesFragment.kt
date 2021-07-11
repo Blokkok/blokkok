@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.blokkok.app.R
+import com.blokkok.app.viewmodels.main.ModulesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ModulesFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    val viewModel: ModulesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
