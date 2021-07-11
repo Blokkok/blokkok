@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/projects"
+            android:checked="true"
+            android:icon="@drawable/ic_round_design_services"
+            android:title="Projects" />
+        <item
+            android:id="@+id/modules"
+            android:icon="@drawable/ic_round_extension"
+            android:title="Modules" />
+        <item
+            android:id="@+id/about"
+            android:icon="@drawable/ic_round_alternate_email"
+            android:title="About" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_round_settings"
+            android:title="Settings" />
+    </group>
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="none">
+        <item android:title="Other">
+            <menu>
+                <item
+                    android:id="@+id/web"
+                    android:icon="@drawable/ic_round_language"
+                    android:title="Website" />
+                <item
+                    android:id="@+id/dc"
+                    android:icon="@drawable/dcord"
+                    android:title="Discord" />
+                <item
+                    android:id="@+id/gh"
+                    android:icon="@drawable/ghub"
+                    android:title="GitHub" />
+            </menu>
+        </item>
+    </group>
+</menu>
