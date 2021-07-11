@@ -18,10 +18,14 @@ class ModulesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewInflater = inflater.inflate(R.layout.fragment_modules, container, false)
-        val addModuleFab: FloatingActionButton = viewInflater.findViewById(R.id.addModule)
-        addModuleFab.setOnClickListener { }
-        return viewInflater
+        val root = inflater.inflate(R.layout.fragment_modules, container, false)
+        val addModuleFab = root.findViewById<FloatingActionButton>(R.id.addModule)
+
+        addModuleFab.setOnClickListener {
+            TODO("Implement add module fab")
+        }
+
+        return root
     }
 
     companion object {

@@ -10,7 +10,7 @@ class EditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
 
-        val actionBar = findViewById<View>(R.id.toolBar) as Toolbar
+        val actionBar = findViewById<Toolbar>(R.id.toolBar)
 
         setSupportActionBar(actionBar)
 

@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
 
-        drawerLayout = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-        drawerNavView = findViewById<View>(R.id.nav_view) as NavigationView
+        drawerLayout = findViewById(R.id.drawer_layout)
+        drawerNavView = findViewById(R.id.nav_view)
 
         drawerToggle = ActionBarDrawerToggle(
             this,
@@ -63,8 +63,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             supportActionBar!!.subtitle = "Projects"
             val fragmentTransaction = supportFragmentManager.beginTransaction()
 
-            fragmentTransaction.replace(R.id.fragmentContainer, HomeFragment.newInstance())
-            fragmentTransaction.commit()
+            fragmentTransaction
+                .replace(R.id.fragmentContainer, HomeFragment.newInstance())
+                .commit()
         }
     }
 
@@ -81,8 +82,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 val homeFragment = HomeFragment.newInstance()
 
-                drawerFragmentTransaction.replace(R.id.fragmentContainer, homeFragment)
-                drawerFragmentTransaction.commit()
+                drawerFragmentTransaction
+                    .replace(R.id.fragmentContainer, homeFragment)
+                    .commit()
+
+                return true
             }
 
             R.id.modules -> {
@@ -93,8 +97,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 val modulesFragment = ModulesFragment.newInstance()
 
-                drawerFragmentTransaction.replace(R.id.fragmentContainer, modulesFragment)
-                drawerFragmentTransaction.commit()
+                drawerFragmentTransaction
+                    .replace(R.id.fragmentContainer, modulesFragment)
+                    .commit()
+
+                return true
             }
 
             R.id.about -> {
@@ -105,8 +112,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 val aboutFragment = AboutFragment.newInstance()
 
-                drawerFragmentTransaction.replace(R.id.fragmentContainer, aboutFragment)
-                drawerFragmentTransaction.commit()
+                drawerFragmentTransaction
+                    .replace(R.id.fragmentContainer, aboutFragment)
+                    .commit()
+
+                return true
             }
 
             R.id.settings -> {
@@ -117,26 +127,35 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 val settingsFragment = SettingsFragment()
 
-                drawerFragmentTransaction.replace(R.id.fragmentContainer, settingsFragment)
-                drawerFragmentTransaction.commit()
+                drawerFragmentTransaction
+                    .replace(R.id.fragmentContainer, settingsFragment)
+                    .commit()
+
+                return true
             }
 
             R.id.dc -> {
                 intent.action = Intent.ACTION_VIEW
                 intent.data = Uri.parse("https://discord.gg/")
                 startActivity(intent)
+
+                return true
             }
 
             R.id.gh -> {
                 intent.action = Intent.ACTION_VIEW
                 intent.data = Uri.parse("https://github.com/Blokkok")
                 startActivity(intent)
+
+                return true
             }
 
             R.id.web -> {
                 intent.action = Intent.ACTION_VIEW
                 intent.data = Uri.parse("https://blokkok.tk/")
                 startActivity(intent)
+
+                return true
             }
         }
 

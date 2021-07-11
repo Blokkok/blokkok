@@ -20,17 +20,19 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewInflater = inflater.inflate(R.layout.fragment_home, container, false)
-        val newProjectFab: FloatingActionButton = viewInflater.findViewById(R.id.newProject)
+        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val newProjectFab = root.findViewById<FloatingActionButton>(R.id.newProject)
 
         newProjectFab.setOnClickListener {
-            val intent = Intent()
-            intent.setClass(requireActivity(), EditorActivity::class.java)
-            startActivity(intent)
+            startActivity(
+                Intent()
+                    .setClass(requireActivity(), EditorActivity::class.java)
+            )
+
             requireActivity().finish()
         }
 
-        return viewInflater
+        return root
     }
 
     companion object {
