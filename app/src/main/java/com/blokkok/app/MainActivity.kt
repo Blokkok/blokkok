@@ -10,6 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.blokkok.app.fragments.main.AboutFragment
+import com.blokkok.app.fragments.main.HomeFragment
+import com.blokkok.app.fragments.main.ModulesFragment
+import com.blokkok.app.fragments.main.SettingsFragment
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -33,7 +37,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerNavView = findViewById<View>(R.id.nav_view) as NavigationView
 
         drawerToggle = ActionBarDrawerToggle(
-            this@MainActivity,
+            this,
             drawerLayout,
             actionBar,
             R.string.app_name,

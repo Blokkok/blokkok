@@ -1,10 +1,11 @@
-package com.blokkok.app
+package com.blokkok.app.fragments.main
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
+import com.blokkok.app.R
 
 class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
     override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {

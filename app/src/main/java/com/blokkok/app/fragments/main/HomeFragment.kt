@@ -1,4 +1,4 @@
-package com.blokkok.app
+package com.blokkok.app.fragments.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.blokkok.app.EditorActivity
+import com.blokkok.app.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class HomeFragment : Fragment() {
@@ -20,12 +22,14 @@ class HomeFragment : Fragment() {
     ): View? {
         val viewInflater = inflater.inflate(R.layout.fragment_home, container, false)
         val newProjectFab: FloatingActionButton = viewInflater.findViewById(R.id.newProject)
-        newProjectFab.setOnClickListener { v: View? ->
+
+        newProjectFab.setOnClickListener {
             val intent = Intent()
             intent.setClass(requireActivity(), EditorActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
         }
+
         return viewInflater
     }
 
