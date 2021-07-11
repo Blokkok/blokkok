@@ -1,15 +1,16 @@
 package com.blokkok.app.fragments.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blokkok.app.EditorActivity
 import com.blokkok.app.R
 import com.blokkok.app.adapters.ProjectsRecyclerView
 import com.blokkok.app.viewmodels.main.HomeViewModel
@@ -36,12 +37,30 @@ class HomeFragment : Fragment() {
         projectsRecyclerView.adapter = projectsAdapter
 
         newProjectFab.setOnClickListener {
-            startActivity(
-                Intent()
-                    .setClass(requireActivity(), EditorActivity::class.java)
-            )
+            val context = requireContext()
+            val builder = AlertDialog.Builder(context)
+            val layout = LinearLayout(context)
 
-            requireActivity().finish()
+            layout.orientation = LinearLayout.VERTICAL
+
+            val projectName = EditText(context)
+            projectName.hint = "Project Name"
+            layout.addView(projectName)
+
+            val projectPackage = EditText(context)
+            projectPackage.hint = "Project Package"
+            layout.addView(projectPackage)
+
+            builder
+                .setView(layout)
+                .setTitle("New Project")
+                .setPositiveButton("Create") { _, _ ->
+                    viewModel.createProject(projectName.text.toString(), projectPackage.text.toString())
+                    // TODO: 7/12/21 Launch the editor activity after ViewModel finished creating the project
+                }
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
         }
 
         return root

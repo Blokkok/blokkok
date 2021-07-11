@@ -17,4 +17,12 @@ class HomeViewModel : ViewModel() {
             projectsLiveDataMutable.value = ProjectsManager.listProjects()
         }
     }
+
+    fun createProject(name: String, packageName: String) {
+        viewModelScope.launch {
+            ProjectsManager.createProject(name, packageName)
+
+            fetchProjects()
+        }
+    }
 }
