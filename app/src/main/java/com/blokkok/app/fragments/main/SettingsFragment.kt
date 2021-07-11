@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.blokkok.app.R
 
 class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
-    override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
     }
 
