@@ -1,0 +1,80 @@
+package com.blokkok.app
+
+import androidx.test.platform.app.InstrumentationRegistry
+import com.blokkok.app.managers.projects.ProjectMetadata
+import com.blokkok.app.managers.projects.ProjectsManager
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import org.junit.Test
+import java.io.File
+
+class ProjectsManagerTest {
+    @Test
+    fun testProjectsListing() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val projectsDir = File(context.filesDir, "projects")
+
+        ProjectsManager.initialize(context)
+
+        val projectIds = arrayOf("test_id_0", "test_id_1", "test_id_2", "test_id_3")
+        projectIds.forEach { addProject(it, projectsDir) }
+
+        val listedProjects = ProjectsManager.listProjects()
+
+        projectIds.forEach { assert(ProjectsManager.exists(it)) }
+        listedProjects.forEach { assert(projectIds.contains(it.id)) }
+    }
+
+    private fun addProject(id: String, projectsDir: File) {
+        val metadata = ProjectMetadata("TestProject", "test.project", id)
+        val projectDir = File(projectsDir, id)
+
+        projectDir.mkdir()
+
+        File(projectDir, "android").mkdir()     // Files required by the compiler
+        File(projectDir, "data").mkdir()        // Project files
+        File(projectDir, "cache").mkdir()       // Cache folder
+
+        File(projectDir, "meta.json").writeText(Json.encodeToString(metadata))
+    }
+
+    @Test
+    fun testGetProject() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val projectsDir = File(context.filesDir, "projects")
+
+        addProject("test_id_0", projectsDir)
+        val project = ProjectsManager.getProject("test_id_0")
+
+        assert(project != null)
+        assert(project!!.name == "TestProject" && project.name == "test.project" && project.id == "test_id_0")
+    }
+
+    @Test
+    fun testCreateProject() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val projectsDir = File(context.filesDir, "projects")
+
+        ProjectsManager.createProject("TestProject", "test.project")
+        val listing = ProjectsManager.listProjects()
+
+        assert(listing.size == 1)
+        assert(listing[0].name == "TestProject" && listing[0].packageName == "test.project")
+        assert(File(projectsDir, listing[0].id).exists() && File(projectsDir, listing[0].id).isDirectory)
+    }
+
+    @Test
+    fun testRemoveProject() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val projectsDir = File(context.filesDir, "projects")
+
+        ProjectsManager.createProject("TestProject", "test.project")
+        var listing = ProjectsManager.listProjects()
+
+        ProjectsManager.removeProject(listing[0].id)
+        listing = ProjectsManager.listProjects()
+
+        assert(listing.isEmpty())
+        assert(!File(projectsDir, listing[0].id).exists())
+    }
+}
