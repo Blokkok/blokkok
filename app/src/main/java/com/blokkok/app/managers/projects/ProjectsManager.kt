@@ -41,7 +41,7 @@ object ProjectsManager {
         listProjects().forEach { removeProject(it.id) }
     }
 
-    fun createProject(name: String, packageName: String) {
+    fun createProject(name: String, packageName: String): ProjectMetadata {
         val id = generateRandomId()
         val metadata = ProjectMetadata(name, packageName, id)
         val projectDir = File(projects, id)
@@ -53,6 +53,8 @@ object ProjectsManager {
         File(projectDir, "cache").mkdir()       // Cache folder
 
         File(projectDir, "meta.json").writeText(Json.encodeToString(metadata))
+
+        return metadata
     }
 
     private fun generateRandomId(): String {
