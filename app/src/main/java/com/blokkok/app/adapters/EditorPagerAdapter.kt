@@ -5,13 +5,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.blokkok.app.fragments.editor.JavaCodeFragment
 import com.blokkok.app.fragments.editor.LayoutCodeFragment
-import com.blokkok.app.fragments.editor.SaveCodeCallback
 
 class EditorPagerAdapter(
     fragmentActivity: FragmentActivity,
-    private val javaCodeCallback: SaveCodeCallback,
+    private val javaSaveCode: (String) -> Unit,
     private val initialJavaCode: String,
-    private val layoutCodeCallback: SaveCodeCallback,
+    private val layoutSaveCode: (String) -> Unit,
     private val initialLayoutCode: String,
 ) : FragmentStateAdapter(fragmentActivity) {
 
@@ -19,8 +18,8 @@ class EditorPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> LayoutCodeFragment(javaCodeCallback, initialJavaCode)
-            1 -> JavaCodeFragment(layoutCodeCallback, initialLayoutCode)
+            0 -> LayoutCodeFragment(javaSaveCode, initialJavaCode)
+            1 -> JavaCodeFragment(layoutSaveCode, initialLayoutCode)
 
             else -> throw IllegalArgumentException("getItem asks for fragment number $position, while we only have $itemCount")
         }

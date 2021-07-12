@@ -10,7 +10,7 @@ import com.blokkok.app.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class JavaCodeFragment(
-    private val saveCodeCallback: SaveCodeCallback,
+    private val saveCode: (String) -> Unit,
     private val initialCodeValue: String
 ) : Fragment() {
 
@@ -31,7 +31,7 @@ class JavaCodeFragment(
         javaCode.setText(initialCodeValue)
 
         saveButton.setOnClickListener {
-            saveCodeCallback.onSaved(javaCode.text.toString())
+            saveCode(javaCode.text.toString())
         }
     }
 }

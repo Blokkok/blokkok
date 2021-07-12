@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
 import com.blokkok.app.adapters.EditorPagerAdapter
-import com.blokkok.app.fragments.editor.SaveCodeCallback
 import com.blokkok.app.managers.projects.ProjectEditor
 import com.blokkok.app.managers.projects.ProjectMetadata
 import com.blokkok.app.managers.projects.ProjectsManager
@@ -43,17 +42,15 @@ class EditorActivity : AppCompatActivity() {
         val initialLayoutCode = projectEditor.layout["main"] ?: ""
 
         editorAdapter =
-            EditorPagerAdapter(this,
-                object : SaveCodeCallback { /* Java code save callback */
-                    override fun onSaved(code: String) {
-                        projectEditor.java["${project.packageName}.MainActivity"] = code
-                        // TODO: 7/12/21 Implement multiple activities and layouts
-                    }
+            EditorPagerAdapter(
+                this,
+                { // Java code save callback
+                    projectEditor.java["${project.packageName}.MainActivity"] = it
+
                 }, initialJavaCode,
-                object : SaveCodeCallback { /* Layout code save callback */
-                    override fun onSaved(code: String) {
-                        projectEditor.layout["main"] = code
-                    }
+                { // Layout code save callback
+                    projectEditor.layout["main"] = it
+
                 }, initialLayoutCode
             )
 
