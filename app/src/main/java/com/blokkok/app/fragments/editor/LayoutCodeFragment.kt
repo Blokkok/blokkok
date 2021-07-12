@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.blokkok.app.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class LayoutCodeFragment(
     private val saveCodeCallback: SaveCodeCallback
@@ -24,7 +25,7 @@ class LayoutCodeFragment(
         super.onViewCreated(view, savedInstanceState)
 
         val layoutCode = view.findViewById<EditText>(R.id.layout_code)
-        val saveButton = view.findViewById<EditText>(R.id.layout_save_button)
+        val saveButton = view.findViewById<FloatingActionButton>(R.id.layout_save_button)
 
         saveButton.setOnClickListener {
             saveCodeCallback.onSaved(layoutCode.text.toString())
