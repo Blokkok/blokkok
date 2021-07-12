@@ -16,7 +16,7 @@ const val useLegacyMethod = true
 object NativeBinariesManager {
 
     private lateinit var nativeLibraryDir: File
-    private lateinit var filesDir: File
+    private lateinit var dataDir: File
     private lateinit var binariesDir: File
 
     /**
@@ -27,8 +27,8 @@ object NativeBinariesManager {
 
     fun initialize(context: Context) {
         nativeLibraryDir = File(context.applicationInfo.nativeLibraryDir)
-        filesDir = context.filesDir
-        binariesDir = File(filesDir, "binaries")
+        dataDir = File(context.applicationInfo.dataDir)
+        binariesDir = File(dataDir, "binaries")
 
         if (useLegacyMethod) {
             // Check if the binaries are already extracted

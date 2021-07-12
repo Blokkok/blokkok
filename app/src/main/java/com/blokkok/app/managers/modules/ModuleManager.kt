@@ -7,12 +7,12 @@ import java.io.File
 
 object ModuleManager {
 
-    private lateinit var filesDir: File
+    private lateinit var dataDir: File
     private lateinit var modulesDir: File
 
     fun initialize(context: Context) {
-        filesDir = context.filesDir
-        modulesDir = File(filesDir, "modules")
+        dataDir = File(context.applicationInfo.dataDir)
+        modulesDir = File(dataDir, "modules")
 
         // Initialize the modules dir if it doesn't exists
         if (!modulesDir.exists()) modulesDir.mkdir()

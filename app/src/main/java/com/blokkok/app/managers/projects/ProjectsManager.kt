@@ -8,12 +8,12 @@ import java.io.File
 
 object ProjectsManager {
 
-    private lateinit var filesDir: File
+    private lateinit var dataDir: File
     private lateinit var projects: File
 
     fun initialize(context: Context) {
-        filesDir = context.filesDir
-        projects = File(filesDir, "projects")
+        dataDir = File(context.applicationInfo.dataDir)
+        projects = File(dataDir, "projects")
 
         // Check if the projects folder exists
         if (!projects.exists()) projects.mkdir()
