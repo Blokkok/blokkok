@@ -24,7 +24,7 @@ class ProjectsRecyclerView(
         ViewHolder(
             LayoutInflater
                 .from(parent.context)
-                .inflate(R.layout.project_item, parent)
+                .inflate(R.layout.project_item, parent, false)
         )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
