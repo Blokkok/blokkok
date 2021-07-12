@@ -85,4 +85,39 @@ class ProjectsManagerTest {
 
         assert(listing.isEmpty())
     }
+
+    @Test
+    fun testWriteCode() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+        ProjectsManager.initialize(context)
+        ProjectsManager.clearProjects()
+
+        val metadata =
+            ProjectsManager
+                .createProject("TestProject", "test.project")
+
+        val editor = metadata.edit(context)
+
+        editor.java["test.project.HelloWorld"] = "// Content of HelloWorld.java"
+        editor.layout["hello_world"] = "<!-- Content of hello_world.xml -->"
+
+        val javaCode =
+            File(
+                context.applicationInfo.dataDir,
+                "projects/${metadata.id}/data/java/com/test/project/HelloWorld.java"
+            )
+
+        assert(javaCode.exists())
+        assert(javaCode.readText() == "// Content of HelloWorld.java")
+
+        val layoutCode =
+            File(
+                context.applicationInfo.dataDir,
+                "projects/${metadata.id}/data/res/layout/hello_world.xml"
+            )
+
+        assert(layoutCode.exists())
+        assert(layoutCode.readText() == "<!-- Content of hello_world.xml -->")
+    }
 }
