@@ -44,8 +44,8 @@ class EditorActivity : AppCompatActivity() {
 
         TabLayoutMediator(tabLayout, editorViewPager) { tab, position ->
             when (position) {
-                1 -> tab.text = "LAYOUT"
-                2 -> tab.text = "CODE"
+                0 -> tab.text = "LAYOUT"
+                1 -> tab.text = "CODE"
             }
         }.attach()
     }
