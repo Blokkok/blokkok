@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.web -> {
                 intent.action = Intent.ACTION_VIEW
-                intent.data = Uri.parse("https://blokkok.tk/")
+                intent.data = Uri.parse("https://blokkok.ga/")
                 startActivity(intent)
 
                 return true
