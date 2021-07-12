@@ -1,10 +1,12 @@
 package com.blokkok.app.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.blokkok.app.EditorActivity
 import com.blokkok.app.R
 import com.blokkok.app.managers.projects.ProjectMetadata
 
@@ -31,13 +33,20 @@ class ProjectsRecyclerView(
         holder.projectName.text = currentProject.name
         holder.projectPackageName.text = currentProject.packageName
         holder.projectId.text = currentProject.id
+
+        holder.root.setOnClickListener {
+            it.context.startActivity(
+                Intent(it.context, EditorActivity::class.java)
+            )
+        }
     }
 
     override fun getItemCount(): Int = projects.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val projectName = itemView.findViewById<TextView>(R.id.project_name)
-        val projectPackageName = itemView.findViewById<TextView>(R.id.project_package)
-        val projectId = itemView.findViewById<TextView>(R.id.project_id)
+        val projectName: TextView           = itemView.findViewById(R.id.project_name)
+        val projectPackageName: TextView    = itemView.findViewById(R.id.project_package)
+        val projectId: TextView             = itemView.findViewById(R.id.project_id)
+        val root: View                      = itemView.findViewById(R.id.root_project_item)
     }
 }
