@@ -35,9 +35,10 @@ class ProjectsRecyclerView(
         holder.projectId.text = currentProject.id
 
         holder.root.setOnClickListener {
-            it.context.startActivity(
-                Intent(it.context, EditorActivity::class.java)
-            )
+            val intent = Intent(it.context, EditorActivity::class.java)
+            intent.putExtra("project_id", currentProject.id)
+
+            it.context.startActivity(intent)
         }
     }
 

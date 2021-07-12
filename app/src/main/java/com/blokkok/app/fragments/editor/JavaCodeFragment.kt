@@ -10,7 +10,8 @@ import com.blokkok.app.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class JavaCodeFragment(
-    private val saveCodeCallback: SaveCodeCallback
+    private val saveCodeCallback: SaveCodeCallback,
+    private val initialCodeValue: String
 ) : Fragment() {
 
     override fun onCreateView(
@@ -26,6 +27,8 @@ class JavaCodeFragment(
 
         val javaCode = view.findViewById<EditText>(R.id.java_code)
         val saveButton = view.findViewById<FloatingActionButton>(R.id.java_save_button)
+
+        javaCode.setText(initialCodeValue)
 
         saveButton.setOnClickListener {
             saveCodeCallback.onSaved(javaCode.text.toString())

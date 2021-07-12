@@ -6,16 +6,29 @@ import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
 import com.blokkok.app.adapters.EditorPagerAdapter
 import com.blokkok.app.fragments.editor.SaveCodeCallback
+import com.blokkok.app.managers.projects.ProjectEditor
+import com.blokkok.app.managers.projects.ProjectMetadata
+import com.blokkok.app.managers.projects.ProjectsManager
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class EditorActivity : AppCompatActivity() {
 
     private lateinit var editorAdapter: EditorPagerAdapter
+    private lateinit var projectEditor: ProjectEditor
+    private lateinit var project: ProjectMetadata
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
+
+        val projectId = intent.getStringExtra("project_id")
+            ?: throw IllegalStateException("The project_id intent extra isn't provided on EditorActivity")
+
+        project = ProjectsManager.getProject(projectId)
+            ?: throw IllegalStateException("The project given in EditorActivity doesn't exist")
+
+        projectEditor = project.edit(this)
 
         val actionBar = findViewById<Toolbar>(R.id.toolBar)
         val editorViewPager = findViewById<ViewPager2>(R.id.editor_viewpager)
@@ -26,18 +39,22 @@ class EditorActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
 
+        val initialJavaCode = projectEditor.java["${project.packageName}.MainActivity"] ?: ""
+        val initialLayoutCode = projectEditor.layout["main"] ?: ""
+
         editorAdapter =
             EditorPagerAdapter(this,
                 object : SaveCodeCallback { /* Java code save callback */
                     override fun onSaved(code: String) {
-                        TODO("Not yet implemented")
+                        projectEditor.java["${project.packageName}.MainActivity"] = code
+                        // TODO: 7/12/21 Implement multiple activities and layouts
                     }
-                },
+                }, initialJavaCode,
                 object : SaveCodeCallback { /* Layout code save callback */
                     override fun onSaved(code: String) {
-                        TODO("Not yet implemented")
+                        projectEditor.layout["main"] = code
                     }
-                }
+                }, initialLayoutCode
             )
 
         editorViewPager.adapter = editorAdapter
