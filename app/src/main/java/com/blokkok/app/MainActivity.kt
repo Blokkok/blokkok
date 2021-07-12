@@ -14,6 +14,9 @@ import com.blokkok.app.fragments.main.AboutFragment
 import com.blokkok.app.fragments.main.HomeFragment
 import com.blokkok.app.fragments.main.ModulesFragment
 import com.blokkok.app.fragments.main.SettingsFragment
+import com.blokkok.app.managers.NativeBinariesManager
+import com.blokkok.app.managers.modules.ModuleManager
+import com.blokkok.app.managers.projects.ProjectsManager
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -26,8 +29,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val actionBar = findViewById<View>(R.id.toolBar) as Toolbar
+        initializeManagers()
 
+        val actionBar = findViewById<View>(R.id.toolBar) as Toolbar
         setSupportActionBar(actionBar)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -160,5 +164,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         return false
+    }
+
+    private fun initializeManagers() {
+        ProjectsManager.initialize(this)
+        NativeBinariesManager.initialize(this)
+        ModuleManager.initialize(this)
     }
 }
