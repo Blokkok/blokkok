@@ -37,6 +37,10 @@ object ProjectsManager {
         return File(projects, id).deleteRecursively()
     }
 
+    fun clearProjects() {
+        listProjects().forEach { removeProject(it.id) }
+    }
+
     fun createProject(name: String, packageName: String) {
         val id = generateRandomId()
         val metadata = ProjectMetadata(name, packageName, id)
