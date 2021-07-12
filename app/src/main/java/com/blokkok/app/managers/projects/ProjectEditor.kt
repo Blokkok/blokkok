@@ -14,6 +14,9 @@ class ProjectEditor(
         if (!layoutFolder.exists()) layoutFolder.mkdir()
     }
 
+    /**
+     * Returns a list of [JavaFile]
+     */
     fun listJava(folder: File = javaFolder, currentPackage: String = ""): List<JavaFile> =
         ArrayList<JavaFile>().apply {
             folder.listFiles()!!.forEach {
@@ -36,11 +39,11 @@ class ProjectEditor(
      * val mainActivityCode = java["com.hello.world.MainActivity"]
      * java["com.hello.world.MainActivity"] = "// oops, it's gone now"
      */
-    val java = object {
+    val java = object : GetterSetter() {
         /**
          * Read the code of a java file, will return null if the given class doesn't exist
          */
-        fun get(name: String): String? {
+        override operator fun get(name: String): String? {
             val path = name.replace(".", "/")
             val file = File(javaFolder, "$path.java")
 
@@ -50,7 +53,7 @@ class ProjectEditor(
         /**
          * Write code to a java file, will create a new file if the given name doesn't exist
          */
-        fun set(name: String, code: String) {
+        override operator fun set(name: String, code: String) {
             val path = name.replace(".", "/")
             val file = File(javaFolder, "$path.java")
 
@@ -60,11 +63,11 @@ class ProjectEditor(
         }
     }
 
-    val layout = object {
+    val layout = object : GetterSetter() {
         /**
          * Read the code of a layout xml file, will return null if the given class doesn't exist
          */
-        fun get(name: String): String? {
+        override operator fun get(name: String): String? {
             val file = File(layoutFolder, "$name.xml")
 
             return if (!file.exists()) null else file.readText()
@@ -73,11 +76,16 @@ class ProjectEditor(
         /**
          * Write code to a layout xml file, will create a new file if the given name doesn't exist
          */
-        fun set(name: String, code: String) {
+        override operator fun set(name: String, code: String) {
             val file = File(javaFolder, "$name.xml")
             if (!file.exists()) file.createNewFile()
 
             file.writeText(code)
         }
+    }
+
+    abstract class GetterSetter {
+        abstract operator fun get(name: String): String?
+        abstract operator fun set(name: String, code: String)
     }
 }
