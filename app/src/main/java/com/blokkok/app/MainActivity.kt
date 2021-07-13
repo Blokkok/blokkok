@@ -10,10 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.blokkok.app.fragments.main.AboutFragment
-import com.blokkok.app.fragments.main.HomeFragment
-import com.blokkok.app.fragments.main.ModulesFragment
-import com.blokkok.app.fragments.main.SettingsFragment
+import com.blokkok.app.fragments.main.*
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.modules.ModuleManager
 import com.blokkok.app.managers.projects.ProjectsManager
@@ -121,6 +118,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .commit()
 
                 return true
+            }
+
+            R.id.licenses -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                drawerNavView.setCheckedItem(R.id.licenses);
+
+                supportActionBar!!.subtitle = "Licenses";
+
+                val licensesFragment = LicensesFragment();
+
+                drawerFragmentTransaction
+                    .replace(R.id.fragmentContainer, licensesFragment)
+                    .commit();
+
+                return true;
             }
 
             R.id.settings -> {
