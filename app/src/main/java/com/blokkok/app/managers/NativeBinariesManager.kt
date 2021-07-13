@@ -23,7 +23,6 @@ object NativeBinariesManager {
      * Used to indicate whether do we need to extract the binaries or not.
      * Call NativeBinariesManager#executeBinaries(Context) if this value is true
      */
-    var needsExtracting = false
 
     fun initialize(context: Context) {
         nativeLibraryDir = File(context.applicationInfo.nativeLibraryDir)
@@ -35,7 +34,7 @@ object NativeBinariesManager {
             if (!binariesDir.exists()) {
                 // Does not seem so, then extract the binaries
                 binariesDir.mkdir()
-                needsExtracting = true
+                extractBinaries(context)
             }
 
         } else {
@@ -43,11 +42,11 @@ object NativeBinariesManager {
         }
     }
 
-    suspend fun extractBinaries(context: Context) {
-        withContext (Dispatchers.IO) {
+    private fun extractBinaries(context: Context) {
+        Thread {
             val resources = context.resources
             unpackZip(ZipInputStream(resources.openRawResource(R.raw.binaries)), binariesDir)
-        }
+        }.run()
     }
 
     fun executeCommand(

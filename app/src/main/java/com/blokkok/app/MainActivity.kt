@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.blokkok.app.compiler.ECJCompiler
 import com.blokkok.app.fragments.main.AboutFragment
 import com.blokkok.app.fragments.main.HomeFragment
 import com.blokkok.app.fragments.main.ModulesFragment
@@ -170,5 +171,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ProjectsManager.initialize(this)
         NativeBinariesManager.initialize(this)
         ModuleManager.initialize(this)
+        ECJCompiler.initialize(this)
     }
 }
