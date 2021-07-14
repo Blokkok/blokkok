@@ -42,19 +42,19 @@ class EditorActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
 
-        val initialJavaCode = projectEditor.java["${project.packageName}.MainActivity"] ?: ""
-        val initialLayoutCode = projectEditor.layout["main"] ?: ""
+        val initialJavaCode = projectEditor.readJavaCode("${project.packageName}.MainActivity") ?: "package ${project.packageName};\n"
+        val initialLayoutCode = projectEditor.readLayoutCode("main") ?: ""
 
         // TODO: 7/14/21 Make a viewmodel for this 
         editorAdapter =
             EditorPagerAdapter(
                 this,
                 { // Java code save callback
-                    projectEditor.java["${project.packageName}.MainActivity"] = it
+                    projectEditor.writeJavaCode(project.packageName, "MainActivity", it)
 
                 }, initialJavaCode,
                 { // Layout code save callback
-                    projectEditor.layout["main"] = it
+                    projectEditor.writeLayoutCode("main", it)
 
                 }, initialLayoutCode
             )

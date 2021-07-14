@@ -34,58 +34,46 @@ class ProjectEditor(
     fun listLayout(): List<String> = layoutFolder.listFiles()!!.map { it.nameWithoutExtension }
 
     /**
-     * Used to read and write java files
-     * Example(s):
-     * val mainActivityCode = java["com.hello.world.MainActivity"]
-     * java["com.hello.world.MainActivity"] = "// oops, it's gone now"
+     * Write code to a java file, will create a new file if the given name doesn't exist
      */
-    val java = object : GetterSetter() {
-        /**
-         * Read the code of a java file, will return null if the given class doesn't exist
-         */
-        override operator fun get(name: String): String? {
-            val path = name.replace(".", "/")
-            val file = File(javaFolder, "$path.java")
+    fun writeJavaCode(packageName: String, name: String, code: String) {
+        val packagePath = packageName.replace(".", "/")
 
-            return if (!file.exists()) null else file.readText()
-        }
+        if (!File(javaFolder, packagePath).exists()) File(javaFolder, packagePath).mkdirs()
 
-        /**
-         * Write code to a java file, will create a new file if the given name doesn't exist
-         */
-        override operator fun set(name: String, code: String) {
-            val path = name.replace(".", "/")
-            val file = File(javaFolder, "$path.java")
+        val file = File(javaFolder, "$packagePath/$name.java")
 
-            if (!file.exists()) file.createNewFile()
+        if (!file.exists()) file.createNewFile()
 
-            file.writeText(code)
-        }
+        file.writeText(code)
     }
 
-    val layout = object : GetterSetter() {
-        /**
-         * Read the code of a layout xml file, will return null if the given class doesn't exist
-         */
-        override operator fun get(name: String): String? {
-            val file = File(layoutFolder, "$name.xml")
+    /**
+     * Read the code of a java file, will return null if the given class doesn't exist
+     */
+    fun readJavaCode(name: String): String? {
+        val path = name.replace(".", "/")
+        val file = File(javaFolder, "$path.java")
 
-            return if (!file.exists()) null else file.readText()
-        }
-
-        /**
-         * Write code to a layout xml file, will create a new file if the given name doesn't exist
-         */
-        override operator fun set(name: String, code: String) {
-            val file = File(javaFolder, "$name.xml")
-            if (!file.exists()) file.createNewFile()
-
-            file.writeText(code)
-        }
+        return if (!file.exists()) null else file.readText()
     }
 
-    abstract class GetterSetter {
-        abstract operator fun get(name: String): String?
-        abstract operator fun set(name: String, code: String)
+    /**
+     * Write code to a layout xml file, will create a new file if the given name doesn't exist
+     */
+    fun writeLayoutCode(name: String, code: String) {
+        val file = File(layoutFolder, "$name.xml")
+        if (!file.exists()) file.createNewFile()
+
+        file.writeText(code)
+    }
+
+    /**
+     * Read the code of a layout xml file, will return null if the given class doesn't exist
+     */
+    fun readLayoutCode(name: String): String? {
+        val file = File(layoutFolder, "$name.xml")
+
+        return if (!file.exists()) null else file.readText()
     }
 }
