@@ -1,6 +1,7 @@
 package com.blokkok.app.compiler
 
 import android.content.Context
+import android.util.Log
 import com.blokkok.app.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -49,7 +50,7 @@ object ECJCompiler {
         errOutput: PrintWriter,
     ): Int {
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath $directory -d $outDirectory -verbose"
+            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath $directory -verbose -d $outDirectory"
         )
 
         process.inputStream.redirectTo(output)
@@ -65,6 +66,7 @@ private fun InputStream.redirectTo(out: PrintWriter) {
     Thread {
         val buffer = ByteArray(1024)
         while (read(buffer) != -1) {
+            Log.d("REDURECT", "redirectTo: ${String(buffer)}")
             out.print(String(buffer))
         }
     }.run()

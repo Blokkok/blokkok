@@ -15,7 +15,7 @@ class CompileActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.compile_fragment_container, CompileFragment(ProjectsManager.getProject(projectId)!!))
+            .replace(R.id.activity_compile_root, CompileFragment(ProjectsManager.getProject(projectId)!!))
             .commit()
     }
 }
