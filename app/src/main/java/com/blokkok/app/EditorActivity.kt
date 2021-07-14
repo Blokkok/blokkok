@@ -1,6 +1,8 @@
 package com.blokkok.app
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
@@ -33,6 +35,8 @@ class EditorActivity : AppCompatActivity() {
         val editorViewPager = findViewById<ViewPager2>(R.id.editor_viewpager)
         val tabLayout = findViewById<TabLayout>(R.id.tabs)
 
+        val compileButton = findViewById<Button>(R.id.compile_button)
+
         setSupportActionBar(actionBar)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -41,6 +45,7 @@ class EditorActivity : AppCompatActivity() {
         val initialJavaCode = projectEditor.java["${project.packageName}.MainActivity"] ?: ""
         val initialLayoutCode = projectEditor.layout["main"] ?: ""
 
+        // TODO: 7/14/21 Make a viewmodel for this 
         editorAdapter =
             EditorPagerAdapter(
                 this,
@@ -62,5 +67,11 @@ class EditorActivity : AppCompatActivity() {
                 1 -> tab.text = "CODE"
             }
         }.attach()
+
+        compileButton.setOnClickListener {
+            val intent = Intent(this, CompileActivity::class.java)
+            intent.putExtra("project_id", projectId)
+            startActivity(intent)
+        }
     }
 }
