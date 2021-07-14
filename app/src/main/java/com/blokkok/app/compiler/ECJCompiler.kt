@@ -49,7 +49,7 @@ object ECJCompiler {
         errOutput: PrintWriter,
     ): Int {
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath $directory -d $outDirectory"
+            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath $directory -d $outDirectory -verbose"
         )
 
         process.inputStream.redirectTo(output)

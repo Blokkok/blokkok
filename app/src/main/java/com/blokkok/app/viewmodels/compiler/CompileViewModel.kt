@@ -60,6 +60,8 @@ class CompileViewModel : ViewModel() {
                 outputLiveDataMutable.value += "\nECJ returned a non-zero status"
                 return@launch
             }
+
+            outputLiveDataMutable.value += "ECJ has finished compiling"
         }
     }
 }
