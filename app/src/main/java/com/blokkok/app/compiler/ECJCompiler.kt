@@ -2,6 +2,8 @@ package com.blokkok.app.compiler
 
 import android.content.Context
 import com.blokkok.app.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.*
 
 object ECJCompiler {
@@ -39,18 +41,23 @@ object ECJCompiler {
         }
     }
 
-    fun compile(
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun compile(
         directory: String,
         outDirectory: String,
         output: PrintWriter,
         errOutput: PrintWriter,
-    ) {
+    ): Int {
         val process = Runtime.getRuntime().exec(
             "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath $directory -d $outDirectory"
         )
 
         process.inputStream.redirectTo(output)
         process.errorStream.redirectTo(errOutput)
+
+        process.waitFor()
+
+        return process.exitValue()
     }
 }
 
