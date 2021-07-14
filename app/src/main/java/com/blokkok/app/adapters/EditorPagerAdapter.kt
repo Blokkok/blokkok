@@ -18,8 +18,8 @@ class EditorPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> LayoutCodeFragment(javaSaveCode, initialJavaCode)
-            1 -> JavaCodeFragment(layoutSaveCode, initialLayoutCode)
+            0 -> LayoutCodeFragment(layoutSaveCode, initialLayoutCode)
+            1 -> JavaCodeFragment(javaSaveCode, initialJavaCode)
 
             else -> throw IllegalArgumentException("getItem asks for fragment number $position, while we only have $itemCount")
         }
