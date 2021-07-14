@@ -13,5 +13,5 @@ data class ProjectMetadata(
     // TODO: 7/11/21 Modules
 ) {
     fun edit(context: Context) =
-        ProjectEditor(File(context.applicationInfo.dataDir, "projects/$id/"))
+        ProjectEditor(File(context.applicationInfo.dataDir, "projects/$id/data/"))
 }
