@@ -1,18 +1,17 @@
-package com.blokkok.app.compiler
+package com.blokkok.app.compilers
 
 import android.content.Context
-import android.util.Log
 import java.io.*
 
 // TODO: 7/16/21 Move android.jar extraction to somewhere else
 
-object ECJCompiler {
+object ECJCompiler : JavaCompiler {
 
     private lateinit var compilerDir: File
     private lateinit var ecjPath: String
     private lateinit var androidJarPath: String
 
-    fun initialize(context: Context) {
+    override fun initialize(context: Context) {
         compilerDir = File(context.applicationInfo.dataDir, "binaries/ecj")
 
         ecjPath = "${compilerDir.absolutePath}/ecj.jar"
@@ -42,18 +41,18 @@ object ECJCompiler {
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun compile(
-        directory: String,
-        outDirectory: String,
-        output: PrintWriter,
-        errOutput: PrintWriter,
+    override suspend fun compileJava(
+        rootPackageFolder: File,
+        outputFolder: File,
+        stdout: PrintWriter,
+        stderr: PrintWriter
     ): Int {
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath $directory -verbose -d $outDirectory"
+            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath ${rootPackageFolder.absolutePath} -verbose -d ${outputFolder.absolutePath}"
         )
 
-        process.inputStream.redirectTo(output)
-        process.errorStream.redirectTo(errOutput)
+        process.inputStream.redirectTo(stdout)
+        process.errorStream.redirectTo(stderr)
 
         process.waitFor()
 

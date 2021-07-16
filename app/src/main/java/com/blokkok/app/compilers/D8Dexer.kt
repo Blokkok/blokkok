@@ -1,14 +1,16 @@
-package com.blokkok.app.compiler
+package com.blokkok.app.compilers
 
 import android.content.Context
 import java.io.*
 
-object D8Dexer {
+object D8Dexer : Dexer {
     private lateinit var d8Dir: File
     private lateinit var d8Path: String
+    private lateinit var androidJarPath: String
 
-    fun initialize(context: Context) {
+    override fun initialize(context: Context) {
         d8Dir = File(context.applicationInfo.dataDir, "binaries/d8")
+        androidJarPath = "${context.applicationInfo.dataDir}/binaries/android.jar"
 
         if (!d8Dir.exists()) {
             d8Dir.mkdirs()
@@ -34,17 +36,18 @@ object D8Dexer {
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun runD8(
-        arguments: String,
-        output: PrintWriter,
-        errOutput: PrintWriter,
+    override suspend fun dex(
+        rootPackageFolder: File,
+        output: File,
+        stdout: PrintWriter,
+        stderr: PrintWriter,
     ): Int {
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 $arguments"
+            "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 --release --classpath $androidJarPath --output ${output.absolutePath} ${listAllFiles(rootPackageFolder).joinToString(" ")}}"
         )
 
-        process.inputStream.redirectTo(output)
-        process.errorStream.redirectTo(errOutput)
+        process.inputStream.redirectTo(stdout)
+        process.errorStream.redirectTo(stderr)
 
         process.waitFor()
 
@@ -59,4 +62,18 @@ private fun InputStream.redirectTo(out: PrintWriter) {
             out.print(String(buffer))
         }
     }.run()
+}
+
+private fun listAllFiles(folder: File): List<String> {
+    if (!folder.exists() || !folder.isDirectory) return emptyList()
+
+    return ArrayList<String>().apply {
+        folder.listFiles()!!.forEach { file ->
+            if (file.isDirectory) {
+                addAll(listAllFiles(file))
+            } else {
+                add(file.absolutePath)
+            }
+        }
+    }
 }

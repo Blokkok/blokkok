@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blokkok.app.compiler.D8Dexer
-import com.blokkok.app.compiler.ECJCompiler
+import com.blokkok.app.compilers.D8Dexer
+import com.blokkok.app.compilers.ECJCompiler
 import com.blokkok.app.managers.projects.ProjectMetadata
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,8 +22,6 @@ class CompileViewModel : ViewModel() {
 
     fun startCompilation(project: ProjectMetadata, context: Context) {
 
-        val androidJarPath = "${context.applicationInfo.dataDir}/binaries/android.jar"
-
         viewModelScope.launch(Dispatchers.IO) {
             val javaFiles = File(context.applicationInfo.dataDir, "projects/${project.id}/data/java/${project.packageName.split(".")[0]}/")
             val cacheFolder = File(context.applicationInfo.dataDir, "projects/${project.id}/cache/")
@@ -38,7 +36,7 @@ class CompileViewModel : ViewModel() {
             }
 
             val ecjRetValue = withContext(Dispatchers.IO) {
-                ECJCompiler.compile(javaFiles.absolutePath, classesCacheFolder.absolutePath,
+                ECJCompiler.compileJava(javaFiles, classesCacheFolder,
                     PrintWriter(object : Writer() {
                         override fun close() {}
                         override fun flush() {}
@@ -77,8 +75,7 @@ class CompileViewModel : ViewModel() {
 
             // Continue with d8
             val d8RetValue = withContext(Dispatchers.IO) {
-                D8Dexer.runD8(
-                    "--release --classpath $androidJarPath --output ${dexCacheFolder.absolutePath} ${listAllFiles(classesCacheFolder).joinToString(" ")}}",
+                D8Dexer.dex(classesCacheFolder, dexCacheFolder,
                     PrintWriter(object : Writer() {
                         override fun close() {}
                         override fun flush() {}
@@ -112,20 +109,6 @@ class CompileViewModel : ViewModel() {
             } else {
                 withContext(Dispatchers.Main) {
                     outputLiveDataMutable.value += "\nD8 has finished dex-ing"
-                }
-            }
-        }
-    }
-
-    private fun listAllFiles(folder: File): List<String> {
-        if (!folder.exists() || !folder.isDirectory) return emptyList()
-
-        return ArrayList<String>().apply {
-            folder.listFiles()!!.forEach { file ->
-                if (file.isDirectory) {
-                    addAll(listAllFiles(file))
-                } else {
-                    add(file.absolutePath)
                 }
             }
         }

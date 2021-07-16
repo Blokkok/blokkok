@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.blokkok.app.compiler.D8Dexer
-import com.blokkok.app.compiler.ECJCompiler
+import com.blokkok.app.compilers.D8Dexer
+import com.blokkok.app.compilers.ECJCompiler
 import com.blokkok.app.fragments.main.*
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.modules.ModuleManager
