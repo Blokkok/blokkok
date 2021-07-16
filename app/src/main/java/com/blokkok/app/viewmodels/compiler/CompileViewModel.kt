@@ -125,7 +125,7 @@ class CompileViewModel : ViewModel() {
                 if (file.isDirectory) {
                     addAll(listAllFiles(file))
                 } else {
-                    add(file.name)
+                    add(file.absolutePath)
                 }
             }
         }
