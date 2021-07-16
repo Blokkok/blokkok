@@ -41,6 +41,18 @@ object NativeBinariesManager {
 
     private fun extractBinaries(context: Context) {
         Thread {
+            /* The structure of the binaries.zip would be
+             *
+             * aapt2
+             * L bin
+             * | L aapt2
+             * L lib
+             *   L (aapt2's libraries)
+             *
+             * zipalign
+             * L bin
+             * | L zipalign
+             */
             unpackZip(ZipInputStream(context.assets.open("binaries.zip")), binariesDir)
         }.run()
     }
@@ -62,8 +74,8 @@ object NativeBinariesManager {
     private fun getName(binary: NativeBinaries): String {
         if (useLegacyMethod) {
             return when (binary) {
-                NativeBinaries.AAPT2 -> File(binariesDir, "aapt2/aapt2").absolutePath
-                NativeBinaries.ZIP_ALIGN -> File(binariesDir, "zipalign/zipalign").absolutePath
+                NativeBinaries.AAPT2 -> File(binariesDir, "aapt2/bin/aapt2").absolutePath
+                NativeBinaries.ZIP_ALIGN -> File(binariesDir, "zipalign/bin/zipalign").absolutePath
             }
         } else {
             throw NotImplementedError("Non-legacy binary execution method is not implemented yet")
