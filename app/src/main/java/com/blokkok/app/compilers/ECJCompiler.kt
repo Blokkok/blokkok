@@ -44,8 +44,8 @@ object ECJCompiler : JavaCompiler {
     override suspend fun compileJava(
         rootPackageFolder: File,
         outputFolder: File,
-        stdout: PrintWriter,
-        stderr: PrintWriter
+        stdout: (String) -> Unit,
+        stderr: (String) -> Unit
     ): Int {
         val process = Runtime.getRuntime().exec(
             "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath ${rootPackageFolder.absolutePath} -verbose -d ${outputFolder.absolutePath}"
@@ -60,11 +60,11 @@ object ECJCompiler : JavaCompiler {
     }
 }
 
-private fun InputStream.redirectTo(out: PrintWriter) {
+private fun InputStream.redirectTo(out: (String) -> Unit) {
     Thread {
         val buffer = ByteArray(1024)
         while (read(buffer) != -1) {
-            out.print(String(buffer))
+            out(String(buffer))
         }
     }.run()
 }

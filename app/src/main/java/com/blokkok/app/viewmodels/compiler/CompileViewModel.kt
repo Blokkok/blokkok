@@ -36,28 +36,14 @@ class CompileViewModel : ViewModel() {
             }
 
             val ecjRetValue = withContext(Dispatchers.IO) {
-                ECJCompiler.compileJava(javaFiles, classesCacheFolder,
-                    PrintWriter(object : Writer() {
-                        override fun close() {}
-                        override fun flush() {}
-
-                        override fun write(cbuf: CharArray?, off: Int, len: Int) {
-                            viewModelScope.launch(Dispatchers.Main) {
-                                outputLiveDataMutable.value += "\nECJ >> ${cbuf?.let { String(it) }}"
-                            }
-                        }
-                    }),
-                    PrintWriter(object : Writer() {
-                        override fun close() {}
-                        override fun flush() {}
-
-                        override fun write(cbuf: CharArray?, off: Int, len: Int) {
-                            viewModelScope.launch(Dispatchers.Main) {
-                                outputLiveDataMutable.value += "\nECJ ERR >> ${cbuf?.let { String(it) }}"
-                            }
-                        }
-                    })
-                )
+                ECJCompiler.compileJava(javaFiles, classesCacheFolder, {
+                    viewModelScope.launch(Dispatchers.Main) { // stdout
+                        outputLiveDataMutable.value += "\nECJ >> $it"
+                    }}, {
+                    viewModelScope.launch(Dispatchers.Main) { // stderr
+                        outputLiveDataMutable.value += "\nECJ ERR >> $it"
+                    }
+                })
             }
 
             if (ecjRetValue != 0) {
@@ -75,28 +61,14 @@ class CompileViewModel : ViewModel() {
 
             // Continue with d8
             val d8RetValue = withContext(Dispatchers.IO) {
-                D8Dexer.dex(classesCacheFolder, dexCacheFolder,
-                    PrintWriter(object : Writer() {
-                        override fun close() {}
-                        override fun flush() {}
-
-                        override fun write(cbuf: CharArray?, off: Int, len: Int) {
-                            viewModelScope.launch(Dispatchers.Main) {
-                                outputLiveDataMutable.value += "\nD8 >> ${cbuf?.let { String(it) }}"
-                            }
-                        }
-                    }),
-                    PrintWriter(object : Writer() {
-                        override fun close() {}
-                        override fun flush() {}
-
-                        override fun write(cbuf: CharArray?, off: Int, len: Int) {
-                            viewModelScope.launch(Dispatchers.Main) {
-                                outputLiveDataMutable.value += "\nD8 ERR >> ${cbuf?.let { String(it) }}"
-                            }
-                        }
-                    })
-                )
+                D8Dexer.dex(classesCacheFolder, dexCacheFolder, {
+                    viewModelScope.launch(Dispatchers.Main) { // stdout
+                        outputLiveDataMutable.value += "\nD8 >> $it"
+                    }}, {
+                    viewModelScope.launch(Dispatchers.Main) { // stderr
+                        outputLiveDataMutable.value += "\nD8 ERR >> $it"
+                    }
+                })
             }
 
             if (d8RetValue != 0) {

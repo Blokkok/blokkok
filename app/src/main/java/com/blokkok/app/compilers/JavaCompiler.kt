@@ -9,7 +9,7 @@ interface JavaCompiler {
     suspend fun compileJava(
         rootPackageFolder: File,
         outputFolder: File,
-        stdout: PrintWriter,
-        stderr: PrintWriter,
+        stdout: (String) -> Unit,
+        stderr: (String) -> Unit,
     ): Int // return value
 }

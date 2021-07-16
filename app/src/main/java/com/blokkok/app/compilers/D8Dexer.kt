@@ -39,8 +39,8 @@ object D8Dexer : Dexer {
     override suspend fun dex(
         rootPackageFolder: File,
         output: File,
-        stdout: PrintWriter,
-        stderr: PrintWriter,
+        stdout: (String) -> Unit,
+        stderr: (String) -> Unit,
     ): Int {
         val process = Runtime.getRuntime().exec(
             "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 --release --classpath $androidJarPath --output ${output.absolutePath} ${listAllFiles(rootPackageFolder).joinToString(" ")}}"
@@ -55,11 +55,11 @@ object D8Dexer : Dexer {
     }
 }
 
-private fun InputStream.redirectTo(out: PrintWriter) {
+private fun InputStream.redirectTo(out: (String) -> Unit) {
     Thread {
         val buffer = ByteArray(1024)
         while (read(buffer) != -1) {
-            out.print(String(buffer))
+            out(String(buffer))
         }
     }.run()
 }
