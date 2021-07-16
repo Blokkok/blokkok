@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.blokkok.app.compiler.D8Dexer
 import com.blokkok.app.compiler.ECJCompiler
 import com.blokkok.app.fragments.main.*
 import com.blokkok.app.managers.NativeBinariesManager
@@ -180,9 +181,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun initializeManagers() {
-        ProjectsManager.initialize(this)
-        NativeBinariesManager.initialize(this)
-        ModuleManager.initialize(this)
-        ECJCompiler.initialize(this)
+        ProjectsManager         .initialize(this)
+        NativeBinariesManager   .initialize(this)
+        ModuleManager           .initialize(this)
+        ECJCompiler             .initialize(this)
+        D8Dexer                 .initialize(this)
     }
 }

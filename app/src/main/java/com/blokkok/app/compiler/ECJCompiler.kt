@@ -63,7 +63,6 @@ private fun InputStream.redirectTo(out: PrintWriter) {
     Thread {
         val buffer = ByteArray(1024)
         while (read(buffer) != -1) {
-            Log.d("REDURECT", "redirectTo: ${String(buffer)}")
             out.print(String(buffer))
         }
     }.run()
