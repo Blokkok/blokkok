@@ -30,13 +30,17 @@ class CompileViewModel : ViewModel() {
 
             val classesCacheFolder = File(cacheFolder, "classes")
             val dexCacheFolder = File(cacheFolder, "dex")
+            val classesDex = File(dexCacheFolder, "classes.jar")
+
+            classesCacheFolder.mkdirs()
+            dexCacheFolder.mkdirs()
 
             val compiler = CompilerPicker.pickCompiler()
             val dexer = CompilerPicker.pickDexer()
 
             // Run ecj
 
-            log("ECJ has started compiling")
+            log("ECJ is starting to compile")
 
             val ecjRetValue = withContext(Dispatchers.IO) {
                 compiler.compileJava(javaFiles, classesCacheFolder,
@@ -54,9 +58,11 @@ class CompileViewModel : ViewModel() {
                 log("ECJ has finished compiling")
             }
 
+            log("\nD8 is starting to dex")
+
             // Continue with d8
             val d8RetValue = withContext(Dispatchers.IO) {
-                dexer.dex(classesCacheFolder, dexCacheFolder,
+                dexer.dex(classesCacheFolder, classesDex,
                     { runBlocking { log("D8 >> $it") } },
                     { runBlocking { log("D8 ERR >> $it") } }
                 )
