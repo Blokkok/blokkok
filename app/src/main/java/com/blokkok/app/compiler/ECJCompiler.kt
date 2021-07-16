@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import java.io.*
 
+// TODO: 7/16/21 Move android.jar extraction to somewhere else
+
 object ECJCompiler {
 
     private lateinit var compilerDir: File
@@ -13,22 +15,22 @@ object ECJCompiler {
     fun initialize(context: Context) {
         compilerDir = File(context.applicationInfo.dataDir, "binaries/ecj")
 
+        ecjPath = "${compilerDir.absolutePath}/ecj.jar"
+        androidJarPath = "${context.applicationInfo.dataDir}/binaries/android.jar"
+
         if (!compilerDir.exists()) {
             compilerDir.mkdirs()
             extract(context)
         }
-
-        ecjPath = "${compilerDir.absolutePath}/ecj.jar"
-        androidJarPath = "${compilerDir.absolutePath}/android.jar"
     }
 
     private fun extract(context: Context) {
-        for (entry in mapOf("ecj/ecj.jar" to "ecj.jar", "ecj/android.jar" to "android.jar")) {
+        for (entry in mapOf("ecj/ecj.jar" to ecjPath, "android.jar" to androidJarPath)) {
             val dexWriter: OutputStream
             val bufSize = 8 * 1024
 
             val bis = BufferedInputStream(context.assets.open(entry.value))
-            dexWriter = BufferedOutputStream(FileOutputStream("${compilerDir.absolutePath}/${entry.key}"))
+            dexWriter = BufferedOutputStream(FileOutputStream(entry.key))
             val buf = ByteArray(bufSize)
             var len: Int
 
