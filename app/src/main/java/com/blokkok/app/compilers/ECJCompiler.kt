@@ -28,8 +28,8 @@ object ECJCompiler : JavaCompiler {
             val dexWriter: OutputStream
             val bufSize = 8 * 1024
 
-            val bis = BufferedInputStream(context.assets.open(entry.value))
-            dexWriter = BufferedOutputStream(FileOutputStream(entry.key))
+            val bis = BufferedInputStream(context.assets.open(entry.key))
+            dexWriter = BufferedOutputStream(FileOutputStream(entry.value))
             val buf = ByteArray(bufSize)
             var len: Int
 

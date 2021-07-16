@@ -104,14 +104,14 @@ private fun unpackZip(zipInputStream: ZipInputStream, outputPath: File): Boolean
     try {
         var filename: String
 
-        var entry: ZipEntry
+        var entry: ZipEntry?
         val buffer = ByteArray(1024)
         var count: Int
 
         while (zipInputStream.nextEntry.also { entry = it } != null) {
-            filename = entry.name
+            filename = entry!!.name
 
-            if (entry.isDirectory) {
+            if (entry!!.isDirectory) {
                 File(outputPath, filename).mkdirs()
                 continue
             }
