@@ -10,6 +10,7 @@ import com.blokkok.app.compilers.ECJCompiler
 import com.blokkok.app.managers.projects.ProjectMetadata
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.PrintWriter
@@ -19,6 +20,10 @@ class CompileViewModel : ViewModel() {
     private val outputLiveDataMutable = MutableLiveData<String>()
 
     val outputLiveData: LiveData<String> = outputLiveDataMutable
+
+    private suspend fun log(message: String) {
+        withContext(Dispatchers.Main) { outputLiveDataMutable.value += "\n$message" }
+    }
 
     fun startCompilation(project: ProjectMetadata, context: Context) {
 
@@ -31,57 +36,39 @@ class CompileViewModel : ViewModel() {
 
             // Run ecj
 
-            withContext(Dispatchers.Main) {
-                outputLiveDataMutable.value += "\nECJ has started compiling"
-            }
+            log("ECJ has started compiling")
 
             val ecjRetValue = withContext(Dispatchers.IO) {
-                ECJCompiler.compileJava(javaFiles, classesCacheFolder, {
-                    viewModelScope.launch(Dispatchers.Main) { // stdout
-                        outputLiveDataMutable.value += "\nECJ >> $it"
-                    }}, {
-                    viewModelScope.launch(Dispatchers.Main) { // stderr
-                        outputLiveDataMutable.value += "\nECJ ERR >> $it"
-                    }
-                })
+                ECJCompiler.compileJava(javaFiles, classesCacheFolder,
+                    { runBlocking { log("ECJ >> $it") } },
+                    { runBlocking { log("ECJ ERR >> $it") } }
+                )
             }
 
             if (ecjRetValue != 0) {
                 // this is not good, ecj returned a non-zero status (something goes wrong)
-                withContext(Dispatchers.Main) {
-                    outputLiveDataMutable.value += "\nECJ returned a non-zero status"
-                }
-
+                log("ECJ returned a non-zero status")
                 return@launch
+
             } else {
-                withContext(Dispatchers.Main) {
-                    outputLiveDataMutable.value += "\nECJ has finished compiling"
-                }
+                log("ECJ has finished compiling")
             }
 
             // Continue with d8
             val d8RetValue = withContext(Dispatchers.IO) {
-                D8Dexer.dex(classesCacheFolder, dexCacheFolder, {
-                    viewModelScope.launch(Dispatchers.Main) { // stdout
-                        outputLiveDataMutable.value += "\nD8 >> $it"
-                    }}, {
-                    viewModelScope.launch(Dispatchers.Main) { // stderr
-                        outputLiveDataMutable.value += "\nD8 ERR >> $it"
-                    }
-                })
+                D8Dexer.dex(classesCacheFolder, dexCacheFolder,
+                    { runBlocking { log("D8 >> $it") } },
+                    { runBlocking { log("D8 ERR >> $it") } }
+                )
             }
 
             if (d8RetValue != 0) {
                 // this is not good, ecj returned a non-zero status (something goes wrong)
-                withContext(Dispatchers.Main) {
-                    outputLiveDataMutable.value += "\nD8 returned a non-zero status"
-                }
-
+                log("D8 returned a non-zero status")
                 return@launch
+
             } else {
-                withContext(Dispatchers.Main) {
-                    outputLiveDataMutable.value += "\nD8 has finished dex-ing"
-                }
+                log("D8 has finished dex-ing")
             }
         }
     }
