@@ -5,16 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blokkok.app.compilers.D8Dexer
-import com.blokkok.app.compilers.ECJCompiler
+import com.blokkok.app.compilers.CompilerPicker
 import com.blokkok.app.managers.projects.ProjectMetadata
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.PrintWriter
-import java.io.Writer
 
 class CompileViewModel : ViewModel() {
     private val outputLiveDataMutable = MutableLiveData<String>()
@@ -34,12 +31,15 @@ class CompileViewModel : ViewModel() {
             val classesCacheFolder = File(cacheFolder, "classes")
             val dexCacheFolder = File(cacheFolder, "dex")
 
+            val compiler = CompilerPicker.pickCompiler()
+            val dexer = CompilerPicker.pickDexer()
+
             // Run ecj
 
             log("ECJ has started compiling")
 
             val ecjRetValue = withContext(Dispatchers.IO) {
-                ECJCompiler.compileJava(javaFiles, classesCacheFolder,
+                compiler.compileJava(javaFiles, classesCacheFolder,
                     { runBlocking { log("ECJ >> $it") } },
                     { runBlocking { log("ECJ ERR >> $it") } }
                 )
@@ -56,7 +56,7 @@ class CompileViewModel : ViewModel() {
 
             // Continue with d8
             val d8RetValue = withContext(Dispatchers.IO) {
-                D8Dexer.dex(classesCacheFolder, dexCacheFolder,
+                dexer.dex(classesCacheFolder, dexCacheFolder,
                     { runBlocking { log("D8 >> $it") } },
                     { runBlocking { log("D8 ERR >> $it") } }
                 )
