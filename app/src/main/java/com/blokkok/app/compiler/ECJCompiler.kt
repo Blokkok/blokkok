@@ -2,9 +2,6 @@ package com.blokkok.app.compiler
 
 import android.content.Context
 import android.util.Log
-import com.blokkok.app.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.*
 
 object ECJCompiler {
@@ -26,11 +23,11 @@ object ECJCompiler {
     }
 
     private fun extract(context: Context) {
-        for (entry in mapOf("android.jar" to R.raw.android, "ecj.jar" to R.raw.ecj)) {
+        for (entry in mapOf("ecj/ecj.jar" to "ecj.jar", "ecj/android.jar" to "android.jar")) {
             val dexWriter: OutputStream
             val bufSize = 8 * 1024
 
-            val bis = BufferedInputStream(context.resources.openRawResource(entry.value))
+            val bis = BufferedInputStream(context.assets.open(entry.value))
             dexWriter = BufferedOutputStream(FileOutputStream("${compilerDir.absolutePath}/${entry.key}"))
             val buf = ByteArray(bufSize)
             var len: Int

@@ -1,14 +1,11 @@
 package com.blokkok.app.fragments.main;
 
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.blokkok.app.R;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.blokkok.app.R
 
 class LicensesFragment : Fragment() {
     override fun onCreateView(

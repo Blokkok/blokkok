@@ -1,9 +1,6 @@
 package com.blokkok.app.managers
 
 import android.content.Context
-import com.blokkok.app.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -44,8 +41,7 @@ object NativeBinariesManager {
 
     private fun extractBinaries(context: Context) {
         Thread {
-            val resources = context.resources
-            unpackZip(ZipInputStream(resources.openRawResource(R.raw.binaries)), binariesDir)
+            unpackZip(ZipInputStream(context.assets.open("binaries.zip")), binariesDir)
         }.run()
     }
 

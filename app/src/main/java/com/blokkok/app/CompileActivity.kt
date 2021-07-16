@@ -1,7 +1,7 @@
 package com.blokkok.app
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.blokkok.app.fragments.compiler.CompileFragment
 import com.blokkok.app.managers.projects.ProjectsManager
 
