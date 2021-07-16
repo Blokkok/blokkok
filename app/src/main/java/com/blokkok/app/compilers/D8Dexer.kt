@@ -43,7 +43,7 @@ object D8Dexer : Dexer {
         stderr: (String) -> Unit,
     ): Int {
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 --release --classpath $androidJarPath --output ${output.absolutePath} ${listAllFiles(rootPackageFolder).joinToString(" ")}}"
+            "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 --release --classpath $androidJarPath --output ${output.absolutePath} ${listAllFiles(rootPackageFolder).joinToString(" ")}"
         )
 
         process.inputStream.redirectTo(stdout)
