@@ -57,6 +57,11 @@ object NativeBinariesManager {
              * | L zipalign
              */
             unpackZip(ZipInputStream(context.assets.open("binaries.zip")), binariesDir)
+
+            // Then make them executable
+            NativeBinaries.values().forEach {
+                File(getBinaryPath(it)).setExecutable(true)
+            }
         }.run()
     }
 
@@ -67,14 +72,14 @@ object NativeBinariesManager {
     ) {
         val process = Runtime.getRuntime().exec(
             ArrayList<String>().apply {
-                add(getName(binary))
+                add(getBinaryPath(binary))
                 addAll(arguments)
             }.toTypedArray())
 
         process.inputStream.redirectStreamTo(outputStream)
     }
 
-    private fun getName(binary: NativeBinaries): String {
+    private fun getBinaryPath(binary: NativeBinaries): String {
         if (useLegacyMethod) {
             return when (binary) {
                 NativeBinaries.AAPT2 -> File(binariesDir, "aapt2/bin/aapt2").absolutePath
