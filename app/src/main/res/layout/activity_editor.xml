@@ -62,10 +62,10 @@
                 tools:layout_editor_absoluteX="206dp"
                 tools:layout_editor_absoluteY="56dp" />
 
-            <!--            <com.google.android.material.tabs.TabItem-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="Components" />-->
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manifest" />
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

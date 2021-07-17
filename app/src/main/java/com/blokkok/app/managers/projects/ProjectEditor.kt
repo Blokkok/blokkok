@@ -1,6 +1,7 @@
 package com.blokkok.app.managers.projects
 
 import java.io.File
+import kotlin.coroutines.CoroutineContext
 
 class ProjectEditor(
     private val dataDir: File
@@ -8,10 +9,12 @@ class ProjectEditor(
 
     private val javaFolder = File(dataDir, "java")
     private val layoutFolder = File(dataDir, "res/layout")
+    private val manifestFile = File(dataDir, "AndroidManifest.xml")
 
     init {
         if (!javaFolder.exists()) javaFolder.mkdir()
         if (!layoutFolder.exists()) layoutFolder.mkdir()
+        if (!manifestFile.exists()) manifestFile.createNewFile()
     }
 
     /**
@@ -75,5 +78,37 @@ class ProjectEditor(
         val file = File(layoutFolder, "$name.xml")
 
         return if (!file.exists()) null else file.readText()
+    }
+
+    /**
+     * Writes the given code into the AndroidManifest.xml file
+     */
+    fun writeManifest(code: String) = manifestFile.writeText(code)
+
+    /**
+     * Returns the content of the AndroidManifest.xml file
+     */
+    fun readManifest(): String? {
+        val content = manifestFile.readText()
+        return if (content == "") null else content
+    }
+
+    companion object {
+        fun generateDefaultManifest(name: String, packageName: String): String =
+"""<?xml version="1.0" encoding="utf-8"?>
+<manifest 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="$packageName">
+
+    <application android:label="$name">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>"""
     }
 }

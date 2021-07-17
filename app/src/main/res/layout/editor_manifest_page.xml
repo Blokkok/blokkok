@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/layout_code"
+        android:id="@+id/manifest_code"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -17,7 +17,7 @@
         android:fontFamily="monospace"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        android:hint="Insert the XML layout code for MainActivity"
+        android:hint="Insert the XML manifest code for this project"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/layout_save_button"
+        android:id="@+id/manifest_save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

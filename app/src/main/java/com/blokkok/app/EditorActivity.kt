@@ -44,6 +44,7 @@ class EditorActivity : AppCompatActivity() {
 
         val initialJavaCode = projectEditor.readJavaCode("${project.packageName}.MainActivity") ?: "package ${project.packageName};\n"
         val initialLayoutCode = projectEditor.readLayoutCode("main") ?: ""
+        val initialManifestCode = projectEditor.readManifest() ?: ProjectEditor.generateDefaultManifest(project.name, project.packageName)
 
         // TODO: 7/14/21 Make a viewmodel for this 
         editorAdapter =
@@ -56,7 +57,10 @@ class EditorActivity : AppCompatActivity() {
                 { // Layout code save callback
                     projectEditor.writeLayoutCode("main", it)
 
-                }, initialLayoutCode
+                }, initialLayoutCode,
+                { // Manifest code save callback
+                    projectEditor.writeManifest(it)
+                }, initialManifestCode
             )
 
         editorViewPager.adapter = editorAdapter
@@ -65,6 +69,7 @@ class EditorActivity : AppCompatActivity() {
             when (position) {
                 0 -> tab.text = "LAYOUT"
                 1 -> tab.text = "CODE"
+                2 -> tab.text = "MANIFEST"
             }
         }.attach()
 
