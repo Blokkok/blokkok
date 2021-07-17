@@ -11,7 +11,7 @@ import java.util.zip.ZipInputStream
 const val useLegacyMethod = true
 
 // Change this when you changed the binaries.zip
-const val binariesABI = "armeabi-v7a"
+const val binariesABI = "x86"
 
 // TODO: 7/10/21 Make a test for this class
 
