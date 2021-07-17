@@ -62,9 +62,8 @@ object ECJCompiler : JavaCompiler {
 
 private fun InputStream.redirectTo(out: (String) -> Unit) {
     Thread {
-        val buffer = ByteArray(1024)
-        while (read(buffer) != -1) {
-            out(String(buffer))
-        }
+        BufferedReader(InputStreamReader(this)).also { reader ->
+            reader.forEachLine { out(it) }
+        }.close()
     }.run()
 }
