@@ -1,8 +1,13 @@
 package com.blokkok.app
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -14,6 +19,7 @@ import com.blokkok.app.compilers.D8Dexer
 import com.blokkok.app.compilers.ECJCompiler
 import com.blokkok.app.fragments.main.*
 import com.blokkok.app.managers.NativeBinariesManager
+import com.blokkok.app.managers.binariesABI
 import com.blokkok.app.managers.modules.ModuleManager
 import com.blokkok.app.managers.projects.ProjectsManager
 import com.google.android.material.navigation.NavigationView
@@ -27,6 +33,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Check if this device supports the binaries' abi
+        if (!Build.SUPPORTED_ABIS.contains(binariesABI)) {
+            AlertDialog.Builder(this)
+                .setTitle("Unsupported CPU ABI")
+                .setMessage("You seem to have downloaded the wrong version of blokkok. This version uses $binariesABI, but your device only support these ABIs: ${Build.SUPPORTED_ABIS.joinToString(", ")}.\n\nTry to find Blokkok with the right version of your CPU ABI.")
+                .setPositiveButton("Ok") { _, _ -> finishAffinity() }
+                .create()
+                .run {
+                    show()
+                    setOnCancelListener {
+                        finishAffinity()
+                    }
+                }
+
+            return
+        }
 
         initializeManagers()
 

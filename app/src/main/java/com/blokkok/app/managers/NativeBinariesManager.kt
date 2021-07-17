@@ -8,6 +8,9 @@ import java.util.zip.ZipInputStream
 // Use the default extraction to home folder + execute it there
 const val useLegacyMethod = true
 
+// Change this when you changed the binaries.zip
+const val binariesABI = "armeabi-v7a"
+
 // TODO: 7/10/21 Make a test for this class
 
 object NativeBinariesManager {
