@@ -1,6 +1,8 @@
 package com.blokkok.app.managers
 
 import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -65,18 +67,28 @@ object NativeBinariesManager {
         }.run()
     }
 
-    fun executeCommand(
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun executeCommand(
         binary: NativeBinaries,
-        arguments: List<String>,
-        outputStream: OutputStream
-    ) {
-        val process = Runtime.getRuntime().exec(
-            ArrayList<String>().apply {
-                add(getBinaryPath(binary))
-                addAll(arguments)
-            }.toTypedArray())
+        arguments: Array<String>,
+        stdout: (String) -> Unit,
+        stderr: (String) -> Unit,
+    ): Int {
+        return withContext(Dispatchers.IO) {
+            val process = Runtime.getRuntime().exec(
+                ArrayList<String>().apply {
+                    add(getBinaryPath(binary))
+                    addAll(arguments)
+                }.toTypedArray()
+            )
 
-        process.inputStream.redirectStreamTo(outputStream)
+            process.inputStream.redirectTo(stdout)
+            process.errorStream.redirectTo(stderr)
+
+            process.waitFor()
+
+            return@withContext process.exitValue()
+        }
     }
 
     private fun getBinaryPath(binary: NativeBinaries): String {
@@ -96,15 +108,12 @@ object NativeBinariesManager {
     }
 }
 
-// Used to redirect InputStreams to an OutputStream
-private fun InputStream.redirectStreamTo(dest: OutputStream) {
+private fun InputStream.redirectTo(out: (String) -> Unit) {
     Thread {
-        val buffer = ByteArray(1024)
-        var length: Int
-
-        while (read(buffer).also { length = it } != -1)
-            dest.write(buffer, 0, length)
-    }.start()
+        BufferedReader(InputStreamReader(this)).also { reader ->
+            reader.forEachLine { out(it) }
+        }.close()
+    }.run()
 }
 
 // Used to unpack zip files into a specified output path

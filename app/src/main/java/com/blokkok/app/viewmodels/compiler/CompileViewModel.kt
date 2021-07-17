@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blokkok.app.compilers.CompilerPicker
+import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.projects.ProjectMetadata
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,12 +70,29 @@ class CompileViewModel : ViewModel() {
             }
 
             if (d8RetValue != 0) {
-                // this is not good, ecj returned a non-zero status (something goes wrong)
                 log("D8 returned a non-zero status")
                 return@launch
 
             } else {
                 log("D8 has finished dex-ing")
+            }
+
+            log("\nAAPT2 starting to run")
+
+            val aapt2RetVal = NativeBinariesManager
+                .executeCommand(
+                    NativeBinariesManager.NativeBinaries.AAPT2,
+                    arrayOf("link"),
+                    { runBlocking { log("AAPT2 >> $it") } },
+                    { runBlocking { log("AAPT2 ERR >> $it") } }
+                )
+
+            if (aapt2RetVal != 0) {
+                log("aapt2 returned a non-zero status")
+                return@launch
+
+            } else {
+                log("aapt2 has finished running")
             }
         }
     }
