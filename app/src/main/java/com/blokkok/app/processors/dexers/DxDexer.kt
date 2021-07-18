@@ -12,7 +12,7 @@ object DxDexer : Dexer {
     }
 
     override suspend fun dex(
-        rootPackageFolder: File,
+        folderOrFile: File,
         output: File,
         stdout: (String) -> Unit,
         stderr: (String) -> Unit

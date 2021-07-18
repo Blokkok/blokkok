@@ -41,13 +41,13 @@ object D8Dexer : Dexer {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun dex(
-        rootPackageFolder: File,
+        folderOrFile: File,
         output: File,
         stdout: (String) -> Unit,
         stderr: (String) -> Unit,
     ): Int {
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 --release --classpath $androidJarPath --output ${output.absolutePath} ${listAllFiles(rootPackageFolder).joinToString(" ")}"
+            "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 --release --classpath $androidJarPath --output ${output.absolutePath} ${listFiles(folderOrFile).joinToString(" ")}"
         )
 
         process.inputStream.redirectTo(stdout)
@@ -67,13 +67,14 @@ private fun InputStream.redirectTo(out: (String) -> Unit) {
     }.run()
 }
 
-private fun listAllFiles(folder: File): List<String> {
-    if (!folder.exists() || !folder.isDirectory) return emptyList()
+private fun listFiles(folder: File): List<String> {
+    if (!folder.exists()) return emptyList()
+    if (folder.isFile) return listOf(folder.absolutePath)
 
     return ArrayList<String>().apply {
         folder.listFiles()!!.forEach { file ->
             if (file.isDirectory) {
-                addAll(listAllFiles(file))
+                addAll(listFiles(file))
             } else {
                 add(file.absolutePath)
             }
