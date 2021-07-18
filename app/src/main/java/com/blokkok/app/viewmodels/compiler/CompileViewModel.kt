@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.*
+import java.lang.StringBuilder
 
 class CompileViewModel : ViewModel() {
     private val outputLiveDataMutable = MutableLiveData<String>()
@@ -139,13 +140,16 @@ class CompileViewModel : ViewModel() {
 
             // =====================================================================================
             // Then build the apk using ApkBuilder
+
+            log("\nStarting to build APK")
+
             val apkBuilder = ApkBuilder(
                 unsignedOutApk,
                 resOutApk,
                 classesDex,
                 null, // No key
                 null, // No cert
-                null
+                PrintStream(OutputStreamLogger("ApkBuilder >> "))
             )
             apkBuilder.setDebugMode(false)
             apkBuilder.sealApk()
@@ -217,5 +221,23 @@ class CompileViewModel : ViewModel() {
                 { runBlocking { log("AAPT2 >> $it") } },
                 { runBlocking { log("AAPT2 ERR >> $it") } }
             )
+    }
+
+    inner class OutputStreamLogger(
+        private val prefix: String
+    ) : OutputStream() {
+
+        private val buffer = StringBuilder()
+
+        override fun write(b: Int) {
+            val char = b.toChar()
+
+            if (char == '\n') {
+                runBlocking { log("$prefix$buffer") }
+                buffer.clear()
+            } else {
+                buffer.append(char)
+            }
+        }
     }
 }
