@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.*
-import java.lang.StringBuilder
 
 class CompileViewModel : ViewModel() {
     private val outputLiveDataMutable = MutableLiveData<String>()
@@ -57,8 +56,8 @@ class CompileViewModel : ViewModel() {
             val resourcesZip = File(compiledResCacheFolder, "resources.zip") // the compiled resources
             val classesDex = File(dexCacheFolder, "classes.jar") // dex-ed classes from both generated java files and project's code
             val resOutApk = File(cacheFolder, "res.apk") // output apk with resources
-            val unsignedOutApk = File(cacheFolder, "${project.name}-unsigned-unaligned.apk") // unsigned and unaligned output apk
-            val unalignedOutApk = File(cacheFolder, "${project.name}-unaligned.apk") // unaligned output apk
+            val unalignedOutApk = File(cacheFolder, "${project.name}-unaligned-unsigned.apk") // unaligned and unaligned output apk
+            val unsignedOutApk = File(cacheFolder, "${project.name}-unsigned.apk") // unsigned output apk
 
             // mkdirs ==============================================================================
             cacheFolder.mkdirs()
@@ -144,18 +143,30 @@ class CompileViewModel : ViewModel() {
             log("\nStarting to build APK")
 
             val apkBuilder = ApkBuilder(
-                unsignedOutApk,
+                unalignedOutApk,
                 resOutApk,
                 classesDex,
-                null, // No key
-                null, // No cert
+                null, // No key and no cert, we will sign this using ApkSigner instead
+                null,
                 PrintStream(OutputStreamLogger("ApkBuilder >> "))
             )
             apkBuilder.setDebugMode(false)
             apkBuilder.sealApk()
 
             // =====================================================================================
-            // Second to last, sign the apk
+            // Second to last, zipalign the apk
+            val zipalignRetVal = zipalignApk(unalignedOutApk, unsignedOutApk)
+
+            if (zipalignRetVal != 0) {
+                log("zipalign returned a non-zero status"); return@launch
+            } else {
+                log("zipaligned has finished aligning the apk")
+            }
+
+            // =====================================================================================
+            // Then finally, sign the apk using apksigner with the debug key
+            // Note: zipalign must be run before the app is signed using apksigner, but if you use
+            //       jarsigner, zipalign must be run after that
         }
     }
 
@@ -222,6 +233,22 @@ class CompileViewModel : ViewModel() {
                 { runBlocking { log("AAPT2 ERR >> $it") } }
             )
     }
+
+    private suspend fun zipalignApk(
+        inputApkFile: File,
+        outputApkFile: File,
+    ): Int {
+        log("\nZipalign is aligning the apk")
+
+        return NativeBinariesManager
+            .executeCommand(
+                NativeBinariesManager.NativeBinaries.ZIP_ALIGN,
+                arrayOf("4", "-v", inputApkFile.absolutePath, outputApkFile.absolutePath),
+                { runBlocking { log("Zipalign >> $it") } },
+                { runBlocking { log("Zipalign ERR >> $it") } }
+            )
+    }
+
 
     inner class OutputStreamLogger(
         private val prefix: String
