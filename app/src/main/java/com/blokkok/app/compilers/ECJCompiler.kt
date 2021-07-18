@@ -7,6 +7,8 @@ import java.io.*
 
 object ECJCompiler : JavaCompiler {
 
+    override val name: String get() = "ECJ"
+
     private lateinit var compilerDir: File
     private lateinit var ecjPath: String
     private lateinit var androidJarPath: String

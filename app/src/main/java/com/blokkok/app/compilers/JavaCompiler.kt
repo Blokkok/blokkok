@@ -5,6 +5,9 @@ import java.io.File
 import java.io.PrintWriter
 
 interface JavaCompiler {
+
+    val name: String
+
     fun initialize(context: Context)
     suspend fun compileJava(
         inputFolders: Array<File>,

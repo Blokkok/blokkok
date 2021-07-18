@@ -143,11 +143,11 @@ class CompileViewModel : ViewModel() {
         inputFolders: Array<File>,
         outputFolder: File
     ): Int {
-        log("ECJ is starting to compile")
+        log("${compiler.name} is starting to compile")
 
         return compiler.compileJava(inputFolders, outputFolder,
-                { runBlocking { log("ECJ >> $it") } },
-                { runBlocking { log("ECJ ERR >> $it") } }
+                { runBlocking { log("${compiler.name} >> $it") } },
+                { runBlocking { log("${compiler.name} ERR >> $it") } }
             )
     }
 
