@@ -195,7 +195,8 @@ class CompileViewModel : ViewModel() {
                     "--manifest", androidManifestXml.absolutePath,
                     "--java", rJavaOutput.absolutePath,
                     "-o", outputApk.absolutePath,
-                    resourcesZip.absolutePath
+                    resourcesZip.absolutePath,
+                    "-v"
                 ),
                 { runBlocking { log("AAPT2 >> $it") } },
                 { runBlocking { log("AAPT2 ERR >> $it") } }
