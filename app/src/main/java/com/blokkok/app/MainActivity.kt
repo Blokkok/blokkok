@@ -12,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.blokkok.app.compilers.D8Dexer
-import com.blokkok.app.compilers.ECJCompiler
+import com.blokkok.app.processors.dexers.D8Dexer
 import com.blokkok.app.fragments.main.*
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.binariesABI
 import com.blokkok.app.managers.modules.ModuleManager
 import com.blokkok.app.managers.projects.ProjectsManager
+import com.blokkok.app.processors.compilers.ECJCompiler
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {

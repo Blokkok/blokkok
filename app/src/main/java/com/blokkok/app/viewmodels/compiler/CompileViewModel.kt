@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blokkok.app.compilers.CompilerPicker
-import com.blokkok.app.compilers.Dexer
-import com.blokkok.app.compilers.JavaCompiler
+import com.blokkok.app.processors.ProcessorPicker
+import com.blokkok.app.processors.Dexer
+import com.blokkok.app.processors.JavaCompiler
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.projects.ProjectMetadata
 import kotlinx.coroutines.Dispatchers
@@ -66,8 +66,8 @@ class CompileViewModel : ViewModel() {
             // mkdirs ==============================================================================
 
             // Picks the compiler and the dexer
-            val compiler = CompilerPicker.pickCompiler()
-            val dexer = CompilerPicker.pickDexer()
+            val compiler = ProcessorPicker.pickCompiler()
+            val dexer = ProcessorPicker.pickDexer()
 
             ///////////////////////
             // Start compilation //

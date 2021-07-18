@@ -1,17 +1,15 @@
-package com.blokkok.app.compilers
+package com.blokkok.app.processors
 
 import android.content.Context
 import java.io.File
-import java.io.PrintWriter
 
-interface JavaCompiler {
-
+interface Dexer {
     val name: String
 
     fun initialize(context: Context)
-    suspend fun compileJava(
-        inputFolders: Array<File>,
-        outputFolder: File,
+    suspend fun dex(
+        rootPackageFolder: File,
+        output: File,
         stdout: (String) -> Unit,
         stderr: (String) -> Unit,
     ): Int // return value

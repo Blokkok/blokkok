@@ -1,6 +1,7 @@
-package com.blokkok.app.compilers
+package com.blokkok.app.processors.dexers
 
 import android.content.Context
+import com.blokkok.app.processors.Dexer
 import java.io.File
 
 object DxDexer : Dexer {
