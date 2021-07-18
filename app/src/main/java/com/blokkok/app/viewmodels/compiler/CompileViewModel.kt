@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blokkok.app.compilers.CompilerPicker
+import com.blokkok.app.compilers.Dexer
 import com.blokkok.app.compilers.JavaCompiler
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.projects.ProjectMetadata
@@ -72,6 +73,7 @@ class CompileViewModel : ViewModel() {
             // Start compilation //
             ///////////////////////
 
+            // =====================================================================================
             // First, run aapt2 to compile resources
 
             val aapt2crRetVal = compileResources(
@@ -85,6 +87,7 @@ class CompileViewModel : ViewModel() {
                 log("aapt2 has finished compiling resources")
             }
 
+            // =====================================================================================
             // Then, link the resources with aapt2
 
             val aapt2lrRetVal = linkResources(
@@ -101,14 +104,13 @@ class CompileViewModel : ViewModel() {
                 log("aapt2 has finished linking resources")
             }
 
-            // Then run ecj to compile java sources
-
-            log("${compiler.name} is starting to compile")
+            // =====================================================================================
+            // Then run the java compiler to compile java sources
 
             val compilerRetVal = compileJavaSources(
-                compiler,
-                arrayOf(javaFiles, generatedJavaFolder),
-                classesCacheFolder
+                compiler, // the compiler used
+                arrayOf(generatedJavaFolder, javaFiles), // the java sources that'll be compiled
+                classesCacheFolder // the output folder
             )
 
             if (compilerRetVal != 0) {
@@ -117,24 +119,23 @@ class CompileViewModel : ViewModel() {
                 log("${compiler.name} has finished compiling")
             }
 
-            // Continue with d8
+            // =====================================================================================
+            // Continue with the dexer to dex those compiled java files
 
-            log("\n${dexer.name} is starting to dex")
+            val dexerRetVal = dexClasses(
+                dexer, // the dexer used
+                classesCacheFolder, // the classes that'll be dex-ed by the dexer
+                classesDex // the output dex file
+            )
 
-            val d8RetValue = withContext(Dispatchers.IO) {
-                dexer.dex(classesCacheFolder, classesDex,
-                    { runBlocking { log("${dexer.name} >> $it") } },
-                    { runBlocking { log("${dexer.name} ERR >> $it") } }
-                )
-            }
-
-            if (d8RetValue != 0) {
+            if (dexerRetVal != 0) {
                 log("${dexer.name} returned a non-zero status"); return@launch
             } else {
                 log("${dexer.name} has finished dex-ing")
             }
 
-            // Lastly, build the apk using ApkBuilder
+            // =====================================================================================
+            // Then build the apk using ApkBuilder
         }
     }
 
@@ -143,11 +144,24 @@ class CompileViewModel : ViewModel() {
         inputFolders: Array<File>,
         outputFolder: File
     ): Int {
-        log("${compiler.name} is starting to compile")
+        log("\n${compiler.name} is starting to compile")
 
         return compiler.compileJava(inputFolders, outputFolder,
                 { runBlocking { log("${compiler.name} >> $it") } },
                 { runBlocking { log("${compiler.name} ERR >> $it") } }
+            )
+    }
+
+    private suspend fun dexClasses(
+        dexer: Dexer,
+        compiledClassesFolder: File,
+        outputDex: File
+    ): Int {
+        log("\n${dexer.name} is starting to dex")
+
+        return dexer.dex(compiledClassesFolder, outputDex,
+                { runBlocking { log("${dexer.name} >> $it") } },
+                { runBlocking { log("${dexer.name} ERR >> $it") } }
             )
     }
 
