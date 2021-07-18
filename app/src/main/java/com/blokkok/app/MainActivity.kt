@@ -16,6 +16,7 @@ import com.blokkok.app.processors.dexers.D8Dexer
 import com.blokkok.app.fragments.main.*
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.binariesABI
+import com.blokkok.app.managers.libraries.LibraryManager
 import com.blokkok.app.managers.modules.ModuleManager
 import com.blokkok.app.managers.projects.ProjectsManager
 import com.blokkok.app.processors.compilers.ECJCompiler
@@ -206,5 +207,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ModuleManager           .initialize(this)
         ECJCompiler             .initialize(this)
         D8Dexer                 .initialize(this)
+        LibraryManager          .initialize(this)
     }
 }
