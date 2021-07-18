@@ -42,13 +42,13 @@ object ECJCompiler : JavaCompiler {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun compileJava(
-        rootPackageFolder: File,
+        inputFolders: Array<File>,
         outputFolder: File,
         stdout: (String) -> Unit,
         stderr: (String) -> Unit
     ): Int {
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath ${rootPackageFolder.absolutePath} -verbose -d ${outputFolder.absolutePath}"
+            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath ${inputFolders.joinToString(" ")} -verbose -d ${outputFolder.absolutePath}"
         )
 
         process.inputStream.redirectTo(stdout)

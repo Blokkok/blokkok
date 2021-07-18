@@ -44,7 +44,7 @@ class CompileViewModel : ViewModel() {
             log("ECJ is starting to compile")
 
             val ecjRetValue = withContext(Dispatchers.IO) {
-                compiler.compileJava(javaFiles, classesCacheFolder,
+                compiler.compileJava(arrayOf(javaFiles, generatedJavaFolder), classesCacheFolder,
                     { runBlocking { log("ECJ >> $it") } },
                     { runBlocking { log("ECJ ERR >> $it") } }
                 )

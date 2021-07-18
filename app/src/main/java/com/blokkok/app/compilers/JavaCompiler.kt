@@ -7,7 +7,7 @@ import java.io.PrintWriter
 interface JavaCompiler {
     fun initialize(context: Context)
     suspend fun compileJava(
-        rootPackageFolder: File,
+        inputFolders: Array<File>,
         outputFolder: File,
         stdout: (String) -> Unit,
         stderr: (String) -> Unit,
