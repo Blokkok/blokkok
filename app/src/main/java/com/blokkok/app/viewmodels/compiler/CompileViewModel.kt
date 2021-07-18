@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blokkok.app.compilers.CompilerPicker
+import com.blokkok.app.compilers.JavaCompiler
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.projects.ProjectMetadata
 import kotlinx.coroutines.Dispatchers
@@ -102,27 +103,24 @@ class CompileViewModel : ViewModel() {
 
             // Then run ecj to compile java sources
 
-            log("ECJ is starting to compile")
+            log("${compiler.name} is starting to compile")
 
-            val ecjRetValue = withContext(Dispatchers.IO) {
-                compiler.compileJava(arrayOf(javaFiles, generatedJavaFolder), classesCacheFolder,
-                    { runBlocking { log("ECJ >> $it") } },
-                    { runBlocking { log("ECJ ERR >> $it") } }
-                )
-            }
+            val compilerRetVal = compileJavaSources(
+                compiler,
+                arrayOf(javaFiles, generatedJavaFolder),
+                classesCacheFolder
+            )
 
-            if (ecjRetValue != 0) {
-                // this is not good, ecj returned a non-zero status (something goes wrong)
-                log("ECJ returned a non-zero status")
-                return@launch
-
+            if (compilerRetVal != 0) {
+                log("${compiler.name} returned a non-zero status"); return@launch
             } else {
-                log("ECJ has finished compiling")
+                log("${compiler.name} has finished compiling")
             }
+
+            // Continue with d8
 
             log("\nD8 is starting to dex")
 
-            // Continue with d8
             val d8RetValue = withContext(Dispatchers.IO) {
                 dexer.dex(classesCacheFolder, classesDex,
                     { runBlocking { log("D8 >> $it") } },
@@ -131,13 +129,26 @@ class CompileViewModel : ViewModel() {
             }
 
             if (d8RetValue != 0) {
-                log("D8 returned a non-zero status")
-                return@launch
-
+                log("D8 returned a non-zero status"); return@launch
             } else {
                 log("D8 has finished dex-ing")
             }
+
+            // Lastly, build the apk using ApkBuilder
         }
+    }
+
+    private suspend fun compileJavaSources(
+        compiler: JavaCompiler,
+        inputFolders: Array<File>,
+        outputFolder: File
+    ): Int {
+        log("ECJ is starting to compile")
+
+        return compiler.compileJava(inputFolders, outputFolder,
+                { runBlocking { log("ECJ >> $it") } },
+                { runBlocking { log("ECJ ERR >> $it") } }
+            )
     }
 
     private suspend fun compileResources(resFolder: File, resourcesZipOutput: File): Int {
