@@ -4,6 +4,8 @@ import android.content.Context
 import java.io.File
 
 interface Dexer {
+    val name: String
+
     fun initialize(context: Context)
     suspend fun dex(
         rootPackageFolder: File,

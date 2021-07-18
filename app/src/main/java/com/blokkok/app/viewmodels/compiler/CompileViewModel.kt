@@ -119,19 +119,19 @@ class CompileViewModel : ViewModel() {
 
             // Continue with d8
 
-            log("\nD8 is starting to dex")
+            log("\n${dexer.name} is starting to dex")
 
             val d8RetValue = withContext(Dispatchers.IO) {
                 dexer.dex(classesCacheFolder, classesDex,
-                    { runBlocking { log("D8 >> $it") } },
-                    { runBlocking { log("D8 ERR >> $it") } }
+                    { runBlocking { log("${dexer.name} >> $it") } },
+                    { runBlocking { log("${dexer.name} ERR >> $it") } }
                 )
             }
 
             if (d8RetValue != 0) {
-                log("D8 returned a non-zero status"); return@launch
+                log("${dexer.name} returned a non-zero status"); return@launch
             } else {
-                log("D8 has finished dex-ing")
+                log("${dexer.name} has finished dex-ing")
             }
 
             // Lastly, build the apk using ApkBuilder

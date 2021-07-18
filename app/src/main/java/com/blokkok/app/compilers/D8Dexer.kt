@@ -4,6 +4,9 @@ import android.content.Context
 import java.io.*
 
 object D8Dexer : Dexer {
+
+    override val name: String get() = "D8"
+
     private lateinit var d8Dir: File
     private lateinit var d8Path: String
     private lateinit var androidJarPath: String

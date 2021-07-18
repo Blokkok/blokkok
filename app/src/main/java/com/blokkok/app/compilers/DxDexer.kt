@@ -4,6 +4,8 @@ import android.content.Context
 import java.io.File
 
 object DxDexer : Dexer {
+    override val name: String get() = "Dx"
+
     override fun initialize(context: Context) {
         TODO("Dx is not yet implemented")
     }
