@@ -5,16 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blokkok.app.processors.ProcessorPicker
-import com.blokkok.app.processors.Dexer
-import com.blokkok.app.processors.JavaCompiler
+import com.android.sdklib.build.ApkBuilder
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.projects.ProjectMetadata
+import com.blokkok.app.processors.Dexer
+import com.blokkok.app.processors.JavaCompiler
+import com.blokkok.app.processors.ProcessorPicker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.File
+import java.io.*
 
 class CompileViewModel : ViewModel() {
     private val outputLiveDataMutable = MutableLiveData<String>()
@@ -55,6 +56,8 @@ class CompileViewModel : ViewModel() {
             val resourcesZip = File(compiledResCacheFolder, "resources.zip") // the compiled resources
             val classesDex = File(dexCacheFolder, "classes.jar") // dex-ed classes from both generated java files and project's code
             val resOutApk = File(cacheFolder, "res.apk") // output apk with resources
+            val unsignedOutApk = File(cacheFolder, "${project.name}-unsigned-unaligned.apk") // unsigned and unaligned output apk
+            val unalignedOutApk = File(cacheFolder, "${project.name}-unaligned.apk") // unaligned output apk
 
             // mkdirs ==============================================================================
             cacheFolder.mkdirs()
@@ -136,6 +139,19 @@ class CompileViewModel : ViewModel() {
 
             // =====================================================================================
             // Then build the apk using ApkBuilder
+            val apkBuilder = ApkBuilder(
+                unsignedOutApk,
+                resOutApk,
+                classesDex,
+                null, // No key
+                null, // No cert
+                null
+            )
+            apkBuilder.setDebugMode(false)
+            apkBuilder.sealApk()
+
+            // =====================================================================================
+            // Second to last, sign the apk
         }
     }
 
