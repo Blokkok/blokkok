@@ -66,40 +66,63 @@ object LibraryManager {
         stdout: (String) -> Unit,
         stderr: (String) -> Unit,
     ) {
+        val aarFile = aarsDir.resolve("$name.aar")
+        if (!aarFile.exists()) return // check if the aar file given actually exists
+
+        val aarCacheDir = cacheDir.resolve(name)
+        val resourcesZipOutput = cacheDir.resolve(name).resolve("res.zip")
+
         withContext(Dispatchers.IO) {
-            val aarFile = aarsDir.resolve("$name.aar")
-            if (!aarFile.exists()) return@withContext // check if the aar file given actually exists
-
-            val aarCacheDir = cacheDir.resolve(name)
-            val resourcesZipOutput = cacheDir.resolve(name).resolve("res.zip")
-
             // First, we're going to need to extract the classes jar (and the res folder) and dex it
             unpackAar(ZipInputStream(FileInputStream(aarFile)), aarCacheDir)
 
             // Dex the classes.jar with the dexer
             val dexer = ProcessorPicker.pickDexer()
 
-            dexer.dex(
-                    File(aarCacheDir, "classes.jar"),
-                    aarCacheDir,
+            stdout("${dexer.name} will start dex-ing the library")
+
+            val dexerRetVal = dexer.dex(
+                    aarCacheDir.resolve("classes.jar"),
+                    aarCacheDir.resolve("classes.dex"),
                     { stdout("${dexer.name} >> $it") },
                     { stderr("${dexer.name} ERR >> $it") }
                 )
 
+            if (dexerRetVal != 0) {
+                stderr("${dexer.name} returns a non-zero status"); return@withContext
+            } else {
+                stdout("${dexer.name} has finished dex-ing")
+            }
+
             // And then compile the resources with aapt2
-            NativeBinariesManager.executeCommand(
+            stdout("AAPT2 is starting to compile the library")
+
+            val aapt2RetVal = NativeBinariesManager.executeCommand(
                 NativeBinariesManager.NativeBinaries.AAPT2,
                 arrayOf(
                     "compile",
-                    "--dir", aarCacheDir.resolve("classes.jar").absolutePath,
+                    "--dir", aarCacheDir.resolve("res/").absolutePath,
                     "-o", resourcesZipOutput.absolutePath,
                     "-v"
                 ),
                 { stdout("AAPT2 >> $it") },
                 { stderr("AAPT2 ERR >> $it") }
             )
+
+            if (aapt2RetVal != 0) {
+                stderr("AAPT2 returns a non-zero status"); return@withContext
+            } else {
+                stdout("AAPT2 has finished dex-ing")
+            }
         }
+
+        // Clean the extracted files
+        aarCacheDir.resolve("classes.jar").delete()
+        aarCacheDir.resolve("res").deleteRecursively()
     }
+
+    fun getClassesDex(name: String): File   = cacheDir.resolve(name).resolve("classes.dex")
+    fun getResourcesZip(name: String): File = cacheDir.resolve(name).resolve("res.zip")
 }
 
 // Used to unpack zip files into a specified output path
