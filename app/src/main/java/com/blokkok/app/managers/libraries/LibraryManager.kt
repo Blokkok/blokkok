@@ -50,11 +50,11 @@ object LibraryManager {
 
     private fun extract(context: Context) {
         Thread {
-            /* This zip just contains a list of .aar files, that are:
+            /* This zip just contains .aar files used to compile the app, those are:
              * androidx.core:core, androidx.appcompat:appcompat, and
              * com.google.android.material:material
              */
-            unpackZip(ZipInputStream(context.assets.open("libraries.zip")), librariesDir)
+            unpackZip(ZipInputStream(context.assets.open("libraries.zip")), aarsDir)
         }.run()
     }
 
