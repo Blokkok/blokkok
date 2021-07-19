@@ -15,6 +15,10 @@
             android:icon="@drawable/ic_round_extension"
             android:title="Modules" />
         <item
+            android:id="@+id/libraries"
+            android:icon="@drawable/ic_bookshelves"
+            android:title="Libraries" />
+        <item
             android:id="@+id/about"
             android:icon="@drawable/ic_round_alternate_email"
             android:title="About" />

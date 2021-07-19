@@ -128,6 +128,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
 
+            R.id.libraries -> {
+                drawerLayout.closeDrawer(GravityCompat.START)
+                drawerNavView.setCheckedItem(R.id.modules)
+
+                supportActionBar!!.subtitle = "Libraries"
+
+                val modulesFragment = LibrariesFragment()
+
+                drawerFragmentTransaction
+                    .replace(R.id.fragmentContainer, modulesFragment)
+                    .commit()
+
+                return true
+            }
+
             R.id.about -> {
                 drawerLayout.closeDrawer(GravityCompat.START)
                 drawerNavView.setCheckedItem(R.id.about)

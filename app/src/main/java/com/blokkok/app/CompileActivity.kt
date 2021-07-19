@@ -10,12 +10,21 @@ class CompileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_compile)
 
-        val projectId = intent.getStringExtra("project_id")
-            ?: throw IllegalStateException("The project_id intent extra isn't provided on CompileActivity")
+        if (intent.hasExtra("project_id")) {
+            val projectId = intent.getStringExtra("project_id")!!
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.activity_compile_root, CompileFragment(ProjectsManager.getProject(projectId)!!))
-            .commit()
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.activity_compile_root, CompileFragment(project = ProjectsManager.getProject(projectId)!!))
+                .commit()
+
+        } else {
+            val libraryName = intent.getStringExtra("library_name")!!
+
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.activity_compile_root, CompileFragment(libraryName = libraryName))
+                .commit()
+        }
     }
 }

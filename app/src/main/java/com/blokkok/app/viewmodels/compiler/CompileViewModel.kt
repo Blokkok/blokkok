@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.sdklib.build.ApkBuilder
 import com.blokkok.app.managers.NativeBinariesManager
+import com.blokkok.app.managers.libraries.LibraryManager
 import com.blokkok.app.managers.projects.ProjectMetadata
 import com.blokkok.app.processors.Dexer
 import com.blokkok.app.processors.JavaCompiler
@@ -26,7 +27,7 @@ class CompileViewModel : ViewModel() {
         withContext(Dispatchers.Main) { outputLiveDataMutable.value += "\n$message" }
     }
 
-    fun startCompilation(project: ProjectMetadata, context: Context) {
+    fun compileProject(project: ProjectMetadata, context: Context) {
 
         val dataDir = context.applicationInfo.dataDir
 
@@ -247,6 +248,26 @@ class CompileViewModel : ViewModel() {
                 { runBlocking { log("Zipalign >> $it") } },
                 { runBlocking { log("Zipalign ERR >> $it") } }
             )
+    }
+
+    fun compileLibrary(libraryName: String) {
+        viewModelScope.launch {
+            log("Starting to compile library $libraryName")
+
+            val retVal = LibraryManager.compileLibrary(
+                libraryName,
+                { runBlocking { log(it) } },
+                { runBlocking { log(it) } }
+            )
+
+            if (retVal == 100) {
+                log("Library $libraryName doesn't exist")
+            } else if (retVal != 0) {
+                log("Compiler returned non-zero status")
+            }
+
+            log("Compiling finished")
+        }
     }
 
 

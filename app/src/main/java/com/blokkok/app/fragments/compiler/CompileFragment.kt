@@ -14,7 +14,8 @@ import com.blokkok.app.viewmodels.compiler.CompileViewModel
 // TODO: 7/13/21 ForegroundService would be cool 
 
 class CompileFragment(
-    private val project: ProjectMetadata
+    private val project: ProjectMetadata? = null,
+    private val libraryName: String? = null,
 ) : Fragment() {
 
     private val viewModel: CompileViewModel by viewModels()
@@ -30,7 +31,10 @@ class CompileFragment(
         super.onViewCreated(view, savedInstanceState)
 
         val out = view.findViewById<TextView>(R.id.compile_out)
-        viewModel.startCompilation(project, requireContext())
+
+        if (project != null) viewModel.compileProject(project, requireContext())
+        if (libraryName != null) viewModel.compileLibrary(libraryName)
+
         viewModel.outputLiveData.observe(viewLifecycleOwner) { out.text = it }
     }
 }

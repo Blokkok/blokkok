@@ -65,9 +65,10 @@ object LibraryManager {
         name: String,
         stdout: (String) -> Unit,
         stderr: (String) -> Unit,
-    ) {
+    ): Int {
         val aarFile = aarsDir.resolve("$name.aar")
-        if (!aarFile.exists()) return // check if the aar file given actually exists
+        if (!aarFile.exists()) return 100 // check if the aar file given actually exists
+                    // 100 is a unique number used to identify that this library doesn't exist
 
         val aarCacheDir = cacheDir.resolve(name)
         val resourcesZipOutput = cacheDir.resolve(name).resolve("res.zip")
@@ -75,7 +76,7 @@ object LibraryManager {
         // Clear the cache first before compiling it again
         if (aarCacheDir.exists()) clearCache(name)
 
-        withContext(Dispatchers.IO) {
+        val retVal = withContext(Dispatchers.IO) {
             // First, we're going to need to extract the classes jar (and the res folder) and dex it
             unpackAar(ZipInputStream(FileInputStream(aarFile)), aarCacheDir)
 
@@ -92,7 +93,7 @@ object LibraryManager {
                 )
 
             if (dexerRetVal != 0) {
-                stderr("${dexer.name} returns a non-zero status"); return@withContext
+                stderr("${dexer.name} returns a non-zero status"); return@withContext dexerRetVal
             } else {
                 stdout("${dexer.name} has finished dex-ing")
             }
@@ -113,15 +114,19 @@ object LibraryManager {
             )
 
             if (aapt2RetVal != 0) {
-                stderr("AAPT2 returns a non-zero status"); return@withContext
+                stderr("AAPT2 returns a non-zero status"); return@withContext aapt2RetVal
             } else {
                 stdout("AAPT2 has finished dex-ing")
             }
+
+            return@withContext 0
         }
 
         // Clean the extracted files
         aarCacheDir.resolve("classes.jar").delete()
         aarCacheDir.resolve("res").deleteRecursively()
+
+        return retVal
     }
 
     fun getClassesDex(name: String): File   = cacheDir.resolve(name).resolve("classes.dex")
