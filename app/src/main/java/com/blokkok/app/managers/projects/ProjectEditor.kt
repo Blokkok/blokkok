@@ -66,6 +66,8 @@ class ProjectEditor(
      */
     fun writeLayoutCode(name: String, code: String) {
         val file = File(layoutFolder, "$name.xml")
+
+        if (!layoutFolder.exists()) layoutFolder.mkdirs()
         if (!file.exists()) file.createNewFile()
 
         file.writeText(code)
