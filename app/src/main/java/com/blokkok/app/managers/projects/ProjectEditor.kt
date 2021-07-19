@@ -100,10 +100,20 @@ class ProjectEditor(
 """<?xml version="1.0" encoding="utf-8"?>
 <manifest 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="$packageName">
+    package="$packageName"
+    android:versionCode="1"
+    android:versionName="1.0">
 
-    <application android:label="$name">
-        <activity android:name=".MainActivity">
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="30" />
+
+    <application
+        android:allowBackup="true"
+        android:label="$name">
+        <activity
+            android:name=".MainActivity"
+            android:label="$name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
