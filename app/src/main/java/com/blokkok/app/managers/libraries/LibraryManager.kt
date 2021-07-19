@@ -76,30 +76,38 @@ object LibraryManager {
         // Clear the cache first before compiling it again
         if (aarCacheDir.exists()) clearCache(name)
 
+        // Don't forget to create the folder
+        aarCacheDir.mkdirs()
+
         val retVal = withContext(Dispatchers.IO) {
             // First, we're going to need to extract the classes jar (and the res folder) and dex it
             unpackAar(ZipInputStream(FileInputStream(aarFile)), aarCacheDir)
 
-            // Dex the classes.jar with the dexer
+            // Rename classes.jar to not conflict with the dexed jar file
+            val rawClassesJar = aarCacheDir.resolve("classes.jar")
+            rawClassesJar.renameTo(aarCacheDir.resolve("classes_bytecode.jar"))
+            // rawClassesJar.createNewFile() // also d8 needs the jar to be created
+
+            // Dex the classes_bytecode.jar with the dexer
             val dexer = ProcessorPicker.pickDexer()
 
-            stdout("${dexer.name} will start dex-ing the library")
+            stdout("${dexer.name} is starting to dex the library")
 
             val dexerRetVal = dexer.dex(
+                    aarCacheDir.resolve("classes_bytecode.jar"),
                     aarCacheDir.resolve("classes.jar"),
-                    aarCacheDir.resolve("classes.dex"),
                     { stdout("${dexer.name} >> $it") },
                     { stderr("${dexer.name} ERR >> $it") }
                 )
 
             if (dexerRetVal != 0) {
-                stderr("${dexer.name} returns a non-zero status"); return@withContext dexerRetVal
+                stderr("${dexer.name} returned a non-zero status (something bad happened)"); return@withContext dexerRetVal
             } else {
                 stdout("${dexer.name} has finished dex-ing")
             }
 
             // And then compile the resources with aapt2
-            stdout("AAPT2 is starting to compile the library")
+            stdout("\nAAPT2 is starting to compile the resources of the library")
 
             val aapt2RetVal = NativeBinariesManager.executeCommand(
                 NativeBinariesManager.NativeBinaries.AAPT2,
@@ -114,23 +122,28 @@ object LibraryManager {
             )
 
             if (aapt2RetVal != 0) {
-                stderr("AAPT2 returns a non-zero status"); return@withContext aapt2RetVal
+                stderr("AAPT2 returned a non-zero status (something bad happened)"); return@withContext aapt2RetVal
             } else {
-                stdout("AAPT2 has finished dex-ing")
+                stdout("AAPT2 has finished compiling resources")
             }
 
             return@withContext 0
         }
 
-        // Clean the extracted files
-        aarCacheDir.resolve("classes.jar").delete()
+        // Clean the res folder because it's not needed anymore
         aarCacheDir.resolve("res").deleteRecursively()
 
         return retVal
     }
 
-    fun getClassesDex(name: String): File   = cacheDir.resolve(name).resolve("classes.dex")
-    fun getResourcesZip(name: String): File = cacheDir.resolve(name).resolve("res.zip")
+    fun getClassesDex(name: String): File =
+        cacheDir.resolve(name).resolve("classes.jar")
+
+    fun getClassesBytecode(name: String): File =
+        cacheDir.resolve(name).resolve("classes_bytecode.jar")
+
+    fun getResourcesZip(name: String): File =
+        cacheDir.resolve(name).resolve("res.zip")
 
     fun isCached(name: String) = cacheDir.resolve(name).exists()
     fun clearCache(name: String) = cacheDir.resolve(name).deleteRecursively()
