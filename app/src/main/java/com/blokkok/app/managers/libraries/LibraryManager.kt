@@ -72,6 +72,9 @@ object LibraryManager {
         val aarCacheDir = cacheDir.resolve(name)
         val resourcesZipOutput = cacheDir.resolve(name).resolve("res.zip")
 
+        // Clear the cache first before compiling it again
+        if (aarCacheDir.exists()) clearCache(name)
+
         withContext(Dispatchers.IO) {
             // First, we're going to need to extract the classes jar (and the res folder) and dex it
             unpackAar(ZipInputStream(FileInputStream(aarFile)), aarCacheDir)
@@ -123,6 +126,9 @@ object LibraryManager {
 
     fun getClassesDex(name: String): File   = cacheDir.resolve(name).resolve("classes.dex")
     fun getResourcesZip(name: String): File = cacheDir.resolve(name).resolve("res.zip")
+
+    fun isCached(name: String) = cacheDir.resolve(name).exists()
+    fun clearCache(name: String) = cacheDir.resolve(name).deleteRecursively()
 }
 
 // Used to unpack zip files into a specified output path
