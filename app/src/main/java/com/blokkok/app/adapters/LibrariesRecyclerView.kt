@@ -52,8 +52,8 @@ class LibrariesRecyclerView(
     override fun getItemCount(): Int = libraries.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val root: View = itemView.findViewById(R.id.library_root_item)
         val name: TextView = itemView.findViewById(R.id.library_name)
-        val root: TextView = itemView.findViewById(R.id.library_root_item)
         val cacheStatus: TextView = itemView.findViewById(R.id.cache_status)
     }
 }
