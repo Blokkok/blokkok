@@ -22,7 +22,7 @@ class LibrariesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_licenses, container, false);
+        return inflater.inflate(R.layout.fragment_libraries, container, false);
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
