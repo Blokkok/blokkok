@@ -204,8 +204,10 @@ private fun unpackAar(
             filename = entry!!.name
 
             // Only extract classes.jar and the res/ folder
-            if (filename != "classes.jar" || !filename.startsWith("res"))
-                continue
+            if (filename != "classes.jar") {
+                if (!filename.startsWith("res"))
+                    continue
+            }
 
             if (entry!!.isDirectory) {
                 File(outputPath, filename).mkdirs()
