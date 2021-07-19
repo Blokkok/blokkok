@@ -48,10 +48,19 @@ object ECJCompiler : JavaCompiler {
         inputFolders: Array<File>,
         outputFolder: File,
         stdout: (String) -> Unit,
-        stderr: (String) -> Unit
+        stderr: (String) -> Unit,
+        classpaths: Array<File>?,
     ): Int {
+
+        val classpathsRendered = StringBuilder().apply {
+            classpaths?.forEach {
+                append("-cp")
+                append(it.absolutePath)
+            }
+        }
+
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath ${inputFolders.joinToString(" ")} -verbose -d ${outputFolder.absolutePath}"
+            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath $classpathsRendered ${inputFolders.joinToString(" ")} -verbose -d ${outputFolder.absolutePath}"
         )
 
         process.inputStream.redirectTo(stdout)

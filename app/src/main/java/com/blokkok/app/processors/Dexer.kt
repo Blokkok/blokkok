@@ -12,5 +12,6 @@ interface Dexer {
         output: File,
         stdout: (String) -> Unit,
         stderr: (String) -> Unit,
+        classpaths: Array<File>? = null,
     ): Int // return value
 }

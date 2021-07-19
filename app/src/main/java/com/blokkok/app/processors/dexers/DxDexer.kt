@@ -15,7 +15,8 @@ object DxDexer : Dexer {
         folderOrFile: File,
         output: File,
         stdout: (String) -> Unit,
-        stderr: (String) -> Unit
+        stderr: (String) -> Unit,
+        classpaths: Array<File>?
     ): Int {
         TODO("Dx is not yet implemented")
     }
