@@ -5,10 +5,14 @@ import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.processors.ProcessorPicker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.regex.Pattern
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -60,6 +64,12 @@ object LibraryManager {
 
     fun listLibraries(): List<String> = aarsDir.listFiles()!!.map { it.nameWithoutExtension }
 
+    fun listCachedLibraries(): List<CachedLibrary> =
+        cacheDir.listFiles()!!.mapNotNull {
+            if (!it.resolve("meta.json").exists()) return@mapNotNull null
+            Json.decodeFromString(it.resolve("meta.json").readText())
+        }
+
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun compileLibrary(
         name: String,
@@ -72,6 +82,7 @@ object LibraryManager {
 
         val aarCacheDir = cacheDir.resolve(name)
         val resourcesZipOutput = cacheDir.resolve(name).resolve("res.zip")
+        var packageName = ""
 
         // Clear the cache first before compiling it again
         if (aarCacheDir.exists()) clearCache(name)
@@ -82,6 +93,18 @@ object LibraryManager {
         val retVal = withContext(Dispatchers.IO) {
             // First, we're going to need to extract the classes jar (and the res folder) and dex it
             unpackAar(ZipInputStream(FileInputStream(aarFile)), aarCacheDir)
+
+            // Read the package name from AndroidManifest.xml
+            val androidManifest = aarCacheDir.resolve("AndroidManifest.xml").readText()
+            val matcher = Pattern.compile("package=\"(.*)\"").matcher(androidManifest)
+
+            if (matcher.find()) {
+                packageName = matcher.group(1)!!
+            } else {
+                // this is weird, AndroidManifest.xml doesn't contain the package name
+                stderr("This library's AndroidManifest.xml doesn't contain the package name for some reason")
+                return@withContext 1
+            }
 
             // Rename classes.jar to not conflict with the dexed jar file
             val rawClassesJar = aarCacheDir.resolve("classes.jar")
@@ -127,11 +150,19 @@ object LibraryManager {
                 stdout("AAPT2 has finished compiling resources")
             }
 
+            // and finally, create the meta.json file
+            File(aarCacheDir, "meta.json").writeText(
+                Json.encodeToString(
+                    CachedLibrary(name, packageName, aarFile.absolutePath, aarCacheDir.absolutePath)
+                )
+            )
+
             return@withContext 0
         }
 
-        // Clean the res folder because it's not needed anymore
+        // Clean the res folder and the AndroidManifest.xml file because they aren't needed anymore
         aarCacheDir.resolve("res").deleteRecursively()
+        aarCacheDir.resolve("AndroidManifest.xml").delete()
 
         return retVal
     }
@@ -203,10 +234,11 @@ private fun unpackAar(
         while (zipInputStream.nextEntry.also { entry = it } != null) {
             filename = entry!!.name
 
-            // Only extract classes.jar and the res/ folder
+            // Only extract classes.jar, the res/ folder and AndroidManifest.xml
             if (filename != "classes.jar") {
                 if (!filename.startsWith("res"))
-                    continue
+                    if (filename != "AndroidManifest.xml")
+                        continue
             }
 
             if (entry!!.isDirectory) {
