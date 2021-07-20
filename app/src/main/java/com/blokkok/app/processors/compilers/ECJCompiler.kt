@@ -54,13 +54,13 @@ object ECJCompiler : JavaCompiler {
 
         val classpathsRendered = StringBuilder().apply {
             classpaths?.forEach {
-                append("-cp")
+                append(":")
                 append(it.absolutePath)
             }
         }
 
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath $classpathsRendered ${inputFolders.joinToString(" ")} -verbose -d ${outputFolder.absolutePath}"
+            "dalvikvm -Xmx256m -Xcompiler-option --compiler-filter=speed -cp $ecjPath org.eclipse.jdt.internal.compiler.batch.Main -proc:none -7 -cp $androidJarPath$classpathsRendered ${inputFolders.joinToString(" ")} -verbose -d ${outputFolder.absolutePath}"
         )
 
         process.inputStream.redirectTo(stdout)
