@@ -24,8 +24,12 @@ import java.util.zip.ZipInputStream
  * | L etc..
  * L cache                      -- this will be the cache directory where the compiled dex file and the resources are stored
  *   L appcompat-1.3.0           | compiling the library to a cache will be decided by the user, or when compiling an apk
- *   | L classes.dex
- *   | L res.zip
+ *   | L dex
+ *   | | L classes1.dex
+ *   | | L classes2.dex
+ *   | | L ...
+ *   | L classes.jar            -- the bytecode jar
+ *   | L res.zip                -- compiled resources
  *   L etc..
  */
 
@@ -70,6 +74,9 @@ object LibraryManager {
             Json.decodeFromString(it.resolve("meta.json").readText())
         }
 
+    fun getCachedLibrary(name: String): CachedLibrary =
+        Json.decodeFromString(cacheDir.resolve(name).resolve("meta.json").readText())
+
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun compileLibrary(
         name: String,
@@ -80,15 +87,19 @@ object LibraryManager {
         if (!aarFile.exists()) return 100 // check if the aar file given actually exists
                     // 100 is a unique number used to identify that this library doesn't exist
 
-        val aarCacheDir = cacheDir.resolve(name)
+        val aarCacheDir        = cacheDir.resolve(name)
+        val dexOutputDir       = cacheDir.resolve(name).resolve("dex")
         val resourcesZipOutput = cacheDir.resolve(name).resolve("res.zip")
-        var packageName = ""
+        val bytecodeClassesJar = cacheDir.resolve(name).resolve("classes.jar")
+
+        var packageName: String
 
         // Clear the cache first before compiling it again
         if (aarCacheDir.exists()) clearCache(name)
 
-        // Don't forget to create the folder
+        // Don't forget to create the folders
         aarCacheDir.mkdirs()
+        dexOutputDir.mkdir()
 
         val retVal = withContext(Dispatchers.IO) {
             // First, we're going to need to extract the classes jar (and the res folder) and dex it
@@ -106,25 +117,19 @@ object LibraryManager {
                 return@withContext 1
             }
 
-            // Rename classes.jar to not conflict with the dexed jar file
-            val rawClassesJar = aarCacheDir.resolve("classes.jar")
-            rawClassesJar.renameTo(aarCacheDir.resolve("classes_bytecode.jar"))
-            // rawClassesJar.createNewFile() // also d8 needs the jar to be created
-
             // Dex the classes_bytecode.jar with the dexer
             val dexer = ProcessorPicker.pickDexer()
 
             stdout("${dexer.name} is starting to dex the library")
 
-            val dexerRetVal = dexer.dex(
-                    aarCacheDir.resolve("classes_bytecode.jar"),
-                    aarCacheDir.resolve("classes.jar"),
+            val dexerRetVal = dexer.dex(bytecodeClassesJar, dexOutputDir,
                     { stdout("${dexer.name} >> $it") },
                     { stderr("${dexer.name} ERR >> $it") }
                 )
 
             if (dexerRetVal != 0) {
-                stderr("${dexer.name} returned a non-zero status (something bad happened)"); return@withContext dexerRetVal
+                stderr("${dexer.name} returned a non-zero status (something bad happened)")
+                return@withContext dexerRetVal
             } else {
                 stdout("${dexer.name} has finished dex-ing")
             }
@@ -145,7 +150,8 @@ object LibraryManager {
             )
 
             if (aapt2RetVal != 0) {
-                stderr("AAPT2 returned a non-zero status (something bad happened)"); return@withContext aapt2RetVal
+                stderr("AAPT2 returned a non-zero status (something bad happened)")
+                return@withContext aapt2RetVal
             } else {
                 stdout("AAPT2 has finished compiling resources")
             }
@@ -166,15 +172,6 @@ object LibraryManager {
 
         return retVal
     }
-
-    fun getClassesDex(name: String): File =
-        cacheDir.resolve(name).resolve("classes.jar")
-
-    fun getClassesBytecode(name: String): File =
-        cacheDir.resolve(name).resolve("classes_bytecode.jar")
-
-    fun getResourcesZip(name: String): File =
-        cacheDir.resolve(name).resolve("res.zip")
 
     fun isCached(name: String) = cacheDir.resolve(name).exists()
     fun clearCache(name: String) = cacheDir.resolve(name).deleteRecursively()

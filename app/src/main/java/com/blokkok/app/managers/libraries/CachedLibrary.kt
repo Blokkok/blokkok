@@ -10,7 +10,7 @@ data class CachedLibrary(
     val aarPath: String,
     val cachePath: String,
 ) {
-    val classesDex: File        get() = File(cachePath).resolve("classes.jar")
-    val classesBytecode: File   get() = File(cachePath).resolve("classes_bytecode.jar")
-    val compiledResources: File get() = File(cachePath).resolve("res.zip")
+    val classesDexFiles: Array<File> get() = File(cachePath).resolve("dex").listFiles()!!
+    val classesBytecode: File        get() = File(cachePath).resolve("classes_bytecode.jar")
+    val compiledResources: File      get() = File(cachePath).resolve("res.zip")
 }
