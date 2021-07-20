@@ -221,9 +221,16 @@ class CompileViewModel : ViewModel() {
         return NativeBinariesManager
             .executeCommand(
                 NativeBinariesManager.NativeBinaries.AAPT2,
-                arrayOf("link",
+                arrayOf(
+                    "link",
                     "-I", androidJar.absolutePath,
                     "--auto-add-overlay",
+                    "--allow-reserved-package-id",
+                    "--no-version-vectors",
+                    "--min-sdk-version", "21", // TODO: 7/20/21 add these to the project metadata
+                    "--target-sdk-version", "30",
+                    "--version-code", "1",
+                    "--version-name", "1.0",
                     "--manifest", androidManifestXml.absolutePath,
                     "--java", rJavaOutput.absolutePath,
                     "-o", outputApk.absolutePath,
@@ -269,7 +276,6 @@ class CompileViewModel : ViewModel() {
             log("Compiling finished")
         }
     }
-
 
     inner class OutputStreamLogger(
         private val prefix: String
