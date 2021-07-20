@@ -71,7 +71,13 @@ object LibraryManager {
     fun listCachedLibraries(): List<CachedLibrary> =
         cacheDir.listFiles()!!.mapNotNull {
             if (!it.resolve("meta.json").exists()) return@mapNotNull null
-            Json.decodeFromString(it.resolve("meta.json").readText())
+
+            Json.decodeFromString<CachedLibrary>(
+                it.resolve("meta.json").readText()
+            ).apply {
+                aarPath = aarsDir.resolve(it.name).absolutePath
+                cachePath = it.absolutePath
+            }
         }
 
     fun getCachedLibrary(name: String): CachedLibrary =
