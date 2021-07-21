@@ -1,7 +1,6 @@
 package com.blokkok.app.adapters
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +9,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.CompileActivity
 import com.blokkok.app.R
+import com.blokkok.app.managers.libraries.Library
+import com.blokkok.app.managers.libraries.LibraryType
 
 class LibrariesRecyclerView(
-    private var libraries: Array<LibraryItem>
+    private var libraries: Array<Library>
 ) : RecyclerView.Adapter<LibrariesRecyclerView.ViewHolder>() {
 
-    fun updateView(libraries: Array<LibraryItem>) {
+    fun updateView(libraries: Array<Library>) {
         this.libraries = libraries
         notifyDataSetChanged()
     }
@@ -30,7 +31,7 @@ class LibrariesRecyclerView(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val library = libraries[position]
         holder.name.text = library.name
-        holder.cacheStatus.text = if (library.isCached) "CACHED" else "NOT CACHED"
+        holder.cacheStatus.text = library.type.name
 
         holder.root.setOnClickListener {
             AlertDialog.Builder(it.context)
@@ -57,8 +58,3 @@ class LibrariesRecyclerView(
         val cacheStatus: TextView = itemView.findViewById(R.id.cache_status)
     }
 }
-
-data class LibraryItem(
-    val name: String,
-    val isCached: Boolean,
-)

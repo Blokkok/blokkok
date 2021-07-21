@@ -3,19 +3,17 @@ package com.blokkok.app.viewmodels.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.blokkok.app.adapters.LibraryItem
+import com.blokkok.app.managers.libraries.Library
 import com.blokkok.app.managers.libraries.LibraryManager
 
 class LibrariesViewModel : ViewModel()  {
-    private val librariesMutable = MutableLiveData<Array<LibraryItem>>()
+    private val librariesMutable = MutableLiveData<Array<Library>>()
 
-    val libraries: LiveData<Array<LibraryItem>> = librariesMutable
+    val libraries: LiveData<Array<Library>> = librariesMutable
 
     fun loadLibraries() {
         librariesMutable.value =
             LibraryManager
-                .listLibraries()
-                .map { LibraryItem(it, LibraryManager.isCached(it)) }
-                .toTypedArray()
+                .listLibraries().toTypedArray()
     }
 }

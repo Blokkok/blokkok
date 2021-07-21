@@ -19,6 +19,7 @@ import java.util.zip.ZipInputStream
 /* Structure of the libraries folder
  *
  * libraries
+ * L libraries.json             -- the file that contains info about libraries in here
  * L aars                       -- this will be the directory where the aars are stored
  * | L appcompat-1.3.0.aar
  * | L etc..
@@ -37,12 +38,14 @@ object LibraryManager {
 
     private lateinit var dataDir: File
     private lateinit var librariesDir: File
+    private lateinit var librariesMeta: File
     private lateinit var aarsDir: File
     private lateinit var cacheDir: File
 
     fun initialize(context: Context) {
         dataDir = File(context.applicationInfo.dataDir)
         librariesDir = File(dataDir, "libraries")
+        librariesMeta = File(librariesDir, "libraries.json")
         aarsDir = File(librariesDir, "aars")
         cacheDir = File(librariesDir, "cache")
 
@@ -63,25 +66,23 @@ object LibraryManager {
              * com.google.android.material:material
              */
             unpackZip(ZipInputStream(context.assets.open("libraries.zip")), aarsDir)
+
+            // After that, initialize the libraries.json file
+            librariesMeta.createNewFile()
+            librariesMeta.writeText(
+                Json.encodeToString(
+                    LibraryContainer(arrayListOf(
+                        Library("appcompat-1.2.0", LibraryType.NOT_CACHED, "androidx.appcompat", aarsDir.resolve("appcompat-1.2.0.aar").relativeTo(librariesDir).absolutePath),
+                        Library("core-1.6.0",      LibraryType.NOT_CACHED, "androidx.core", aarsDir.resolve("core-1.6.0.aar").relativeTo(librariesDir).absolutePath),
+                        Library("material-1.4.0",  LibraryType.NOT_CACHED, "com.google.android.material", aarsDir.resolve("material-1.4.0.aar").relativeTo(librariesDir).absolutePath),
+                    ))
+                )
+            )
         }.run()
     }
 
-    fun listLibraries(): List<String> = aarsDir.listFiles()!!.map { it.nameWithoutExtension }
-
-    fun listCachedLibraries(): List<CachedLibrary> =
-        cacheDir.listFiles()!!.mapNotNull {
-            if (!it.resolve("meta.json").exists()) return@mapNotNull null
-
-            Json.decodeFromString<CachedLibrary>(
-                it.resolve("meta.json").readText()
-            ).apply {
-                aarPath = aarsDir.resolve(it.name).absolutePath
-                cachePath = it.absolutePath
-            }
-        }
-
-    fun getCachedLibrary(name: String): CachedLibrary =
-        Json.decodeFromString(cacheDir.resolve(name).resolve("meta.json").readText())
+    fun listLibraries(): List<Library> =
+        Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun compileLibrary(
@@ -123,7 +124,7 @@ object LibraryManager {
                 return@withContext 1
             }
 
-            // Dex the classes_bytecode.jar with the dexer
+            // Dex the classes.jar with the dexer
             val dexer = ProcessorPicker.pickDexer()
 
             stdout("${dexer.name} is starting to dex the library")
@@ -162,12 +163,12 @@ object LibraryManager {
                 stdout("AAPT2 has finished compiling resources")
             }
 
-            // and finally, create the meta.json file
-            File(aarCacheDir, "meta.json").writeText(
-                Json.encodeToString(
-                    CachedLibrary(name, packageName, aarFile.absolutePath, aarCacheDir.absolutePath)
-                )
-            )
+            // and finally, change this library type to be CACHED and also add it's cache folder
+            val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
+            libraries.map {
+                if (it.name == "name") Library(it.name, LibraryType.CACHED, packageName, it.aarPath, cacheDir.relativeTo(librariesMeta).absolutePath)
+                else it
+            }
 
             return@withContext 0
         }
@@ -177,6 +178,71 @@ object LibraryManager {
         aarCacheDir.resolve("AndroidManifest.xml").delete()
 
         return retVal
+    }
+
+    fun addAARLibrary(file: File) {
+        // pretty straightforward
+        file.copyTo(aarsDir)
+
+        // then add a new entry to the libraries.json file
+        val name = file.nameWithoutExtension
+        val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
+
+        libraries.add(
+            Library(
+                name,
+                LibraryType.NOT_CACHED,
+                cacheFolderPath = librariesDir.resolve(name).absolutePath
+            )
+        )
+
+        librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
+    }
+
+    fun addPrecompiledLibrary(zip: File) {
+        /* The structure of the precompiled library zip is:
+         *
+         * file.zip
+         * L name
+         * L package
+         * L classes.jar
+         * L dex
+         * | L classes.dex
+         * | L ...
+         * L res.zip
+         *
+         * or basically the structure of the cache
+         */
+        // Create a temporary folder
+        val temp = File.createTempFile("extract", null)
+        temp.mkdir()
+
+        // then unpack the zip on that temporary folder
+        unpackZip(ZipInputStream(FileInputStream(zip)), temp)
+        val name = temp.resolve("name").readText() // read the name
+        val packageName = temp.resolve("package").readText() // and the package name
+
+        // then delete those files
+        temp.resolve("name").delete()
+        temp.resolve("package").delete()
+        temp.renameTo(librariesDir.resolve(name)) // move these files to the libraries directory
+
+        // then delete it
+        temp.delete()
+
+        // finally, add a new entry on the libraries.json file
+        val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
+
+        libraries.add(
+            Library(
+                name,
+                LibraryType.PRECOMPILED,
+                packageName,
+                cacheFolderPath = librariesDir.resolve(name).absolutePath
+            )
+        )
+
+        librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
     }
 
     fun isCached(name: String) = cacheDir.resolve(name).exists()
