@@ -3,8 +3,12 @@ package com.blokkok.app.viewmodels.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.blokkok.app.managers.libraries.Library
 import com.blokkok.app.managers.libraries.LibraryManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.InputStream
 
 class LibrariesViewModel : ViewModel()  {
     private val librariesMutable = MutableLiveData<Array<Library>>()
@@ -12,8 +16,24 @@ class LibrariesViewModel : ViewModel()  {
     val libraries: LiveData<Array<Library>> = librariesMutable
 
     fun loadLibraries() {
-        librariesMutable.value =
-            LibraryManager
-                .listLibraries().toTypedArray()
+        viewModelScope.launch(Dispatchers.IO) {
+            librariesMutable.value =
+                LibraryManager
+                    .listLibraries().toTypedArray()
+        }
+    }
+
+    fun addAARLibrary(inputStream: InputStream, name: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            LibraryManager.addAARLibrary(inputStream, name)
+            loadLibraries()
+        }
+    }
+
+    fun addPrecompiledLibrary(zipFile: InputStream) {
+        viewModelScope.launch(Dispatchers.IO) {
+            LibraryManager.addPrecompiledLibrary(zipFile)
+            loadLibraries()
+        }
     }
 }

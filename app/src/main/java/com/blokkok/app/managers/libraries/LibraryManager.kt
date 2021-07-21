@@ -8,10 +8,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.util.regex.Pattern
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -181,12 +178,11 @@ object LibraryManager {
         return retVal
     }
 
-    fun addAARLibrary(file: File) {
+    fun addAARLibrary(stream: InputStream, name: String) {
         // pretty straightforward
-        file.copyTo(aarsDir)
+        aarsDir.resolve(name).writeBytes(stream.readBytes())
 
         // then add a new entry to the libraries.json file
-        val name = file.nameWithoutExtension
         val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
 
         libraries.add(
@@ -200,7 +196,7 @@ object LibraryManager {
         librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
     }
 
-    fun addPrecompiledLibrary(zip: File) {
+    fun addPrecompiledLibrary(zipFile: InputStream) {
         /* The structure of the precompiled library zip is:
          *
          * file.zip
@@ -219,7 +215,7 @@ object LibraryManager {
         temp.mkdir()
 
         // then unpack the zip on that temporary folder
-        unpackZip(ZipInputStream(FileInputStream(zip)), temp)
+        unpackZip(ZipInputStream(zipFile), temp)
         val name = temp.resolve("name").readText() // read the name
         val packageName = temp.resolve("package").readText() // and the package name
 
