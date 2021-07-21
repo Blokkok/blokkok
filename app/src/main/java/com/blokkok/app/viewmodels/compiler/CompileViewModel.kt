@@ -251,7 +251,7 @@ class CompileViewModel : ViewModel() {
         return NativeBinariesManager
             .executeCommand(
                 NativeBinariesManager.NativeBinaries.ZIP_ALIGN,
-                arrayOf("4", "-v", inputApkFile.absolutePath, outputApkFile.absolutePath),
+                arrayOf("-v", "4", inputApkFile.absolutePath, outputApkFile.absolutePath),
                 { runBlocking { log("Zipalign >> $it") } },
                 { runBlocking { log("Zipalign ERR >> $it") } }
             )
