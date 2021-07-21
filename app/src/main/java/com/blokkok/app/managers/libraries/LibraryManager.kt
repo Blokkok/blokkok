@@ -166,9 +166,10 @@ object LibraryManager {
             // and finally, change this library type to be CACHED and also add it's cache folder
             val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
             libraries.map {
-                if (it.name == "name") Library(it.name, LibraryType.CACHED, packageName, it.aarPath, cacheDir.relativeTo(librariesMeta).absolutePath)
+                if (it.name == name) Library(it.name, LibraryType.CACHED, packageName, it.aarPath, cacheDir.relativeTo(librariesMeta).absolutePath)
                 else it
             }
+            librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
 
             return@withContext 0
         }
@@ -245,8 +246,17 @@ object LibraryManager {
         librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
     }
 
-    fun isCached(name: String) = cacheDir.resolve(name).exists()
-    fun clearCache(name: String) = cacheDir.resolve(name).deleteRecursively()
+    fun clearCache(name: String) {
+        cacheDir.resolve(name).deleteRecursively()
+
+        // set the library entry to be NOT_CACHED
+        val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
+        libraries.map {
+            if (it.name == name) Library(it.name, LibraryType.NOT_CACHED, aarPath = it.aarPath)
+            else it
+        }
+        librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
+    }
 }
 
 // Used to unpack zip files into a specified output path
