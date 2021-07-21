@@ -10,6 +10,7 @@ data class ProjectMetadata(
     val name: String,
     val packageName: String,
     val id: String,
+    val libraries: List<String>, // List of library names used in this project
     // TODO: 7/11/21 Modules
 ) {
     fun edit(context: Context) =

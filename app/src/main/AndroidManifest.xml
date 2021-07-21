@@ -11,6 +11,7 @@
         android:theme="@style/BlokkokTheme">
         <activity android:name=".CompileActivity" />
         <activity android:name=".EditorActivity" />
+        <activity android:name=".ManageProjectLibrariesActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

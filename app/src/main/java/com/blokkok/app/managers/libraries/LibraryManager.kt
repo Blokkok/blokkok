@@ -31,6 +31,8 @@ import java.util.zip.ZipInputStream
  *   L etc..
  */
 
+// TODO: 7/21/21 Use library name as a key to get it's data in libraries.json
+
 object LibraryManager {
 
     private lateinit var dataDir: File
@@ -80,6 +82,9 @@ object LibraryManager {
 
     fun listLibraries(): List<Library> =
         Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
+
+    // this function is subject to change
+    fun findLibrary(name: String): Library? = listLibraries().find { it.name == name }
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun compileLibrary(

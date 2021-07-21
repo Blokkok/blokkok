@@ -37,13 +37,21 @@ object ProjectsManager {
         return File(projects, id).deleteRecursively()
     }
 
+    fun modifyMetadata(id: String, newMeta: ProjectMetadata) {
+        if (!exists(id)) return
+
+        File(projects, id)
+            .resolve("meta.json")
+            .writeText(Json.encodeToString(newMeta))
+    }
+
     fun clearProjects() {
         listProjects().forEach { removeProject(it.id) }
     }
 
     fun createProject(name: String, packageName: String): ProjectMetadata {
         val id = generateRandomId()
-        val metadata = ProjectMetadata(name, packageName, id)
+        val metadata = ProjectMetadata(name, packageName, id, emptyList())
         val projectDir = File(projects, id)
 
         projectDir.mkdir()
