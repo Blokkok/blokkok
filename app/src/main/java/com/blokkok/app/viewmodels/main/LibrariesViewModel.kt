@@ -8,6 +8,7 @@ import com.blokkok.app.managers.libraries.Library
 import com.blokkok.app.managers.libraries.LibraryManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.InputStream
 
 class LibrariesViewModel : ViewModel()  {
@@ -17,9 +18,8 @@ class LibrariesViewModel : ViewModel()  {
 
     fun loadLibraries() {
         viewModelScope.launch(Dispatchers.IO) {
-            librariesMutable.value =
-                LibraryManager
-                    .listLibraries().toTypedArray()
+            val libraries = LibraryManager.listLibraries().toTypedArray()
+            withContext(Dispatchers.Main) { librariesMutable.value = libraries }
         }
     }
 
