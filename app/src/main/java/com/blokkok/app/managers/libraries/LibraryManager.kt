@@ -161,12 +161,16 @@ object LibraryManager {
             }
 
             // and finally, change this library type to be CACHED and also add it's cache folder
-            val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
-            libraries.map {
-                if (it.name == name) Library(it.name, LibraryType.CACHED, packageName, it.aarPath, cacheDir.relativeTo(librariesMeta).absolutePath)
-                else it
-            }
-            librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
+            val librariesNew = ArrayList(
+                Json.decodeFromString<LibraryContainer>(librariesMeta.readText())
+                    .libraries
+                    .map {
+                        if (it.name == name) Library(it.name, LibraryType.CACHED, packageName, it.aarPath, cacheDir.relativeTo(librariesMeta).absolutePath)
+                        else it
+                    }
+            )
+
+            librariesMeta.writeText(Json.encodeToString(LibraryContainer(librariesNew)))
 
             return@withContext 0
         }
