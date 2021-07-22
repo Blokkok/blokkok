@@ -115,39 +115,3 @@ private fun InputStream.redirectTo(out: (String) -> Unit) {
         }.close()
     }.run()
 }
-
-// Used to unpack zip files into a specified output path
-private fun unpackZip(zipInputStream: ZipInputStream, outputPath: File): Boolean {
-    try {
-        var filename: String
-
-        var entry: ZipEntry?
-        val buffer = ByteArray(1024)
-        var count: Int
-
-        while (zipInputStream.nextEntry.also { entry = it } != null) {
-            filename = entry!!.name
-
-            if (entry!!.isDirectory) {
-                File(outputPath, filename).mkdirs()
-                continue
-            }
-
-            val fileOut = FileOutputStream(File(outputPath, filename))
-
-            while (zipInputStream.read(buffer).also { count = it } != -1)
-                fileOut.write(buffer, 0, count)
-
-            fileOut.close()
-            zipInputStream.closeEntry()
-        }
-
-        zipInputStream.close()
-
-    } catch (e: IOException) {
-        e.printStackTrace()
-        return false
-    }
-
-    return true
-}

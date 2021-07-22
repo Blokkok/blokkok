@@ -4,6 +4,7 @@ import android.os.Build
 import com.blokkok.app.processors.compilers.ECJCompiler
 import com.blokkok.app.processors.dexers.D8Dexer
 import com.blokkok.app.processors.dexers.DxDexer
+import com.blokkok.app.processors.signers.AndroidApkSigner
 
 object ProcessorPicker {
     fun pickDexer(): Dexer {
@@ -14,4 +15,6 @@ object ProcessorPicker {
     }
 
     fun pickCompiler(): JavaCompiler = ECJCompiler
+
+    fun pickSigner(): ApkSigner = AndroidApkSigner
 }

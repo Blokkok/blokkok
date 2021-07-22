@@ -2,6 +2,7 @@ package com.blokkok.app.managers.libraries
 
 import android.content.Context
 import com.blokkok.app.managers.NativeBinariesManager
+import com.blokkok.app.managers.unpackZip
 import com.blokkok.app.processors.ProcessorPicker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -262,45 +263,6 @@ object LibraryManager {
         }
         librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
     }
-}
-
-// Used to unpack zip files into a specified output path
-private fun unpackZip(
-    zipInputStream: ZipInputStream,
-    outputPath: File,
-): Boolean {
-    try {
-        var filename: String
-
-        var entry: ZipEntry?
-        val buffer = ByteArray(1024)
-        var count: Int
-
-        while (zipInputStream.nextEntry.also { entry = it } != null) {
-            filename = entry!!.name
-
-            if (entry!!.isDirectory) {
-                File(outputPath, filename).mkdirs()
-                continue
-            }
-
-            val fileOut = FileOutputStream(File(outputPath, filename))
-
-            while (zipInputStream.read(buffer).also { count = it } != -1)
-                fileOut.write(buffer, 0, count)
-
-            fileOut.close()
-            zipInputStream.closeEntry()
-        }
-
-        zipInputStream.close()
-
-    } catch (e: IOException) {
-        e.printStackTrace()
-        return false
-    }
-
-    return true
 }
 
 // Unpacks the classes.jar and res/ folder
