@@ -1,5 +1,6 @@
 package com.blokkok.app.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,12 +23,15 @@ class MoveableLibrariesRecyclerView : RecyclerView.Adapter<MoveableLibrariesRecy
 
     fun addLibrary(library: Library) {
         libraries.add(library)
-        notifyItemInserted(libraries.size - 1)
+
+        if (libraries.size == 1) notifyDataSetChanged()
+        else notifyItemInserted(libraries.size - 1)
     }
 
-    fun moveItem(from: Int, to: Int) {
+    fun swapItem(from: Int, to: Int) {
         Collections.swap(libraries, from, to)
-        notifyItemMoved(from, to)
+        // FIXME: 7/22/21 Somehow use notifyItemMoved, I can't use it since onBindViewHolder's position won't change
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -41,11 +45,11 @@ class MoveableLibrariesRecyclerView : RecyclerView.Adapter<MoveableLibrariesRecy
         holder.libraryName.text = libraries[position].name
 
         holder.up.setOnClickListener {
-            if (position != 0) moveItem(position, position + 1)
+            if (position != 0) swapItem(position, position + 1)
         }
 
         holder.down.setOnClickListener {
-            if (position != libraries.size - 1) moveItem(position, position - 1)
+            if (position != libraries.size - 1) swapItem(position, position - 1)
         }
     }
 
