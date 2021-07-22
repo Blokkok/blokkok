@@ -7,7 +7,7 @@ Cloning this repository isn't a single step process, you would need to install `
 
  - Second, clone this repository as how you do it normally 
    ```console
-   $ git clone https://github/Blokkok/blokkok
+   $ git clone https://github.com/Blokkok/blokkok
    ```
  - Lastly, don't forget to pull the files from the LFS storage, sum of all of the files inside the LFS storage are approximately 45MB.
    ```console
