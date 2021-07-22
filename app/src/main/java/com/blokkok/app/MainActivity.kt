@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return
         }
 
-        initializeManagers()
+        Thread { initializeManagers() }.start()
 
         val actionBar = findViewById<View>(R.id.toolBar) as Toolbar
         setSupportActionBar(actionBar)
