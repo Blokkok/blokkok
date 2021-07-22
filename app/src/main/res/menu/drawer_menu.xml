@@ -34,7 +34,7 @@
     <group
         android:id="@+id/group2"
         android:checkableBehavior="none">
-        <item android:title="Other">
+        <item android:title="Social">
             <menu>
                 <item
                     android:id="@+id/web"
