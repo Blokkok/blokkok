@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.sdklib.build.ApkBuilder
+import com.blokkok.app.managers.CommonFilesManager
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.libraries.LibraryManager
 import com.blokkok.app.managers.projects.ProjectMetadata
+import com.blokkok.app.processors.ApkSigner
 import com.blokkok.app.processors.Dexer
 import com.blokkok.app.processors.JavaCompiler
 import com.blokkok.app.processors.ProcessorPicker
@@ -59,6 +61,7 @@ class CompileViewModel : ViewModel() {
             val resOutApk = File(cacheFolder, "res.apk") // output apk with resources
             val unalignedOutApk = File(cacheFolder, "${project.name}-unaligned-unsigned.apk") // unaligned and unaligned output apk
             val unsignedOutApk = File(cacheFolder, "${project.name}-unsigned.apk") // unsigned output apk
+            val outApk = File(cacheFolder, "${project.name}.apk") // signed output apk
 
             // mkdirs ==============================================================================
             cacheFolder.mkdirs()
@@ -69,9 +72,10 @@ class CompileViewModel : ViewModel() {
             compiledResCacheFolder.mkdirs()
             // mkdirs ==============================================================================
 
-            // Picks the compiler and the dexer
+            // Picks the compile, dexer and the signer
             val compiler = ProcessorPicker.pickCompiler()
             val dexer = ProcessorPicker.pickDexer()
+            val signer = ProcessorPicker.pickSigner()
 
             ///////////////////////
             // Start compilation //
@@ -168,6 +172,15 @@ class CompileViewModel : ViewModel() {
             // Then finally, sign the apk using apksigner with the debug key
             // Note: zipalign must be run before the app is signed using apksigner, but if you use
             //       jarsigner, zipalign must be run after that
+            val signerRetVal = signApk(signer, unsignedOutApk, outApk)
+
+            if (signerRetVal != 0) {
+                log("${signer.name} returned a non-zero status"); return@launch
+            } else {
+                log("${signer.name} has finished signing the apk")
+            }
+
+            log("\nThe app has been successfully built!")
         }
     }
 
@@ -255,6 +268,21 @@ class CompileViewModel : ViewModel() {
                 { runBlocking { log("Zipalign >> $it") } },
                 { runBlocking { log("Zipalign ERR >> $it") } }
             )
+    }
+
+    private suspend fun signApk(
+        signer: ApkSigner,
+        inputApkFile: File,
+        outputApkFile: File,
+        privateKey: File = CommonFilesManager.testKeyPrivateKey,
+        publicKey: File = CommonFilesManager.testKeyPublicKey,
+    ): Int {
+        log("\n${signer.name} is signing the apk")
+
+        return signer.sign(inputApkFile, outputApkFile, privateKey, publicKey,
+            { runBlocking { log("${signer.name} >> $it") } },
+            { runBlocking { log("${signer.name} ERR >> $it") } }
+        )
     }
 
     fun compileLibrary(libraryName: String) {
