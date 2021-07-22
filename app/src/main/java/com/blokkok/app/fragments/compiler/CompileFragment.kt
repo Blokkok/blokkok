@@ -1,5 +1,7 @@
 package com.blokkok.app.fragments.compiler
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +13,8 @@ import com.blokkok.app.R
 import com.blokkok.app.managers.projects.ProjectMetadata
 import com.blokkok.app.viewmodels.compiler.CompileViewModel
 
-// TODO: 7/13/21 ForegroundService would be cool 
+
+// TODO: 7/13/21 ForegroundService would be cool
 
 class CompileFragment(
     private val project: ProjectMetadata? = null,
@@ -31,6 +34,15 @@ class CompileFragment(
         super.onViewCreated(view, savedInstanceState)
 
         val out = view.findViewById<TextView>(R.id.compile_out)
+
+        viewModel.installCallback = {
+            val promptInstall = Intent(Intent.ACTION_VIEW)
+                .setDataAndType(
+                    Uri.fromFile(it),
+                    "application/vnd.android.package-archive"
+                )
+            startActivity(promptInstall)
+        }
 
         if (project != null) viewModel.compileProject(project, requireContext())
         if (libraryName != null) viewModel.compileLibrary(libraryName)

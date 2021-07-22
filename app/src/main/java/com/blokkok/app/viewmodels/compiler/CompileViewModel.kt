@@ -20,7 +20,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.*
 
+
 class CompileViewModel : ViewModel() {
+
     private val outputLiveDataMutable = MutableLiveData<String>()
 
     val outputLiveData: LiveData<String> = outputLiveDataMutable
@@ -28,6 +30,9 @@ class CompileViewModel : ViewModel() {
     private suspend fun log(message: String) {
         withContext(Dispatchers.Main) { outputLiveDataMutable.value += "\n$message" }
     }
+
+    // This lambda will be assigned on the fragment
+    lateinit var installCallback: (File) -> Unit
 
     fun compileProject(project: ProjectMetadata, context: Context) {
 
@@ -180,7 +185,9 @@ class CompileViewModel : ViewModel() {
                 log("${signer.name} has finished signing the apk")
             }
 
-            log("\nThe app has been successfully built!")
+            log("\nThe app has been successfully built! Installing the apk")
+
+            installCallback(outApk)
         }
     }
 
