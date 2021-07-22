@@ -16,8 +16,8 @@ object CommonFilesManager {
     private lateinit var filesDir: File
     private lateinit var testKeyDir: File
 
-    val testKeyPrivateKey: File = testKeyDir.resolve("testkey.pk8")
-    val testKeyPublicKey: File  = testKeyDir.resolve("testkey.x509.pem")
+    val testKeyPrivateKey: File by lazy { testKeyDir.resolve("testkey.pk8") }
+    val testKeyPublicKey: File  by lazy { testKeyDir.resolve("testkey.x509.pem") }
 
     fun initialize(context: Context) {
         filesDir = context.filesDir
