@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/em_manage_libraries"
+        android:title="Manage Libraries" />
 
-    <item android:title="View Source" />
-    <item android:title="Export" />
+    <item
+        android:id="@+id/em_view_source"
+        android:title="View Source" />
+
+    <item
+        android:id="@+id/em_export"
+        android:title="Export" />
 </menu>

@@ -2,7 +2,10 @@ package com.blokkok.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
@@ -13,17 +16,20 @@ import com.blokkok.app.managers.projects.ProjectsManager
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
+
 class EditorActivity : AppCompatActivity() {
 
     private lateinit var editorAdapter: EditorPagerAdapter
     private lateinit var projectEditor: ProjectEditor
     private lateinit var project: ProjectMetadata
 
+    private lateinit var projectId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
 
-        val projectId = intent.getStringExtra("project_id")
+        projectId = intent.getStringExtra("project_id")
             ?: throw IllegalStateException("The project_id intent extra isn't provided on EditorActivity")
 
         project = ProjectsManager.getProject(projectId)
@@ -78,5 +84,33 @@ class EditorActivity : AppCompatActivity() {
             intent.putExtra("project_id", projectId)
             startActivity(intent)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.editor_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.em_manage_libraries -> {
+            startActivity(
+                Intent(this, ManageProjectLibrariesActivity::class.java).apply {
+                    putExtra("project_id", projectId)
+                }
+            )
+            true
+        }
+
+        R.id.em_view_source -> {
+            Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
+            true
+        }
+
+        R.id.em_export -> {
+            Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
+            true
+        }
+
+        else -> super.onOptionsItemSelected(item)
     }
 }
