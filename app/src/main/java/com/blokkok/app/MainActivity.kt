@@ -14,6 +14,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.blokkok.app.processors.dexers.D8Dexer
 import com.blokkok.app.fragments.main.*
+import com.blokkok.app.managers.CommonFilesManager
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.binariesABI
 import com.blokkok.app.managers.libraries.LibraryManager
@@ -223,5 +224,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ECJCompiler             .initialize(this)
         D8Dexer                 .initialize(this)
         LibraryManager          .initialize(this)
+        CommonFilesManager      .initialize(this)
     }
 }
