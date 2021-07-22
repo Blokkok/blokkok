@@ -1,7 +1,6 @@
 package com.blokkok.app.processors.signers
 
 import android.content.Context
-import com.blokkok.app.managers.CommonFilesManager
 import com.blokkok.app.processors.ApkSigner
 import java.io.*
 
@@ -13,13 +12,12 @@ object AndroidApkSigner : ApkSigner {
 
     override fun initialize(context: Context) {
         apkSignerDir = File(context.applicationInfo.dataDir, "binaries/apksigner")
+        apkSignerJar = File("${apkSignerDir.absolutePath}/apksigner.jar")
 
         if (!apkSignerDir.exists()) {
             apkSignerDir.mkdirs()
             extract(context)
         }
-
-        apkSignerJar = File("${apkSignerDir.absolutePath}/apksigner.jar")
     }
 
     private fun extract(context: Context) {
