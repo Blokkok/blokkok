@@ -69,12 +69,12 @@ class CompileFragment(
         val out = requireView().findViewById<TextView>(R.id.compile_out)
         val vscroll = requireView().findViewById<ScrollView>(R.id.log_vscroll)
 
-        if (project != null) viewModel.compileProject(project, requireContext())
-        if (libraryName != null) viewModel.compileLibrary(libraryName)
-
         viewModel.outputLiveData.observe(viewLifecycleOwner) {
             out.append(it)
             vscroll.fullScroll(View.FOCUS_DOWN)
         }
+
+        if (project != null) viewModel.compileProject(project, requireContext())
+        else if (libraryName != null) viewModel.compileLibrary(libraryName)
     }
 }
