@@ -24,8 +24,10 @@ import java.io.*
 class CompileViewModel : ViewModel() {
 
     private val outputLiveDataMutable = MutableLiveData<String>()
+    private val saveFileLiveDataMutable = MutableLiveData<File>()
 
     val outputLiveData: LiveData<String> = outputLiveDataMutable
+    val saveFileLiveData: LiveData<File> = saveFileLiveDataMutable
 
     private suspend fun log(message: String) {
         withContext(Dispatchers.Main) { outputLiveDataMutable.value += "\n$message" }
@@ -187,7 +189,7 @@ class CompileViewModel : ViewModel() {
 
             log("\nThe app has been successfully built! Installing the apk")
 
-            installCallback(outApk)
+            withContext(Dispatchers.Main) { saveFileLiveDataMutable.value = outApk }
         }
     }
 
