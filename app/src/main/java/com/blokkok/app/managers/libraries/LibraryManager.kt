@@ -219,7 +219,7 @@ object LibraryManager {
          * or basically the structure of the cache
          */
         // Create a temporary folder
-        val temp = File.createTempFile("extract", null)
+        val temp = File(dataDir, "cache/temp")
         temp.mkdirs()
 
         // then unpack the zip on that temporary folder
