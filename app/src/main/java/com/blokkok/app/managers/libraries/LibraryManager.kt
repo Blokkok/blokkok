@@ -53,32 +53,7 @@ object LibraryManager {
         if (!librariesDir.exists()) {
             aarsDir.mkdirs()
             cacheDir.mkdirs()
-
-            // and also extract the necessary libraries used for android building
-            extract(context)
         }
-    }
-
-    private fun extract(context: Context) {
-        Thread {
-            /* This zip just contains .aar files used to compile the app, those are:
-             * androidx.core:core, androidx.appcompat:appcompat, and
-             * com.google.android.material:material
-             */
-            unpackZip(ZipInputStream(context.assets.open("libraries.zip")), aarsDir)
-
-            // After that, initialize the libraries.json file
-            librariesMeta.createNewFile()
-            librariesMeta.writeText(
-                Json.encodeToString(
-                    LibraryContainer(arrayListOf(
-                        Library("appcompat-1.2.0", LibraryType.NOT_CACHED, "androidx.appcompat", aarsDir.resolve("appcompat-1.2.0.aar").relativeTo(librariesDir).absolutePath),
-                        Library("core-1.6.0",      LibraryType.NOT_CACHED, "androidx.core", aarsDir.resolve("core-1.6.0.aar").relativeTo(librariesDir).absolutePath),
-                        Library("material-1.4.0",  LibraryType.NOT_CACHED, "com.google.android.material", aarsDir.resolve("material-1.4.0.aar").relativeTo(librariesDir).absolutePath),
-                    ))
-                )
-            )
-        }.run()
     }
 
     fun listLibraries(): List<Library> =
