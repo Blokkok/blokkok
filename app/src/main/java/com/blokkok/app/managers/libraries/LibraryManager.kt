@@ -164,6 +164,7 @@ object LibraryManager {
     }
 
     fun addAARLibrary(stream: InputStream, name: String) {
+        val nameWithoutExtension = aarsDir.resolve(name).nameWithoutExtension
         // pretty straightforward
         aarsDir.resolve(name).writeBytes(stream.readBytes())
 
@@ -172,9 +173,9 @@ object LibraryManager {
 
         libraries.add(
             Library(
-                name,
+                nameWithoutExtension,
                 LibraryType.NOT_CACHED,
-                cacheFolderPath = librariesDir.resolve(name).absolutePath
+                aarPath = librariesDir.resolve(nameWithoutExtension).absolutePath
             )
         )
 
@@ -197,7 +198,7 @@ object LibraryManager {
          */
         // Create a temporary folder
         val temp = File.createTempFile("extract", null)
-        temp.mkdir()
+        temp.mkdirs()
 
         // then unpack the zip on that temporary folder
         unpackZip(ZipInputStream(zipFile), temp)
