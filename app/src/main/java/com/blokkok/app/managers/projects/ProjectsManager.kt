@@ -45,6 +45,9 @@ object ProjectsManager {
             .writeText(Json.encodeToString(newMeta))
     }
 
+    fun clearCompileCache(id: String) =
+        File(projects, id).resolve("cache").deleteRecursively()
+
     fun clearProjects() {
         listProjects().forEach { removeProject(it.id) }
     }

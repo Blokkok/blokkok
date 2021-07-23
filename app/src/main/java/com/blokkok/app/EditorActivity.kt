@@ -92,6 +92,12 @@ class EditorActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.em_clear_cache -> {
+            ProjectsManager.clearCompileCache(projectId)
+            Toast.makeText(this, "Cache cleared!", Toast.LENGTH_SHORT).show()
+            true
+        }
+
         R.id.em_manage_libraries -> {
             startActivity(
                 Intent(this, ManageProjectLibrariesActivity::class.java).apply {
