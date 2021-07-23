@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.CompileActivity
 import com.blokkok.app.R
 import com.blokkok.app.managers.libraries.Library
-import com.blokkok.app.managers.libraries.LibraryType
+import com.blokkok.app.managers.libraries.LibraryManager
 
 class LibrariesRecyclerView(
     private var libraries: Array<Library>
@@ -47,6 +48,22 @@ class LibrariesRecyclerView(
                 .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
                 .create()
                 .show()
+        }
+
+        holder.root.setOnLongClickListener {
+            AlertDialog.Builder(it.context)
+                .setTitle("Confirmation")
+                .setMessage("Do you really want to delete ${library.name}?")
+                .setPositiveButton("Delete") { _, _ ->
+                    LibraryManager.deleteLibrary(library.name)
+
+                    Toast.makeText(it.context, "${library.name} deleted", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+                .create()
+                .show()
+            true
         }
     }
 

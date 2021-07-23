@@ -238,6 +238,31 @@ object LibraryManager {
         }
         librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
     }
+
+    fun deleteLibrary(name: String) {
+
+        // Find the library we're looking for
+        val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
+        libraries.mapNotNull {
+            if (it.name == name) {
+                // Yes, this is the library we're looking for, check the type and remove it's contents
+                when (it.type) {
+                    LibraryType.NOT_CACHED -> File(it.aarPath!!).delete()
+                    LibraryType.PRECOMPILED -> File(it.cacheFolderPath!!).deleteRecursively()
+                    LibraryType.CACHED -> {
+                        File(it.aarPath!!).delete()
+                        File(it.cacheFolderPath!!).deleteRecursively()
+                    }
+                }
+
+                // then return null to remove this library from the metadata
+                null
+            }
+
+            else it
+        }
+        librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
+    }
 }
 
 // Unpacks the classes.jar and res/ folder
