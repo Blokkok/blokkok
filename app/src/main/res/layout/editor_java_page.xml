@@ -17,7 +17,7 @@
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="start|top"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textNoSuggestions"
         android:hint="Insert the java code for MainActivity"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

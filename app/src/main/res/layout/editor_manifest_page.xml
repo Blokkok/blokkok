@@ -16,7 +16,7 @@
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="start|top"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textNoSuggestions"
         android:hint="Insert the XML manifest code for this project"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
