@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -66,10 +67,14 @@ class CompileFragment(
         super.onStart()
 
         val out = requireView().findViewById<TextView>(R.id.compile_out)
+        val vscroll = requireView().findViewById<ScrollView>(R.id.log_vscroll)
 
         if (project != null) viewModel.compileProject(project, requireContext())
         if (libraryName != null) viewModel.compileLibrary(libraryName)
 
-        viewModel.outputLiveData.observe(viewLifecycleOwner) { out.text = it }
+        viewModel.outputLiveData.observe(viewLifecycleOwner) {
+            out.append(it)
+            vscroll.fullScroll(View.FOCUS_DOWN)
+        }
     }
 }

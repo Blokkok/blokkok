@@ -30,7 +30,7 @@ class CompileViewModel : ViewModel() {
     val saveFileLiveData: LiveData<File> = saveFileLiveDataMutable
 
     private suspend fun log(message: String) {
-        withContext(Dispatchers.Main) { outputLiveDataMutable.value += "\n$message" }
+        withContext(Dispatchers.Main) { outputLiveDataMutable.value = "\n$message" }
     }
 
     // This lambda will be assigned on the fragment

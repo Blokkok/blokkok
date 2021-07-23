@@ -8,12 +8,14 @@
     tools:context=".fragments.compiler.CompileFragment">
 
     <ScrollView
+        android:id="@+id/log_vscroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:descendantFocusability="blocksDescendants"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +24,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -39,8 +41,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="monospace"
                         android:textColor="#000"
-                        android:scrollHorizontally="true"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="12sp" />
                 </LinearLayout>
             </HorizontalScrollView>
