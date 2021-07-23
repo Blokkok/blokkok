@@ -65,7 +65,6 @@ class CompileViewModel : ViewModel() {
             val compiledResCacheFolder  = File(cacheFolder, "compiledRes") // where the compiled resources files (resources.zip) are located
 
             val resourcesZip = File(compiledResCacheFolder, "resources.zip") // the compiled resources
-            val classesDex = File(dexCacheFolder, "classes.jar") // dex-ed classes from both generated java files and project's code
             val resOutApk = File(cacheFolder, "res.apk") // output apk with resources
             val unalignedOutApk = File(cacheFolder, "${projectNameSafe}-unaligned-unsigned.apk") // unaligned and unaligned output apk
             val unsignedOutApk = File(cacheFolder, "${projectNameSafe}-unsigned.apk") // unsigned output apk
@@ -141,7 +140,7 @@ class CompileViewModel : ViewModel() {
             val dexerRetVal = dexClasses(
                 dexer, // the dexer used
                 classesCacheFolder, // the classes that'll be dex-ed by the dexer
-                classesDex // the output dex file
+                dexCacheFolder // the folder to output the dex files
             )
 
             if (dexerRetVal != 0) {
@@ -158,11 +157,18 @@ class CompileViewModel : ViewModel() {
             val apkBuilder = ApkBuilder(
                 unalignedOutApk,
                 resOutApk,
-                classesDex,
+                dexCacheFolder.resolve("classes.dex"),
                 null, // No key and no cert, we will sign this using ApkSigner instead
                 null,
                 PrintStream(OutputStreamLogger("ApkBuilder >> "))
             )
+
+            // Add the remaining dex files (if any)
+            dexCacheFolder.listFiles()!!.forEach {
+                if (it.name == "classes.dex") return@forEach
+                apkBuilder.addFile(it, it.name)
+            }
+
             apkBuilder.setDebugMode(false)
             apkBuilder.sealApk()
 
