@@ -145,6 +145,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
 
+            R.id.store -> {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                drawerNavView.setCheckedItem(R.id.store);
+
+                supportActionBar!!.subtitle = "Store";
+
+                val storeFragment = StoreFragment.newInstance();
+
+                drawerFragmentTransaction
+                    .replace(R.id.fragmentContainer, storeFragment)
+                    .commit();
+
+                return true;
+            }
+
             R.id.about -> {
                 drawerLayout.closeDrawer(GravityCompat.START)
                 drawerNavView.setCheckedItem(R.id.about)
