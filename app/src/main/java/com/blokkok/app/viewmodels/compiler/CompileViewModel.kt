@@ -56,6 +56,7 @@ class CompileViewModel : ViewModel() {
         val cacheFolder =
             File(dataDir, "projects/${project.id}/cache/")
 
+        val projectNameSafe = project.name.safeName()
 
         viewModelScope.launch(Dispatchers.IO) {
             val classesCacheFolder      = File(cacheFolder, "classes") // where compiled java files from both generated java files and the project's code are located
@@ -66,9 +67,9 @@ class CompileViewModel : ViewModel() {
             val resourcesZip = File(compiledResCacheFolder, "resources.zip") // the compiled resources
             val classesDex = File(dexCacheFolder, "classes.jar") // dex-ed classes from both generated java files and project's code
             val resOutApk = File(cacheFolder, "res.apk") // output apk with resources
-            val unalignedOutApk = File(cacheFolder, "${project.name}-unaligned-unsigned.apk") // unaligned and unaligned output apk
-            val unsignedOutApk = File(cacheFolder, "${project.name}-unsigned.apk") // unsigned output apk
-            val outApk = File(cacheFolder, "${project.name}.apk") // signed output apk
+            val unalignedOutApk = File(cacheFolder, "${projectNameSafe}-unaligned-unsigned.apk") // unaligned and unaligned output apk
+            val unsignedOutApk = File(cacheFolder, "${projectNameSafe}-unsigned.apk") // unsigned output apk
+            val outApk = File(cacheFolder, "${projectNameSafe}.apk") // signed output apk
 
             // mkdirs ==============================================================================
             cacheFolder.mkdirs()
@@ -313,6 +314,9 @@ class CompileViewModel : ViewModel() {
             log("Compiling finished")
         }
     }
+
+    // Removes whitespace and " from a string
+    private fun String.safeName(): String = replace(Regex("[\"\\s]"), "_")
 
     inner class OutputStreamLogger(
         private val prefix: String
