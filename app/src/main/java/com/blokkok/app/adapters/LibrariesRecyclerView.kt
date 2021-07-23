@@ -12,6 +12,7 @@ import com.blokkok.app.CompileActivity
 import com.blokkok.app.R
 import com.blokkok.app.managers.libraries.Library
 import com.blokkok.app.managers.libraries.LibraryManager
+import com.blokkok.app.managers.libraries.LibraryType
 
 class LibrariesRecyclerView(
     private var libraries: Array<Library>
@@ -35,6 +36,9 @@ class LibrariesRecyclerView(
         holder.cacheStatus.text = library.type.name
 
         holder.root.setOnClickListener {
+            // Check if this is a precompiled library
+            if (library.type == LibraryType.PRECOMPILED) return@setOnClickListener
+
             AlertDialog.Builder(it.context)
                 .setTitle("Confirmation")
                 .setMessage("Do you want to compile (or re-compile if you've already compiled it) the cache for this library?\n\nNote: Yes, this is just temporary. Later on, when clicking the library item, you would be directed into a library manager activity.")
