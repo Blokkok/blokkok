@@ -84,4 +84,4 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
-google-services.json
+app/google-services.json
