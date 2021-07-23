@@ -8,7 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.*
+import org.json.JSONObject
 import java.io.*
 import java.util.regex.Pattern
 import java.util.zip.ZipEntry
@@ -53,14 +54,39 @@ object LibraryManager {
         if (!librariesDir.exists()) {
             aarsDir.mkdirs()
             cacheDir.mkdirs()
+
+            librariesMeta.writeText("{}")
         }
     }
 
+    // I'm using both JSONObject and kotlinx.serialization since kotlinx.serialization can't list elements
+    // this is going to have a quite performance hit, I'll update them when I find a better solution
     fun listLibraries(): List<Library> =
-        Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
+        JSONObject(librariesMeta.readText()).let { json ->
+            return json.keys().asSequence().toList().map {
+                Json.decodeFromString(json.getJSONObject(it).toString())
+            }
+        }
 
-    // this function is subject to change
-    fun findLibrary(name: String): Library? = listLibraries().find { it.name == name }
+    private fun putLibraryEntry(name: String, library: Library) {
+        val librariesMetaJson = JSONObject(librariesMeta.readText())
+        librariesMetaJson.put(name, JSONObject(Json.encodeToString(library)))
+        librariesMeta.writeText(librariesMetaJson.toString())
+    }
+
+    private fun deleteLibraryEntry(name: String) {
+        val librariesMetaJson = JSONObject(librariesMeta.readText())
+        if (!librariesMetaJson.has(name)) return
+        librariesMetaJson.remove(name)
+        librariesMeta.writeText(librariesMetaJson.toString())
+    }
+
+    fun getLibraryEntry(name: String): Library? {
+        val librariesMetaJson = JSONObject(librariesMeta.readText())
+        if (!librariesMetaJson.has(name)) return null
+
+        return Json.decodeFromString(librariesMetaJson.getJSONObject(name).toString())
+    }
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun compileLibrary(
@@ -142,16 +168,16 @@ object LibraryManager {
             }
 
             // and finally, change this library type to be CACHED and also add it's cache folder
-            val librariesNew = ArrayList(
-                Json.decodeFromString<LibraryContainer>(librariesMeta.readText())
-                    .libraries
-                    .map {
-                        if (it.name == name) Library(it.name, LibraryType.CACHED, packageName, it.aarPath, cacheDir.relativeTo(librariesMeta).absolutePath)
-                        else it
-                    }
+            putLibraryEntry(
+                name,
+                Library(
+                    name,
+                    LibraryType.CACHED,
+                    packageName,
+                    getLibraryEntry(name)!!.aarPath,
+                    cacheDir.relativeTo(librariesMeta).absolutePath
+                )
             )
-
-            librariesMeta.writeText(Json.encodeToString(LibraryContainer(librariesNew)))
 
             return@withContext 0
         }
@@ -168,18 +194,14 @@ object LibraryManager {
         // pretty straightforward
         aarsDir.resolve(name).writeBytes(stream.readBytes())
 
-        // then add a new entry to the libraries.json file
-        val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
-
-        libraries.add(
+        // then add a new library entry
+        putLibraryEntry(nameWithoutExtension,
             Library(
                 nameWithoutExtension,
                 LibraryType.NOT_CACHED,
                 aarPath = librariesDir.resolve(nameWithoutExtension).absolutePath
             )
         )
-
-        librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
     }
 
     fun addPrecompiledLibrary(zipFile: InputStream) {
@@ -213,10 +235,9 @@ object LibraryManager {
         // then delete it
         temp.delete()
 
-        // finally, add a new entry on the libraries.json file
-        val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
-
-        libraries.add(
+        // finally, add a new library entry
+        putLibraryEntry(
+            name,
             Library(
                 name,
                 LibraryType.PRECOMPILED,
@@ -224,45 +245,30 @@ object LibraryManager {
                 cacheFolderPath = librariesDir.resolve(name).absolutePath
             )
         )
-
-        librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
     }
 
     fun clearCache(name: String) {
         cacheDir.resolve(name).deleteRecursively()
 
         // set the library entry to be NOT_CACHED
-        val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
-        libraries.map {
-            if (it.name == name) Library(it.name, LibraryType.NOT_CACHED, aarPath = it.aarPath)
-            else it
-        }
-        librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
+        putLibraryEntry(name, getLibraryEntry(name)!!.copy(type = LibraryType.NOT_CACHED))
     }
 
     fun deleteLibrary(name: String) {
+        val library = getLibraryEntry(name)!!
 
-        // Find the library we're looking for
-        val libraries = Json.decodeFromString<LibraryContainer>(librariesMeta.readText()).libraries
-        libraries.mapNotNull {
-            if (it.name == name) {
-                // Yes, this is the library we're looking for, check the type and remove it's contents
-                when (it.type) {
-                    LibraryType.NOT_CACHED -> File(it.aarPath!!).delete()
-                    LibraryType.PRECOMPILED -> File(it.cacheFolderPath!!).deleteRecursively()
-                    LibraryType.CACHED -> {
-                        File(it.aarPath!!).delete()
-                        File(it.cacheFolderPath!!).deleteRecursively()
-                    }
-                }
-
-                // then return null to remove this library from the metadata
-                null
+        // Delete the files depending on their type
+        when (library.type) {
+            LibraryType.NOT_CACHED -> File(library.aarPath!!).delete()
+            LibraryType.PRECOMPILED -> File(library.cacheFolderPath!!).deleteRecursively()
+            LibraryType.CACHED -> {
+                File(library.aarPath!!).delete()
+                File(library.cacheFolderPath!!).deleteRecursively()
             }
-
-            else it
         }
-        librariesMeta.writeText(Json.encodeToString(LibraryContainer(libraries)))
+
+        // and delete the entry
+        deleteLibraryEntry(name)
     }
 }
 

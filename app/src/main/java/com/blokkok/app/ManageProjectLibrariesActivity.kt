@@ -6,7 +6,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.adapters.MoveableLibrariesRecyclerView
-import com.blokkok.app.managers.libraries.Library
 import com.blokkok.app.managers.libraries.LibraryManager
 import com.blokkok.app.managers.projects.ProjectMetadata
 import com.blokkok.app.managers.projects.ProjectsManager
@@ -36,7 +35,7 @@ class ManageProjectLibrariesActivity : AppCompatActivity() {
         moveableLibrariesRecyclerView.layoutManager = LinearLayoutManager(this)
         moveableLibrariesRecyclerView.adapter = adapter
 
-        adapter.setLibraries(project.libraries.map { LibraryManager.findLibrary(it)!! })
+        adapter.setLibraries(project.libraries.map { LibraryManager.getLibraryEntry(it)!! })
 
         addLibrary.setOnClickListener { view ->
             // Show a dialog with all the libraries minus the added libraries
@@ -46,7 +45,7 @@ class ManageProjectLibrariesActivity : AppCompatActivity() {
                 .setTitle("Pick a library to be added")
                 .setItems(libraries.toTypedArray()) { dialog, which ->
                     adapter.addLibrary(
-                        LibraryManager.findLibrary(libraries[which])!!
+                        LibraryManager.getLibraryEntry(libraries[which])!!
                     )
 
                     dialog.dismiss()
