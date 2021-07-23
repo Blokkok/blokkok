@@ -40,12 +40,16 @@ class CompileFragment(
         super.onAttach(context)
 
         saveFile = registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
-            val contentResolver = requireContext().contentResolver
-            val output = contentResolver
-                .openAssetFileDescriptor(uri, "w")!!
-                .createOutputStream()
+            uri?.let {
+                val contentResolver = requireContext().contentResolver
+                val output = contentResolver
+                    .openAssetFileDescriptor(it, "w")!!
+                    .createOutputStream()
 
-            Thread { FileInputStream(apkFile).copyTo(output) }.start()
+                Thread { FileInputStream(apkFile).copyTo(output) }.start()
+            }
+
+            requireActivity().finish()
         }
     }
 
