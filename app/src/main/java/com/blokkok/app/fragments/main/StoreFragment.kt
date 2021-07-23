@@ -17,7 +17,7 @@ class StoreFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_home, container, false);
+        val root = inflater.inflate(R.layout.fragment_store, container, false);
 
         return root;
     }

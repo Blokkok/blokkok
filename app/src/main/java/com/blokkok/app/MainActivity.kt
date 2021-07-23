@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 supportActionBar!!.subtitle = "Store";
 
-                val storeFragment = StoreFragment.newInstance();
+                val storeFragment = StoreFragment();
 
                 drawerFragmentTransaction
                     .replace(R.id.fragmentContainer, storeFragment)
