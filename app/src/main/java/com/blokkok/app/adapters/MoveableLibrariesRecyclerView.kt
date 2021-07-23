@@ -30,8 +30,7 @@ class MoveableLibrariesRecyclerView : RecyclerView.Adapter<MoveableLibrariesRecy
 
     fun swapItem(from: Int, to: Int) {
         Collections.swap(libraries, from, to)
-        // FIXME: 7/22/21 Somehow use notifyItemMoved, I can't use it since onBindViewHolder's position won't change
-        notifyDataSetChanged()
+        notifyItemMoved(from, to)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -45,11 +44,13 @@ class MoveableLibrariesRecyclerView : RecyclerView.Adapter<MoveableLibrariesRecy
         holder.libraryName.text = libraries[position].name
 
         holder.up.setOnClickListener {
-            if (position != 0) swapItem(position, position + 1)
+            val adapterPosition = holder.adapterPosition
+            if (adapterPosition != 0) swapItem(adapterPosition, adapterPosition - 1)
         }
 
         holder.down.setOnClickListener {
-            if (position != libraries.size - 1) swapItem(position, position - 1)
+            val adapterPosition = holder.adapterPosition
+            if (adapterPosition != libraries.size - 1) swapItem(adapterPosition, adapterPosition + 1)
         }
     }
 
