@@ -199,7 +199,7 @@ object LibraryManager {
             Library(
                 nameWithoutExtension,
                 LibraryType.NOT_CACHED,
-                aarPath = librariesDir.resolve(nameWithoutExtension).absolutePath
+                aarPath = aarsDir.resolve(name).absolutePath
             )
         )
     }
