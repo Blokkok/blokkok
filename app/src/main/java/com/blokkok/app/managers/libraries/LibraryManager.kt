@@ -230,7 +230,7 @@ object LibraryManager {
         // then delete those files
         temp.resolve("name").delete()
         temp.resolve("package").delete()
-        temp.renameTo(librariesDir.resolve(name)) // move these files to the libraries directory
+        temp.renameTo(cacheDir.resolve(name)) // move these files to the cache directory
 
         // then delete it
         temp.delete()
