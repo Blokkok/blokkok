@@ -242,7 +242,7 @@ object LibraryManager {
                 name,
                 LibraryType.PRECOMPILED,
                 packageName,
-                cacheFolderPath = librariesDir.resolve(name).absolutePath
+                cacheFolderPath = cacheDir.resolve(name).absolutePath
             )
         )
     }
