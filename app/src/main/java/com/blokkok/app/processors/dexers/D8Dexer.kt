@@ -50,7 +50,7 @@ object D8Dexer : Dexer {
 
         val classpath = StringBuilder().apply {
             libraries?.forEach {
-                append("--classpath")
+                append("--classpath ")
                 append(it.absolutePath)
             }
         }
