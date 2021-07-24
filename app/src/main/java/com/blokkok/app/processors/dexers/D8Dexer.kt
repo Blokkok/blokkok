@@ -45,18 +45,20 @@ object D8Dexer : Dexer {
         output: File,
         stdout: (String) -> Unit,
         stderr: (String) -> Unit,
-        classpaths: Array<File>?,
+        libraries: Array<File>?,
     ): Int {
 
-        val classpathsRendered = StringBuilder().apply {
-            classpaths?.forEach {
+        val classpath = StringBuilder().apply {
+            libraries?.forEach {
                 append("--classpath")
                 append(it.absolutePath)
             }
         }
 
+        val mergeLibraries = libraries?.joinToString(" ") ?: ""
+
         val process = Runtime.getRuntime().exec(
-            "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 --release --classpath $androidJarPath $classpathsRendered --output ${output.absolutePath} ${listFiles(folderOrFile).joinToString(" ")}"
+            "dalvikvm -Xmx256m -cp $d8Path com.android.tools.r8.D8 --release --classpath $androidJarPath $classpath --output ${output.absolutePath} ${listFiles(folderOrFile).joinToString(" ")} $mergeLibraries"
         )
 
         process.inputStream.redirectTo(stdout)
