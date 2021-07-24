@@ -9,6 +9,7 @@ import com.android.sdklib.build.ApkBuilder
 import com.blokkok.app.managers.CommonFilesManager
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.libraries.LibraryManager
+import com.blokkok.app.managers.libraries.LibraryType
 import com.blokkok.app.managers.projects.ProjectMetadata
 import com.blokkok.app.processors.ApkSigner
 import com.blokkok.app.processors.Dexer
@@ -19,7 +20,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.*
-
 
 class CompileViewModel : ViewModel() {
 
@@ -32,9 +32,6 @@ class CompileViewModel : ViewModel() {
     private suspend fun log(message: String) {
         withContext(Dispatchers.Main) { outputLiveDataMutable.value = "\n$message" }
     }
-
-    // This lambda will be assigned on the fragment
-    lateinit var installCallback: (File) -> Unit
 
     fun compileProject(project: ProjectMetadata, context: Context) {
 
@@ -57,6 +54,7 @@ class CompileViewModel : ViewModel() {
             File(dataDir, "projects/${project.id}/cache/")
 
         val projectNameSafe = project.name.safeName()
+        val libraryEntries = project.libraries.mapNotNull { LibraryManager.getLibraryEntry(it) }
 
         viewModelScope.launch(Dispatchers.IO) {
             val classesCacheFolder      = File(cacheFolder, "classes") // where compiled java files from both generated java files and the project's code are located
@@ -91,6 +89,26 @@ class CompileViewModel : ViewModel() {
             // =====================================================================================
             // First, run aapt2 to compile resources
 
+            // Compile libraries if they haven't been compiled
+            libraryEntries.forEach {
+                if (it.type == LibraryType.NOT_CACHED) {
+                    log("Library ${it.name} hasn't been compiled before, compiling it's resources..")
+
+                    // Compile this library
+                    val retVal = compileLibraryCoro(it.name)
+
+                    if (retVal != 0) {
+                        log("Library compiler reurned a non-zero status"); return@launch
+                    } else {
+                        log("Library ${it.name} has been sucessfully compiled")
+                    }
+
+                } else {
+                    log("Library ${it.name} is already compiled, skipping on compiling this library")
+                }
+            }
+
+            // then compile the app's resources
             val aapt2crRetVal = compileResources(
                 resFolder, // the res folder
                 resourcesZip // and the output file will be cache/compiledRes/resources.zip
@@ -110,7 +128,9 @@ class CompileViewModel : ViewModel() {
                 androidManifestXml, // the AndroidManifest.xml file
                 File(generatedJavaFolder, packagePath), // output folder of R.java
                 resOutApk, // output apk
-                resourcesZip // the compiled resources
+                resourcesZip, // the compiled resources
+                libraryEntries.map { it.compiledResources!! }.toTypedArray(), // the res.zip files (compiled resources) of libraries
+                libraryEntries.map { it.packageName!! }.toTypedArray() // the package names of each libraries
             )
 
             if (aapt2lrRetVal != 0) {
@@ -125,7 +145,8 @@ class CompileViewModel : ViewModel() {
             val compilerRetVal = compileJavaSources(
                 compiler, // the compiler used
                 arrayOf(generatedJavaFolder, javaFiles), // the java sources that'll be compiled
-                classesCacheFolder // the output folder
+                classesCacheFolder, // the output folder
+                libraryEntries.map { it.classesJar!! }.toTypedArray() // the bytecode jar of each libraries
             )
 
             if (compilerRetVal != 0) {
@@ -140,7 +161,10 @@ class CompileViewModel : ViewModel() {
             val dexerRetVal = dexClasses(
                 dexer, // the dexer used
                 classesCacheFolder, // the classes that'll be dex-ed by the dexer
-                dexCacheFolder // the folder to output the dex files
+                dexCacheFolder, // the folder to output the dex files
+                ArrayList<File>().apply {
+                    libraryEntries.forEach { addAll(it.classesDexes!!) }
+                }.toTypedArray()
             )
 
             if (dexerRetVal != 0) {
@@ -203,26 +227,30 @@ class CompileViewModel : ViewModel() {
     private suspend fun compileJavaSources(
         compiler: JavaCompiler,
         inputFolders: Array<File>,
-        outputFolder: File
+        outputFolder: File,
+        libraryJars: Array<File>? = null
     ): Int {
         log("\n${compiler.name} is starting to compile")
 
         return compiler.compileJava(inputFolders, outputFolder,
                 { runBlocking { log("${compiler.name} >> $it") } },
-                { runBlocking { log("${compiler.name} ERR >> $it") } }
+                { runBlocking { log("${compiler.name} ERR >> $it") } },
+                libraryJars
             )
     }
 
     private suspend fun dexClasses(
         dexer: Dexer,
         compiledClassesFolder: File,
-        outputDex: File
+        outputDex: File,
+        libraries: Array<File>? = null,
     ): Int {
         log("\n${dexer.name} is starting to dex")
 
         return dexer.dex(compiledClassesFolder, outputDex,
                 { runBlocking { log("${dexer.name} >> $it") } },
-                { runBlocking { log("${dexer.name} ERR >> $it") } }
+                { runBlocking { log("${dexer.name} ERR >> $it") } },
+                libraries
             )
     }
 
@@ -243,14 +271,16 @@ class CompileViewModel : ViewModel() {
         androidManifestXml: File,
         rJavaOutput: File,
         outputApk: File,
-        resourcesZip: File
+        resourcesZip: File,
+        libraryPrecompiledResources: Array<File>? = null,
+        libraryPackageNames: Array<String>? = null,
     ): Int {
         log("\nAAPT2 is linking resources")
 
         return NativeBinariesManager
             .executeCommand(
                 NativeBinariesManager.NativeBinaries.AAPT2,
-                arrayOf(
+                arrayListOf(
                     "link",
                     "-I", androidJar.absolutePath,
                     "--auto-add-overlay",
@@ -265,7 +295,19 @@ class CompileViewModel : ViewModel() {
                     "-o", outputApk.absolutePath,
                     resourcesZip.absolutePath,
                     "-v"
-                ),
+                ).apply {
+                    // Add the libraries if they are given
+                    libraryPrecompiledResources?.forEach {
+                        add("-R")
+                        add(it.absolutePath)
+                    }
+
+                    libraryPackageNames?.let {
+                        add("--extra-packages")
+                        add(it.joinToString(":"))
+                    }
+
+                }.toTypedArray(),
                 { runBlocking { log("AAPT2 >> $it") } },
                 { runBlocking { log("AAPT2 ERR >> $it") } }
             )
@@ -303,13 +345,7 @@ class CompileViewModel : ViewModel() {
 
     fun compileLibrary(libraryName: String) {
         viewModelScope.launch {
-            log("Starting to compile library $libraryName")
-
-            val retVal = LibraryManager.compileLibrary(
-                libraryName,
-                { runBlocking { log(it) } },
-                { runBlocking { log(it) } }
-            )
+            val retVal = compileLibraryCoro(libraryName)
 
             if (retVal == 100) {
                 log("Library $libraryName doesn't exist")
@@ -319,6 +355,16 @@ class CompileViewModel : ViewModel() {
 
             log("Compiling finished")
         }
+    }
+
+    suspend fun compileLibraryCoro(libraryName: String): Int {
+        log("Starting to compile library $libraryName")
+
+        return LibraryManager.compileLibrary(
+            libraryName,
+            { runBlocking { log(it) } },
+            { runBlocking { log(it) } }
+        )
     }
 
     // Removes whitespace and " from a string
