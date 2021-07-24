@@ -35,7 +35,7 @@ class ManageProjectLibrariesActivity : AppCompatActivity() {
         moveableLibrariesRecyclerView.layoutManager = LinearLayoutManager(this)
         moveableLibrariesRecyclerView.adapter = adapter
 
-        adapter.setLibraries(project.libraries.map { LibraryManager.getLibraryEntry(it)!! })
+        adapter.setLibraries(project.libraries.mapNotNull { LibraryManager.getLibraryEntry(it) })
 
         addLibrary.setOnClickListener { view ->
             // Show a dialog with all the libraries minus the added libraries
