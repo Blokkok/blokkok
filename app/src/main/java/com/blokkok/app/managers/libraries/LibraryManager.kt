@@ -24,10 +24,7 @@ import java.util.zip.ZipInputStream
  * | L etc..
  * L cache                      -- this will be the cache directory where the compiled dex file and the resources are stored
  *   L appcompat-1.3.0           | compiling the library to a cache will be decided by the user, or when compiling an apk
- *   | L dex
- *   | | L classes1.dex
- *   | | L classes2.dex
- *   | | L ...
+ *   | L classes_dex.jar        -- the dexified jar
  *   | L classes.jar            -- the bytecode jar
  *   | L res.zip                -- compiled resources
  *   L etc..
@@ -99,8 +96,8 @@ object LibraryManager {
                     // 100 is a unique number used to identify that this library doesn't exist
 
         val aarCacheDir        = cacheDir.resolve(name)
-        val dexOutputDir       = cacheDir.resolve(name).resolve("dex")
         val resourcesZipOutput = cacheDir.resolve(name).resolve("res.zip")
+        val dexClassesJar      = cacheDir.resolve(name).resolve("classes_dex.jar")
         val bytecodeClassesJar = cacheDir.resolve(name).resolve("classes.jar")
 
         var packageName: String
@@ -110,7 +107,6 @@ object LibraryManager {
 
         // Don't forget to create the folders
         aarCacheDir.mkdirs()
-        dexOutputDir.mkdir()
 
         val retVal = withContext(Dispatchers.IO) {
             // First, we're going to need to extract the classes jar (and the res folder) and dex it
@@ -133,7 +129,7 @@ object LibraryManager {
 
             stdout("${dexer.name} is starting to dex the library")
 
-            val dexerRetVal = dexer.dex(bytecodeClassesJar, dexOutputDir,
+            val dexerRetVal = dexer.dex(bytecodeClassesJar, dexClassesJar,
                     { stdout("${dexer.name} >> $it") },
                     { stderr("${dexer.name} ERR >> $it") }
                 )
@@ -210,10 +206,8 @@ object LibraryManager {
          * file.zip
          * L name
          * L package
+         * L classes_dex.jar
          * L classes.jar
-         * L dex
-         * | L classes.dex
-         * | L ...
          * L res.zip
          *
          * or basically the structure of the cache

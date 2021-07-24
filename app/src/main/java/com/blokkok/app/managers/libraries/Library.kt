@@ -11,7 +11,7 @@ data class Library(
     val aarPath: String? = null,         // this will be null when the type is PRECOMPILED
     val cacheFolderPath: String? = null, // this will be null when the type is NOT_CACHED
 ) {
-    val classesJar: File?          get() = cacheFolderPath?.let { File(it, "classes.jar") }
-    val classesDexes: Array<File>? get() = cacheFolderPath?.let { File(it, "dex").listFiles()!! }
-    val compiledResources: File?   get() = cacheFolderPath?.let { File(it, "res.zip") }
+    val classesJar: File?        get() = cacheFolderPath?.let { File(it, "classes.jar") }
+    val classesJarDex: File?     get() = cacheFolderPath?.let { File(it, "classes_dex.jar") }
+    val compiledResources: File? get() = cacheFolderPath?.let { File(it, "res.zip") }
 }

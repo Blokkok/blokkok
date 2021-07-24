@@ -162,9 +162,7 @@ class CompileViewModel : ViewModel() {
                 dexer, // the dexer used
                 classesCacheFolder, // the classes that'll be dex-ed by the dexer
                 dexCacheFolder, // the folder to output the dex files
-                ArrayList<File>().apply {
-                    libraryEntries.forEach { addAll(it.classesDexes!!) }
-                }.toTypedArray()
+                libraryEntries.map { it.classesJarDex!! }.toTypedArray()
             )
 
             if (dexerRetVal != 0) {
@@ -357,7 +355,7 @@ class CompileViewModel : ViewModel() {
         }
     }
 
-    suspend fun compileLibraryCoro(libraryName: String): Int {
+    private suspend fun compileLibraryCoro(libraryName: String): Int {
         log("Starting to compile library $libraryName")
 
         return LibraryManager.compileLibrary(
