@@ -13,6 +13,8 @@ import com.blokkok.app.adapters.StoreItemAdapter
 import com.blokkok.app.adapters.StoreItemMetadata
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.delay
 
 
 class StoreFragment : Fragment() {
@@ -35,25 +37,26 @@ class StoreFragment : Fragment() {
         val recyclerView3 = root.findViewById<RecyclerView>(R.id.recyclerView3);
         val recyclerView4 = root.findViewById<RecyclerView>(R.id.recyclerView4);
 
-        recyclerView1.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView2.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView3.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView4.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView1.layoutManager = LinearLayoutManager(context);
+        recyclerView2.layoutManager = LinearLayoutManager(context);
+        recyclerView3.layoutManager = LinearLayoutManager(context);
+        recyclerView4.layoutManager = LinearLayoutManager(context);
 
         sharedContent.get().addOnSuccessListener { document ->
             if (document != null) {
+                // TODO: FIX THIS SHT, ITS NOT WORKING
+
                 val StoreItemList: List<StoreItemMetadata> = ArrayList();
 
                 for (snapshot in document) {
-                    StoreItemList.plusElement(snapshot.toObject(StoreItemMetadata::class.java));
+                    StoreItemList.plus(snapshot.toObject(StoreItemMetadata::class.java));
+                    Log.d("sus", StoreItemList.toString());
                 }
 
                 recyclerView1.adapter = StoreItemAdapter(StoreItemList);
                 recyclerView2.adapter = StoreItemAdapter(StoreItemList);
                 recyclerView3.adapter = StoreItemAdapter(StoreItemList);
                 recyclerView4.adapter = StoreItemAdapter(StoreItemList);
-
-                // TODO: fix java.lang.RuntimeException: Could not deserialize object. Class com.blokkok.app.adapters.StoreItemMetadata does not define a no-argument constructor. If you are using ProGuard, make sure these constructors are not stripped
             } else {
                 Log.d("DataBase", "No such document");
             }

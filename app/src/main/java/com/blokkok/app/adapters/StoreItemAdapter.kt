@@ -1,48 +1,53 @@
 package com.blokkok.app.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.R
-import com.blokkok.app.managers.projects.ProjectMetadata
-import kotlinx.serialization.Serializable
+import java.util.*
+import kotlin.collections.ArrayList
 
-@Serializable
 data class StoreItemMetadata(
-    val title: String,
-    val description: String,
-    val whats_new: String,
-    val downloads: Int,
-    val likes: List<String>,
-    val owner: String,
-    val type: String,
-    val file: String,
-    val publish_date: Int,
-    val update_date: Int,
-    val visibility: String,
+    val title: String = "Error",
+    val description: String = "Error",
+    val whats_new: String = "Error",
+    val downloads: Int = 0,
+    val likes: ArrayList<String> = ArrayList(),
+    val owner: String = "uidError",
+    val type: String = "project",
+    val file: String = "error",
+    val publish_date: Date? = null,
+    val update_date: Date? = null,
+    val visibility: String = "public",
 );
 
 class StoreItemAdapter(
     private var storeList: List<StoreItemMetadata>
 
-) : RecyclerView.Adapter<ProjectsRecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<StoreItemAdapter.ViewHolder>() {
     fun updateView(newStoreList: List<StoreItemMetadata>) {
-        storeList = newStoreList
-        notifyDataSetChanged()
+        storeList = newStoreList;
+        notifyDataSetChanged();
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsRecyclerView.ViewHolder =
-        ProjectsRecyclerView.ViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
             LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.store_item, parent, false)
         )
 
-    override fun onBindViewHolder(holder: ProjectsRecyclerView.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val currentItem = storeList[position];
+
+        holder.textViewModuleTitle.text = currentItem.title;
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+    override fun getItemCount(): Int = storeList.size;
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textViewModuleTitle: TextView = itemView.findViewById(R.id.textViewModuleTitle);
     }
 }
