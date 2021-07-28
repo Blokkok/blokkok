@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:id="@+id/recyclerView1"/>
+                    android:id="@+id/new_modules_recyclerview"/>
 
             </LinearLayout>
 
@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:id="@+id/recyclerView2"/>
+                    android:id="@+id/trending_modules_recyclerview"/>
 
             </LinearLayout>
 
@@ -116,7 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:id="@+id/recyclerView3"/>
+                    android:id="@+id/new_projects_recyclerview"/>
 
             </LinearLayout>
 
@@ -151,7 +151,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:id="@+id/recyclerView4"/>
+                    android:id="@+id/trending_projects_recyclerview"/>
 
             </LinearLayout>
 
