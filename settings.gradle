@@ -2,3 +2,5 @@ rootProject.name = "Blokkok"
 include ':app'
 include ':module-system'
 include ':module-interface'
+project(':module-system').projectDir = new File(rootDir, 'submodules/blokkok-modsys/module-system/')
+project(':module-interface').projectDir = new File(rootDir, 'submodules/blokkok-modsys/module-interface/')
