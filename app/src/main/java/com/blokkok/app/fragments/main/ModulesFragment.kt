@@ -8,14 +8,17 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.R
+import com.blokkok.app.adapters.ModulesRecyclerViewAdapter
 import com.blokkok.app.viewmodels.main.ModulesViewModel
-import com.blokkok.modsys.ModuleManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.zip.ZipInputStream
 
 class ModulesFragment : Fragment() {
+
     val viewModel: ModulesViewModel by viewModels()
+    val modulesAdapter = ModulesRecyclerViewAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,6 +27,10 @@ class ModulesFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_modules, container, false)
         val addModuleFab = root.findViewById<FloatingActionButton>(R.id.addModule)
+        val modulesRecyclerView = root.findViewById<RecyclerView>(R.id.moduleList)
+
+        modulesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        modulesRecyclerView.adapter = modulesAdapter
 
         val importModule = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
             if (it == null) return@registerForActivityResult
@@ -38,12 +45,15 @@ class ModulesFragment : Fragment() {
         return root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.toastAction.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
+
+        viewModel.modules.observe(viewLifecycleOwner) { modulesAdapter.updateView(it) }
+        viewModel.loadModules()
     }
 
     companion object {
