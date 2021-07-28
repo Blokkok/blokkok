@@ -1,0 +1,3 @@
+[submodule "submodules/blokkok-modsys"]
+	path = submodules/blokkok-modsys
+	url = https://github.com/Blokkok/blokkok-modsys

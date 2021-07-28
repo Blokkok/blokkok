@@ -1,2 +1,4 @@
 rootProject.name = "Blokkok"
 include ':app'
+include ':module-system'
+include ':module-interface'
