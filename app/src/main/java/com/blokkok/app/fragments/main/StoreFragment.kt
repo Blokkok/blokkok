@@ -35,10 +35,10 @@ class StoreFragment : Fragment() {
         val newProjectsRV = root.findViewById<RecyclerView>(R.id.new_projects_recyclerview);
         val trendProjectsRV = root.findViewById<RecyclerView>(R.id.trending_projects_recyclerview);
 
-        newModulesRV.layoutManager    = LinearLayoutManager(context);
-        trendModulesRV.layoutManager  = LinearLayoutManager(context);
-        newProjectsRV.layoutManager   = LinearLayoutManager(context);
-        trendProjectsRV.layoutManager = LinearLayoutManager(context);
+        newModulesRV.layoutManager    = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        trendModulesRV.layoutManager  = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        newProjectsRV.layoutManager   = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        trendProjectsRV.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
 
         sharedContent.get().addOnSuccessListener { document ->
             if (document != null) {

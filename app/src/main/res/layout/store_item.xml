@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
     <LinearLayout
         android:id="@+id/linear1"
@@ -29,7 +29,7 @@
             android:focusable="false"
             android:padding="4dp"
             android:text="module_name"
-            android:textColor="#000000"
+            android:textColor="@color/colorOnBackground"
             android:textSize="12sp" />
 
         <LinearLayout
@@ -45,8 +45,9 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:focusable="false"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_launcher" />
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_round_favorite"
+                app:tint="@color/colorOnBackground" />
 
             <TextView
                 android:id="@+id/textview2"
@@ -64,8 +65,9 @@
                 android:layout_height="14dp"
                 android:layout_marginStart="8dp"
                 android:focusable="false"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_launcher" />
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_round_get_app"
+                app:tint="@color/colorOnBackground" />
 
             <TextView
                 android:id="@+id/textview3"
