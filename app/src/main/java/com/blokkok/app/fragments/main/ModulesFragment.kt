@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -26,8 +28,12 @@ class ModulesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_modules, container, false)
+
         val addModuleFab = root.findViewById<FloatingActionButton>(R.id.addModule)
         val modulesRecyclerView = root.findViewById<RecyclerView>(R.id.moduleList)
+
+        val loadModules = root.findViewById<Button>(R.id.load_modules)
+        val unloadModules = root.findViewById<Button>(R.id.unload_modules)
 
         modulesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         modulesRecyclerView.adapter = modulesAdapter
@@ -42,6 +48,9 @@ class ModulesFragment : Fragment() {
             importModule.launch(arrayOf("application/zip"))
         }
 
+        loadModules.setOnClickListener { viewModel.loadModules() }
+        unloadModules.setOnClickListener { viewModel.unloadModules() }
+
         return root
     }
 
@@ -52,8 +61,22 @@ class ModulesFragment : Fragment() {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
 
+        val modulesLoadStatus = view.findViewById<TextView>(R.id.module_load_status)
+
+        val loadModules = view.findViewById<Button>(R.id.load_modules)
+        val unloadModules = view.findViewById<Button>(R.id.unload_modules)
+
+        viewModel.loadStatus.observe(viewLifecycleOwner) {
+            modulesLoadStatus.text = it
+        }
+
+        viewModel.loadingModulesStatus.observe(viewLifecycleOwner) {
+            loadModules.isEnabled = !it
+            unloadModules.isEnabled = !it
+        }
+
         viewModel.modules.observe(viewLifecycleOwner) { modulesAdapter.updateView(it) }
-        viewModel.loadModules()
+        viewModel.listModules()
     }
 
     companion object {

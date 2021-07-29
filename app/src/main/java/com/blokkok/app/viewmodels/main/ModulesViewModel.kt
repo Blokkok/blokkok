@@ -1,11 +1,9 @@
 package com.blokkok.app.viewmodels.main
 
+import android.app.Application
 import android.content.ContentResolver
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.blokkok.modsys.ModuleManager
 import com.blokkok.modsys.models.ModuleMetadata
 import kotlinx.coroutines.Dispatchers
@@ -13,13 +11,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.zip.ZipInputStream
 
-class ModulesViewModel : ViewModel() {
+class ModulesViewModel(application: Application) : AndroidViewModel(application) {
 
     private val modulesMutable = MutableLiveData<List<ModuleMetadata>>()
     private val toastActionMutable = MutableLiveData<String>()
+    private val loadStatusMutable = MutableLiveData<String>()
+    private val loadingModulesStatusMutable = MutableLiveData<Boolean>()
 
     val toastAction: LiveData<String> = toastActionMutable
     val modules: LiveData<List<ModuleMetadata>> = modulesMutable
+    val loadStatus: LiveData<String> = loadStatusMutable
+    val loadingModulesStatus: LiveData<Boolean> = loadingModulesStatusMutable
 
     fun importModule(contentResolver: ContentResolver, uri: Uri) {
         val descriptor = contentResolver.openAssetFileDescriptor(uri, "r")!!
@@ -28,7 +30,7 @@ class ModulesViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             ModuleManager.importModule(ZipInputStream(inputStream))
 
-            loadModules()
+            listModules()
 
             withContext(Dispatchers.Main) {
                 toastActionMutable.value = "Module has been successfully imported"
@@ -36,9 +38,39 @@ class ModulesViewModel : ViewModel() {
         }
     }
 
-    fun loadModules() {
+    fun listModules() {
         viewModelScope.launch {
             modulesMutable.value = ModuleManager.listModules().values.toList()
+        }
+    }
+
+    fun loadModules() {
+        loadingModulesStatusMutable.value = true
+        loadStatusMutable.value = "Loading modules"
+
+        viewModelScope.launch(Dispatchers.Unconfined) {
+            ModuleManager.loadModules(getApplication())
+
+            withContext(Dispatchers.Main) {
+                loadingModulesStatusMutable.value = false
+                loadStatusMutable.value = "Modules loaded"
+                toastActionMutable.value = "Modules has been successfully loaded!"
+            }
+        }
+    }
+
+    fun unloadModules() {
+        loadingModulesStatusMutable.value = true
+        loadStatusMutable.value = "Unloading modules"
+
+        viewModelScope.launch(Dispatchers.Unconfined) {
+            ModuleManager.loadModules(getApplication())
+
+            withContext(Dispatchers.Main) {
+                loadingModulesStatusMutable.value = false
+                loadStatusMutable.value = "Modules unloaded"
+                toastActionMutable.value = "Modules has been successfully unloaded!"
+            }
         }
     }
 }

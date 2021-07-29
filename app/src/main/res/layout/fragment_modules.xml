@@ -1,23 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/moduleList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flow" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addModule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="Add Module"
         android:src="@drawable/ic_round_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@color/colorControlHighlight" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <TextView
+        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:id="@+id/module_load_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:text="No modules loaded"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/load_modules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load all"
+        tools:layout_editor_absoluteX="62dp"
+        tools:layout_editor_absoluteY="96dp" />
+
+    <Button
+        android:id="@+id/unload_modules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unload all" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:constraint_referenced_ids="load_modules,unload_modules"
+        app:flow_horizontalGap="18dp"
+        app:layout_constraintEnd_toEndOf="@+id/module_load_status"
+        app:layout_constraintStart_toStartOf="@+id/module_load_status"
+        app:layout_constraintTop_toBottomOf="@+id/module_load_status" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

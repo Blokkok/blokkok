@@ -24,11 +24,13 @@
             <TextView
                 android:id="@+id/module_title"
                 style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="TextView"
+                app:layout_constraintEnd_toStartOf="@+id/enable_module"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,9 +43,18 @@
                 android:layout_marginBottom="16dp"
                 android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/enable_module"
                 app:layout_constraintStart_toStartOf="@+id/module_title"
                 app:layout_constraintTop_toBottomOf="@+id/module_title" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/enable_module"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

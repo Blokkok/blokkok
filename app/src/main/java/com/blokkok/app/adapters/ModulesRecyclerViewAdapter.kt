@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.R
+import com.blokkok.modsys.ModuleManager
 import com.blokkok.modsys.models.ModuleMetadata
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class ModulesRecyclerViewAdapter : RecyclerView.Adapter<ModulesRecyclerViewAdapter.ViewHolder>() {
 
@@ -29,6 +31,13 @@ class ModulesRecyclerViewAdapter : RecyclerView.Adapter<ModulesRecyclerViewAdapt
 
         holder.name.text = curModule.name
         holder.description.text = curModule.description
+        holder.enableSwitch.setOnCheckedChangeListener { _, checked ->
+            if (checked) {
+                ModuleManager.enableModule(curModule.id)
+            } else {
+                ModuleManager.disableModule(curModule.id)
+            }
+        }
     }
 
     override fun getItemCount(): Int = modules.size
@@ -36,5 +45,6 @@ class ModulesRecyclerViewAdapter : RecyclerView.Adapter<ModulesRecyclerViewAdapt
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.module_title)
         val description: TextView = itemView.findViewById(R.id.module_desc)
+        val enableSwitch: SwitchMaterial = itemView.findViewById(R.id.enable_module)
     }
 }
