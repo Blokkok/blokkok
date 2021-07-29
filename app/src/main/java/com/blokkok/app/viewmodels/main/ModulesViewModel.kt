@@ -49,7 +49,9 @@ class ModulesViewModel(application: Application) : AndroidViewModel(application)
         loadStatusMutable.value = "Loading modules"
 
         viewModelScope.launch(Dispatchers.Unconfined) {
-            ModuleManager.loadModules(getApplication())
+            ModuleManager.loadModules({
+                toastActionMutable.value = it
+            }, (getApplication() as Application).codeCacheDir.absolutePath)
 
             withContext(Dispatchers.Main) {
                 loadingModulesStatusMutable.value = false
@@ -64,7 +66,7 @@ class ModulesViewModel(application: Application) : AndroidViewModel(application)
         loadStatusMutable.value = "Unloading modules"
 
         viewModelScope.launch(Dispatchers.Unconfined) {
-            ModuleManager.loadModules(getApplication())
+            ModuleManager.unloadModules()
 
             withContext(Dispatchers.Main) {
                 loadingModulesStatusMutable.value = false
