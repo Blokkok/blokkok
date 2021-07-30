@@ -46,6 +46,8 @@ class EditorFragment : Fragment(R.layout.editor_fragment) {
         val compileButton   = binding.compileButton
 
         actionBar.subtitle = project.name
+        actionBar.setOnMenuItemClickListener(::menuClick)
+
         viewModel.initializeProjectEditor(project, project.edit(requireContext()))
 
         editorAdapter =
@@ -79,11 +81,7 @@ class EditorFragment : Fragment(R.layout.editor_fragment) {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.editor_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+    private fun menuClick(item: MenuItem): Boolean = when (item.itemId) {
         R.id.em_clear_cache -> {
             viewModel.clearCompileCache(projectId) {
                 Toast.makeText(requireContext(), "Cache cleared!", Toast.LENGTH_SHORT).show()
