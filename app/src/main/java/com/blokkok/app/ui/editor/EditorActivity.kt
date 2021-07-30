@@ -9,7 +9,6 @@ import com.blokkok.app.ui.editor.fragments.EditorFragment
 class EditorActivity : AppCompatActivity() {
 
     private lateinit var projectId: String
-
     private lateinit var binding: ActivityEditorBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +26,12 @@ class EditorActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.editor_fragment_container, EditorFragment::class.java, editorArgs)
+            .replace(
+                R.id.editor_fragment_container,
+                EditorFragment::class.java,
+                editorArgs,
+                "editor"
+            )
             .commit()
     }
 }

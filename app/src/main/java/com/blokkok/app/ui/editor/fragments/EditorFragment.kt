@@ -2,8 +2,6 @@ package com.blokkok.app.ui.editor.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -12,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.blokkok.app.R
 import com.blokkok.app.databinding.EditorFragmentBinding
 import com.blokkok.app.managers.projects.ProjectMetadata
+import com.blokkok.app.managers.projects.ProjectsManager
 import com.blokkok.app.ui.compile.CompileActivity
 import com.blokkok.app.ui.editor.adapters.EditorPagerAdapter
 import com.blokkok.app.ui.editor.viewmodels.EditorViewModel
@@ -94,11 +93,19 @@ class EditorFragment : Fragment(R.layout.editor_fragment) {
         }
 
         R.id.em_manage_libraries -> {
-            startActivity(
-                Intent(requireContext(), ManageProjectLibrariesFragment::class.java).apply {
-                    putExtra("project_id", projectId)
-                }
-            )
+            val args = Bundle().apply {
+                putString("project_id", projectId)
+            }
+
+            val fragment = ManageProjectLibrariesFragment()
+            fragment.arguments = args
+
+            requireActivity()
+                .supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.editor_fragment_container, fragment, "manage_libraries")
+                .addToBackStack("editor")
+                .commit()
 
             true
         }
