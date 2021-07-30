@@ -34,6 +34,9 @@ class EditorFragment : Fragment(R.layout.editor_fragment) {
         args?.let {
             projectId = args.getString("project_id")
                 ?: throw NullPointerException("The project_id intent extra isn't provided on EditorActivity")
+
+            project = ProjectsManager.getProject(projectId)
+                ?: throw NullPointerException("Project $projectId doesn't exist")
         }
     }
 
