@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import com.blokkok.app.R
 import com.blokkok.app.databinding.CompileFragmentBinding
 import com.blokkok.app.managers.projects.ProjectMetadata
-import com.blokkok.app.viewmodels.compiler.CompileViewModel
+import com.blokkok.app.ui.compile.viewmodels.CompileViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import java.io.File
 import java.io.FileInputStream

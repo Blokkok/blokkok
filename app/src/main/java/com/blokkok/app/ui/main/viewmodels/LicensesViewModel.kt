@@ -1,7 +1,6 @@
 package com.blokkok.app.ui.main.viewmodels
 
 import android.content.res.AssetManager
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.R
 import com.blokkok.app.databinding.FragmentLibrariesBinding
 import com.blokkok.app.ui.main.adapters.LibrariesRecyclerView
-import com.blokkok.app.viewmodels.main.LibrariesViewModel
+import com.blokkok.app.ui.main.viewmodels.LibrariesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 

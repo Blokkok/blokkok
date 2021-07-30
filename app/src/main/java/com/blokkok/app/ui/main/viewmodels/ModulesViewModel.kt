@@ -1,4 +1,4 @@
-package com.blokkok.app.viewmodels.main
+package com.blokkok.app.ui.main.viewmodels
 
 import android.app.Application
 import android.content.ContentResolver

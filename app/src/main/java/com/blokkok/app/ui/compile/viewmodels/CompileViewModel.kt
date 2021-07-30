@@ -1,4 +1,4 @@
-package com.blokkok.app.viewmodels.compiler
+package com.blokkok.app.ui.compile.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.LiveData
