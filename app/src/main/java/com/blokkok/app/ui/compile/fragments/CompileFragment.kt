@@ -2,21 +2,17 @@ package com.blokkok.app.ui.compile.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ScrollView
-import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.blokkok.app.R
+import com.blokkok.app.databinding.CompileFragmentBinding
 import com.blokkok.app.managers.projects.ProjectMetadata
 import com.blokkok.app.viewmodels.compiler.CompileViewModel
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import java.io.File
 import java.io.FileInputStream
-
 
 // TODO: 7/13/21 ForegroundService would be cool
 
@@ -27,15 +23,10 @@ class CompileFragment(
 
     private val viewModel: CompileViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.compile_fragment, container, false)
-    }
-
     private lateinit var apkFile: File
     private lateinit var saveFile: ActivityResultLauncher<String>
+
+    private val binding: CompileFragmentBinding by viewBinding(CompileFragmentBinding::bind)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -66,8 +57,8 @@ class CompileFragment(
     override fun onStart() {
         super.onStart()
 
-        val out = requireView().findViewById<TextView>(R.id.compile_out)
-        val vscroll = requireView().findViewById<ScrollView>(R.id.log_vscroll)
+        val out = binding.compileOut
+        val vscroll = binding.logVscroll
 
         viewModel.outputLiveData.observe(viewLifecycleOwner) {
             out.append(it)

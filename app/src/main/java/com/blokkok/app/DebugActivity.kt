@@ -2,19 +2,23 @@ package com.blokkok.app
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.blokkok.app.databinding.ActivityDebugBinding
 
 class DebugActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityDebugBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_debug);
+        super.onCreate(savedInstanceState)
 
-        val reportButton = findViewById<Button>(R.id.reportButton);
-        val errorTextView = findViewById<TextView>(R.id.errorTextView);
+        binding = ActivityDebugBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        errorTextView.text = this.intent.getStringExtra("error");
+        val reportButton = binding.reportButton
+        val errorTextView = binding.errorTextView
+
+        errorTextView.text = intent.getStringExtra("error");
 
         reportButton.setOnClickListener {
             AlertDialog.Builder(this)

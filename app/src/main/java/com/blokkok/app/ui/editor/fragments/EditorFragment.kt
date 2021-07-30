@@ -6,19 +6,17 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import com.blokkok.app.R
+import com.blokkok.app.databinding.EditorFragmentBinding
 import com.blokkok.app.managers.projects.ProjectMetadata
 import com.blokkok.app.ui.compile.CompileActivity
 import com.blokkok.app.ui.editor.adapters.EditorPagerAdapter
 import com.blokkok.app.ui.editor.viewmodels.EditorViewModel
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
 class EditorFragment : Fragment(R.layout.editor_fragment) {
 
@@ -26,8 +24,9 @@ class EditorFragment : Fragment(R.layout.editor_fragment) {
 
     private lateinit var editorAdapter: EditorPagerAdapter
     private lateinit var project: ProjectMetadata
-
     private lateinit var projectId: String
+
+    private val binding by viewBinding(EditorFragmentBinding::bind)
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
@@ -41,11 +40,10 @@ class EditorFragment : Fragment(R.layout.editor_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val actionBar = view.findViewById<Toolbar>(R.id.toolBar)
-        val editorViewPager = view.findViewById<ViewPager2>(R.id.editor_viewpager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tabs)
-
-        val compileButton = view.findViewById<Button>(R.id.compile_button)
+        val actionBar       = binding.toolBar
+        val editorViewPager = binding.editorViewpager
+        val tabLayout       = binding.tabs
+        val compileButton   = binding.compileButton
 
         actionBar.subtitle = project.name
         viewModel.initializeProjectEditor(project, project.edit(requireContext()))

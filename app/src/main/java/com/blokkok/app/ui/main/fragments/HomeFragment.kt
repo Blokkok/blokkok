@@ -1,35 +1,30 @@
 package com.blokkok.app.ui.main.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.blokkok.app.R
+import com.blokkok.app.databinding.FragmentHomeBinding
 import com.blokkok.app.ui.main.adapters.ProjectsRecyclerView
 import com.blokkok.app.viewmodels.main.HomeViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var projectsAdapter: ProjectsRecyclerView
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
+    private val binding by viewBinding(FragmentHomeBinding::bind)
 
-        val newProjectFab = root.findViewById<FloatingActionButton>(R.id.newProject)
-        val projectsRecyclerView = root.findViewById<RecyclerView>(R.id.projectList)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val newProjectFab = binding.newProject
+        val projectsRecyclerView = binding.projectList
 
         projectsAdapter = ProjectsRecyclerView(emptyList())
 
@@ -62,12 +57,6 @@ class HomeFragment : Fragment() {
                 .create()
                 .show()
         }
-
-        return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         viewModel.fetchProjects()
         viewModel.projectsLiveData.observe(viewLifecycleOwner) { projects ->

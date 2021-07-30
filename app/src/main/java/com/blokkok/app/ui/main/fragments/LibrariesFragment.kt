@@ -4,19 +4,18 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blokkok.app.R
+import com.blokkok.app.databinding.FragmentLibrariesBinding
 import com.blokkok.app.ui.main.adapters.LibrariesRecyclerView
 import com.blokkok.app.viewmodels.main.LibrariesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
 
 class LibrariesFragment : Fragment() {
@@ -24,18 +23,13 @@ class LibrariesFragment : Fragment() {
     private val librariesAdapter = LibrariesRecyclerView(emptyArray())
     private val viewModel: LibrariesViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_libraries, container, false);
-    }
+    private val binding by viewBinding(FragmentLibrariesBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val librariesRecyclerView: RecyclerView = view.findViewById(R.id.rv_libraries)
-        val addLibraries: FloatingActionButton  = view.findViewById(R.id.libraries_add)
+        val librariesRecyclerView: RecyclerView = binding.rvLibraries
+        val addLibraries: FloatingActionButton  = binding.librariesAdd
 
         librariesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         librariesRecyclerView.adapter = librariesAdapter

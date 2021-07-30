@@ -6,13 +6,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.blokkok.app.R
+import com.blokkok.app.databinding.ActivityMainBinding
 import com.blokkok.app.managers.binariesABI
 import com.blokkok.app.ui.main.fragments.*
 import com.google.android.material.navigation.NavigationView
@@ -23,9 +22,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawerNavView: NavigationView
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Check if this device supports the binaries' abi
         if (!Build.SUPPORTED_ABIS.contains(binariesABI)) {
@@ -44,14 +47,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return
         }
 
-        val actionBar = findViewById<View>(R.id.toolBar) as Toolbar
+        val actionBar = binding.toolBar
         setSupportActionBar(actionBar)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
 
-        drawerLayout = findViewById(R.id.drawer_layout)
-        drawerNavView = findViewById(R.id.nav_view)
+        drawerLayout = binding.drawerLayout
+        drawerNavView = binding.navView
 
         drawerToggle = ActionBarDrawerToggle(
             this,
