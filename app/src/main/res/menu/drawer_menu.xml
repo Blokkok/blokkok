@@ -27,9 +27,9 @@
             android:icon="@drawable/ic_round_alternate_email"
             android:title="About" />
         <item
-            android:id="@+id/licenses"
+            android:id="@+id/license"
             android:icon="@drawable/ic_round_insert_drive_file"
-            android:title="Licenses" />
+            android:title="License" />
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_round_settings"

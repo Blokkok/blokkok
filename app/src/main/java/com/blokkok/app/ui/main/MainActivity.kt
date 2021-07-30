@@ -169,19 +169,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
 
-            R.id.licenses -> {
-                drawerLayout.closeDrawer(GravityCompat.START);
-                drawerNavView.setCheckedItem(R.id.licenses);
+            R.id.license -> {
+                drawerLayout.closeDrawer(GravityCompat.START)
+                drawerNavView.setCheckedItem(R.id.license)
 
-                supportActionBar!!.subtitle = "Licenses";
+                supportActionBar!!.subtitle = "License"
 
-                val licensesFragment = LicensesFragment();
+                val licensesFragment = LicenseFragment()
 
                 drawerFragmentTransaction
                     .replace(R.id.fragmentContainer, licensesFragment)
-                    .commit();
+                    .commit()
 
-                return true;
+                return true
             }
 
             R.id.settings -> {
