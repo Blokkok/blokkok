@@ -8,12 +8,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blokkok.app.R
 import com.blokkok.app.databinding.FragmentHomeBinding
 import com.blokkok.app.ui.main.adapters.ProjectsRecyclerView
 import com.blokkok.app.viewmodels.main.HomeViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var projectsAdapter: ProjectsRecyclerView

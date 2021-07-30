@@ -11,14 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blokkok.app.R
 import com.blokkok.app.databinding.FragmentLibrariesBinding
 import com.blokkok.app.ui.main.adapters.LibrariesRecyclerView
 import com.blokkok.app.viewmodels.main.LibrariesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
-
-class LibrariesFragment : Fragment() {
+class LibrariesFragment : Fragment(R.layout.fragment_libraries) {
 
     private val librariesAdapter = LibrariesRecyclerView(emptyArray())
     private val viewModel: LibrariesViewModel by viewModels()

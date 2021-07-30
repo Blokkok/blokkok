@@ -7,12 +7,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blokkok.app.R
 import com.blokkok.app.databinding.FragmentModulesBinding
 import com.blokkok.app.ui.main.adapters.ModulesRecyclerViewAdapter
 import com.blokkok.app.viewmodels.main.ModulesViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
-class ModulesFragment : Fragment() {
+class ModulesFragment : Fragment(R.layout.fragment_modules) {
 
     val viewModel: ModulesViewModel by viewModels()
     val modulesAdapter = ModulesRecyclerViewAdapter()

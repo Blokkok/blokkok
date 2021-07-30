@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blokkok.app.R
 import com.blokkok.app.databinding.FragmentStoreBinding
 import com.blokkok.app.ui.main.adapters.StoreItemAdapter
 import com.blokkok.app.ui.main.adapters.StoreItemMetadata
@@ -13,7 +14,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 
-class StoreFragment : Fragment() {
+class StoreFragment : Fragment(R.layout.fragment_store) {
 
     private val binding by viewBinding(FragmentStoreBinding::bind)
 

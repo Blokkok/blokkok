@@ -7,6 +7,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.blokkok.app.R
 import com.blokkok.app.databinding.CompileFragmentBinding
 import com.blokkok.app.managers.projects.ProjectMetadata
 import com.blokkok.app.viewmodels.compiler.CompileViewModel
@@ -19,7 +20,7 @@ import java.io.FileInputStream
 class CompileFragment(
     private val project: ProjectMetadata? = null,
     private val libraryName: String? = null,
-) : Fragment() {
+) : Fragment(R.layout.compile_fragment) {
 
     private val viewModel: CompileViewModel by viewModels()
 
