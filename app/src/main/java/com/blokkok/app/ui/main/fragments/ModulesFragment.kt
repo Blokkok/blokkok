@@ -1,4 +1,4 @@
-package com.blokkok.app.fragments.main
+package com.blokkok.app.ui.main.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.R
-import com.blokkok.app.adapters.ModulesRecyclerViewAdapter
+import com.blokkok.app.ui.main.adapters.ModulesRecyclerViewAdapter
 import com.blokkok.app.viewmodels.main.ModulesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 

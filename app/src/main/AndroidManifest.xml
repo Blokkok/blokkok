@@ -8,12 +8,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/BlokkokTheme">
-        <activity android:name=".DebugActivity"></activity>
-        <activity android:name=".CompileActivity" />
-        <activity android:name=".EditorActivity" />
-        <activity android:name=".ManageProjectLibrariesActivity" />
-        <activity android:name=".MainActivity">
+        android:theme="@style/BlokkokTheme"
+        android:name=".BlokkokApplication">
+        <activity android:name=".DebugActivity" />
+        <activity android:name=".ui.compile.CompileActivity" />
+        <activity android:name=".ui.editor.EditorActivity" />
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

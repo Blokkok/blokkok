@@ -1,4 +1,4 @@
-package com.blokkok.app.fragments.main
+package com.blokkok.app.ui.main.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -9,17 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.R
-import com.blokkok.app.adapters.StoreItemAdapter
-import com.blokkok.app.adapters.StoreItemMetadata
+import com.blokkok.app.ui.main.adapters.StoreItemAdapter
+import com.blokkok.app.ui.main.adapters.StoreItemMetadata
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
 class StoreFragment : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState);
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

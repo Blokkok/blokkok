@@ -1,6 +1,5 @@
-package com.blokkok.app.adapters
+package com.blokkok.app.ui.editor.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +56,7 @@ class MoveableLibrariesRecyclerView : RecyclerView.Adapter<MoveableLibrariesRecy
     override fun getItemCount(): Int = libraries.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val root: View              = itemView.findViewById(R.id.mli_root)
+        // val root: View              = itemView.findViewById(R.id.mli_root)
         val libraryName: TextView   = itemView.findViewById(R.id.mli_library_name)
         val up: View                = itemView.findViewById(R.id.mli_up)
         val down: View              = itemView.findViewById(R.id.mli_down)

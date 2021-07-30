@@ -1,4 +1,4 @@
-package com.blokkok.app.fragments.main
+package com.blokkok.app.ui.main.fragments
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener

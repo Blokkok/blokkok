@@ -5,7 +5,7 @@
     android:id="@+id/root_compile_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.compiler.CompileFragment">
+    tools:context=".ui.compile.fragments.CompileFragment">
 
     <ScrollView
         android:id="@+id/log_vscroll"

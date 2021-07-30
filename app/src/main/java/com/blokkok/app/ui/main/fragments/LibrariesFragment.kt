@@ -1,7 +1,6 @@
-package com.blokkok.app.fragments.main
+package com.blokkok.app.ui.main.fragments
 
 import android.content.ContentResolver
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -15,8 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blokkok.app.R
-import com.blokkok.app.adapters.LibrariesRecyclerView
-import com.blokkok.app.managers.libraries.LibraryManager
+import com.blokkok.app.ui.main.adapters.LibrariesRecyclerView
 import com.blokkok.app.viewmodels.main.LibrariesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 

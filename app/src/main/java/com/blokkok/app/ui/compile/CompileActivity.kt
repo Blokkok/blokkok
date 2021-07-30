@@ -1,9 +1,10 @@
-package com.blokkok.app
+package com.blokkok.app.ui.compile
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.blokkok.app.fragments.compiler.CompileFragment
+import com.blokkok.app.R
 import com.blokkok.app.managers.projects.ProjectsManager
+import com.blokkok.app.ui.compile.fragments.CompileFragment
 
 class CompileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

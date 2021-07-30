@@ -1,10 +1,9 @@
 package com.blokkok.app.managers.projects
 
 import java.io.File
-import kotlin.coroutines.CoroutineContext
 
 class ProjectEditor(
-    private val dataDir: File
+    dataDir: File
 ) {
 
     private val javaFolder = File(dataDir, "java")

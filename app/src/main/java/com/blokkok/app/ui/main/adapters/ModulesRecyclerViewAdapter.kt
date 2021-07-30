@@ -1,4 +1,4 @@
-package com.blokkok.app.adapters
+package com.blokkok.app.ui.main.adapters
 
 import android.view.LayoutInflater
 import android.view.View

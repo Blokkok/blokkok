@@ -1,4 +1,4 @@
-package com.blokkok.app.adapters
+package com.blokkok.app.ui.main.adapters
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.blokkok.app.CompileActivity
 import com.blokkok.app.R
 import com.blokkok.app.managers.libraries.Library
 import com.blokkok.app.managers.libraries.LibraryManager
 import com.blokkok.app.managers.libraries.LibraryType
+import com.blokkok.app.ui.compile.CompileActivity
 
 class LibrariesRecyclerView(
     private var libraries: Array<Library>

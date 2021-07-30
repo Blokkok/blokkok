@@ -1,4 +1,4 @@
-package com.blokkok.app.fragments.editor
+package com.blokkok.app.ui.editor.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

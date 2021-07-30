@@ -1,20 +1,20 @@
-package com.blokkok.app.adapters
+package com.blokkok.app.ui.editor.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.blokkok.app.fragments.editor.JavaCodeFragment
-import com.blokkok.app.fragments.editor.LayoutCodeFragment
-import com.blokkok.app.fragments.editor.ManifestCodeFragment
+import com.blokkok.app.ui.editor.fragments.JavaCodeFragment
+import com.blokkok.app.ui.editor.fragments.LayoutCodeFragment
+import com.blokkok.app.ui.editor.fragments.ManifestCodeFragment
 
 class EditorPagerAdapter(
     fragmentActivity: FragmentActivity,
-    private val javaSaveCode: (String) -> Unit,
     private val initialJavaCode: String,
-    private val layoutSaveCode: (String) -> Unit,
+    private val javaSaveCode: (String) -> Unit,
     private val initialLayoutCode: String,
-    private val manifestSaveCode: (String) -> Unit,
+    private val layoutSaveCode: (String) -> Unit,
     private val initialManifestCode: String,
+    private val manifestSaveCode: (String) -> Unit,
 ) : FragmentStateAdapter(fragmentActivity) {
 
     override fun getItemCount(): Int = 3

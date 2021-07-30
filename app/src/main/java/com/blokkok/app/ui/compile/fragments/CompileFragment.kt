@@ -1,4 +1,4 @@
-package com.blokkok.app.fragments.compiler
+package com.blokkok.app.ui.compile.fragments
 
 import android.content.Context
 import android.os.Bundle

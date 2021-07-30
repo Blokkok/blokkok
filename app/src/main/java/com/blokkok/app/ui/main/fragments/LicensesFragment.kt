@@ -1,4 +1,4 @@
-package com.blokkok.app.fragments.main;
+package com.blokkok.app.ui.main.fragments;
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,11 +13,5 @@ class LicensesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_licenses, container, false);
-    }
-
-    companion object {
-        fun newInstance(): LicensesFragment {
-            return LicensesFragment();
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.blokkok.app.adapters
+package com.blokkok.app.ui.main.adapters
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.blokkok.app.EditorActivity
 import com.blokkok.app.R
 import com.blokkok.app.managers.projects.ProjectMetadata
+import com.blokkok.app.ui.editor.EditorActivity
 
 class ProjectsRecyclerView(
     private var projects: List<ProjectMetadata>

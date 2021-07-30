@@ -5,4 +5,4 @@
     android:id="@+id/activity_compile_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CompileActivity" />
+    tools:context=".ui.compile.CompileActivity" />

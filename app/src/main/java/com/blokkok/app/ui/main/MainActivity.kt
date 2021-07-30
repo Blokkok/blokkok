@@ -1,4 +1,4 @@
-package com.blokkok.app
+package com.blokkok.app.ui.main
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -12,16 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.blokkok.app.fragments.main.*
-import com.blokkok.app.managers.CommonFilesManager
-import com.blokkok.app.managers.NativeBinariesManager
+import com.blokkok.app.R
 import com.blokkok.app.managers.binariesABI
-import com.blokkok.app.managers.libraries.LibraryManager
-import com.blokkok.app.managers.projects.ProjectsManager
-import com.blokkok.app.processors.compilers.ECJCompiler
-import com.blokkok.app.processors.dexers.D8Dexer
-import com.blokkok.app.processors.signers.AndroidApkSigner
-import com.blokkok.modsys.ModuleManager
+import com.blokkok.app.ui.main.fragments.*
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -50,8 +43,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             return
         }
-
-        Thread { initializeManagers() }.start()
 
         val actionBar = findViewById<View>(R.id.toolBar) as Toolbar
         setSupportActionBar(actionBar)
@@ -231,16 +222,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         return false
-    }
-
-    private fun initializeManagers() {
-        ProjectsManager         .initialize(this)
-        NativeBinariesManager   .initialize(this)
-        ModuleManager           .initialize(this)
-        ECJCompiler             .initialize(this)
-        D8Dexer                 .initialize(this)
-        AndroidApkSigner        .initialize(this)
-        LibraryManager          .initialize(this)
-        CommonFilesManager      .initialize(this)
     }
 }

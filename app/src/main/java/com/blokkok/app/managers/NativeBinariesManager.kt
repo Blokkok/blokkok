@@ -4,7 +4,6 @@ import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.*
-import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 // Use the default extraction to home folder + execute it there
