@@ -31,6 +31,7 @@ class ModulesRecyclerViewAdapter : RecyclerView.Adapter<ModulesRecyclerViewAdapt
 
         holder.name.text = curModule.name
         holder.description.text = curModule.description
+        holder.enableSwitch.isChecked = curModule.enabled
         holder.enableSwitch.setOnCheckedChangeListener { _, checked ->
             if (checked) {
                 ModuleManager.enableModule(curModule.id)
