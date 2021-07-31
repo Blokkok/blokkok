@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Process
+import android.util.Log
 import com.blokkok.app.managers.CommonFilesManager
 import com.blokkok.app.managers.NativeBinariesManager
 import com.blokkok.app.managers.libraries.LibraryManager
@@ -37,12 +38,15 @@ class BlokkokApplication : Application() {
 
     private fun initializeExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler { _, ex ->
+            Log.e("BlokkokApplication", "Blokkok crashed", ex)
+
             val intent = Intent(applicationContext, DebugActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                 putExtra("error", ex.stackTraceToString())
             }
 
-            val pendingIntent = PendingIntent.getActivity(applicationContext,
+            val pendingIntent = PendingIntent.getActivity(
+                applicationContext,
                 0,
                 intent,
                 PendingIntent.FLAG_ONE_SHOT

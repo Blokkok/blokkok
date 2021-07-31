@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 supportActionBar!!.subtitle = "About"
 
-                val aboutFragment = AboutFragment.newInstance()
+                val aboutFragment = AboutFragment()
 
                 drawerFragmentTransaction
                     .replace(R.id.fragmentContainer, aboutFragment)

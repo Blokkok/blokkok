@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="cnitem_avatar_round_radius">28dp</dimen>
+</resources>
