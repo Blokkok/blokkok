@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.blokkok.app.R
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val actionBar = binding.toolBar
-        setSupportActionBar(actionBar)
-
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeButtonEnabled(true)
+        toolbar = binding.toolBar
 
         drawerLayout = binding.drawerLayout
         drawerNavView = binding.navView
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerToggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
-            actionBar,
+            toolbar,
             R.string.app_name,
             R.string.app_name
         )
@@ -60,11 +58,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         */
 
         if (savedInstanceState == null) {
-            supportActionBar!!.subtitle = "Projects"
+            toolbar.subtitle = ""
             val fragmentTransaction = supportFragmentManager.beginTransaction()
 
             fragmentTransaction
-                .replace(R.id.fragmentContainer, HomeFragment(openModuleManagerCallback =  {
+                .replace(R.id.fragmentContainer, HomeFragment(openModuleManagerCallback = {
                     drawerNavView.menu.performIdentifierAction(R.id.modules, 0)
                 }))
                 .commit()
@@ -79,7 +77,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.home_item -> {
                 drawerNavView.setCheckedItem(R.id.home_item)
 
-                supportActionBar!!.subtitle = "Projects"
+                toolbar.subtitle = ""
 
                 val homeFragment = HomeFragment(openModuleManagerCallback =  {
                     drawerNavView.menu.performIdentifierAction(R.id.modules, 0)
@@ -97,7 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.modules -> {
                 drawerNavView.setCheckedItem(R.id.modules)
 
-                supportActionBar!!.subtitle = "Modules"
+                toolbar.subtitle = "Modules"
 
                 val modulesFragment = ModulesFragment.newInstance()
 
@@ -129,7 +127,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.store -> {
                 drawerNavView.setCheckedItem(R.id.store);
 
-                supportActionBar!!.subtitle = "Store";
+                toolbar.subtitle = "Store";
 
                 val storeFragment = StoreFragment();
 
@@ -145,7 +143,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.about -> {
                 drawerNavView.setCheckedItem(R.id.about)
 
-                supportActionBar!!.subtitle = "About"
+                toolbar.subtitle = "About"
 
                 val aboutFragment = AboutFragment()
 
@@ -161,7 +159,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.license -> {
                 drawerNavView.setCheckedItem(R.id.license)
 
-                supportActionBar!!.subtitle = "License"
+                toolbar.subtitle = "License"
 
                 val licensesFragment = LicenseFragment()
 
@@ -177,7 +175,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.settings -> {
                 drawerNavView.setCheckedItem(R.id.settings)
 
-                supportActionBar!!.subtitle = "Settings"
+                toolbar.subtitle = "Settings"
 
                 val settingsFragment = SettingsFragment()
 
