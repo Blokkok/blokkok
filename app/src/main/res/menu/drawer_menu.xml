@@ -6,18 +6,14 @@
         android:id="@+id/group1"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/projects"
+            android:id="@+id/home_item"
             android:checked="true"
-            android:icon="@drawable/ic_round_design_services"
-            android:title="Projects" />
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
         <item
             android:id="@+id/modules"
             android:icon="@drawable/ic_round_extension"
             android:title="Modules" />
-        <item
-            android:id="@+id/libraries"
-            android:icon="@drawable/ic_bookshelves"
-            android:title="Libraries" />
         <item
             android:id="@+id/store"
             android:icon="@drawable/ic_round_shopping"

@@ -7,13 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Process
 import android.util.Log
-import com.blokkok.app.managers.CommonFilesManager
-import com.blokkok.app.managers.NativeBinariesManager
-import com.blokkok.app.managers.libraries.LibraryManager
-import com.blokkok.app.managers.projects.ProjectsManager
-import com.blokkok.app.processors.compilers.ECJCompiler
-import com.blokkok.app.processors.dexers.D8Dexer
-import com.blokkok.app.processors.signers.AndroidApkSigner
 import com.blokkok.modsys.ModuleManager
 import kotlin.system.exitProcess
 
@@ -24,14 +17,7 @@ class BlokkokApplication : Application() {
         super.onCreate()
 
         // Initialize stuff
-        ProjectsManager         .initialize(this)
-        NativeBinariesManager   .initialize(this)
-        ModuleManager           .initialize(this)
-        ECJCompiler             .initialize(this)
-        D8Dexer                 .initialize(this)
-        AndroidApkSigner        .initialize(this)
-        LibraryManager          .initialize(this)
-        CommonFilesManager      .initialize(this)
+        ModuleManager.initialize(this)
 
         initializeExceptionHandler()
     }

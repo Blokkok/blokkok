@@ -11,9 +11,7 @@
         android:theme="@style/BlokkokTheme"
         android:name=".BlokkokApplication">
         <activity android:name=".DebugActivity" />
-        <activity android:name=".ui.compile.CompileActivity" />
-        <activity android:name=".ui.editor.EditorActivity" />
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
