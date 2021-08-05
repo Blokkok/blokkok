@@ -12,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.blokkok.app.R
 import com.blokkok.app.databinding.ActivityMainBinding
 import com.blokkok.app.ui.fragments.*
+import com.blokkok.modsys.ModuleManager
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -47,16 +48,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerNavView.setNavigationItemSelectedListener(this)
 
-        /*
-        val sharedPreferences = getPreferences(MODE_PRIVATE)
-
-        if(sharedPreferences.getBoolean("dark_mode", false)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-        */
-
         if (savedInstanceState == null) {
             toolbar.subtitle = ""
             val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -66,6 +57,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     drawerNavView.menu.performIdentifierAction(R.id.modules, 0)
                 }))
                 .commit()
+        }
+
+        ModuleManager.executeCommunications {
+            createFunction("getMainDrawerMenu") {
+                return@createFunction drawerNavView.menu
+            }
         }
     }
 

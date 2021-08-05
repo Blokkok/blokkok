@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Process
 import android.util.Log
 import com.blokkok.modsys.ModuleManager
+import com.blokkok.modsys.communication.objects.Broadcaster
 import kotlin.system.exitProcess
 
 
@@ -18,13 +19,25 @@ class BlokkokApplication : Application() {
 
         // Initialize stuff
         ModuleManager.initialize(this)
-
         initializeExceptionHandler()
+
+        // Initialize some communications
+        ModuleManager.executeCommunications {
+            createFunction("getApplicationContext") {
+                return@createFunction this@BlokkokApplication
+            }
+
+            crashBroadcaster = createBroadcaster("onCrash")
+        }
     }
+
+    private lateinit var crashBroadcaster: Broadcaster
 
     private fun initializeExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler { _, ex ->
             Log.e("BlokkokApplication", "Blokkok crashed", ex)
+
+            crashBroadcaster.broadcast(ex)
 
             val intent = Intent(applicationContext, DebugActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
