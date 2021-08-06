@@ -24,6 +24,9 @@ Cloning this repository isn't a single step process, you would need to install `
 ### Building
 Building this app is fairly simple, if you have android studio, you can open this project in it and click run. If you don't, you will need to have java installed in your machine, then run `./gradlew assembleDebug` or `.\gradlew assembleDebug` (if on windows) in the project directory. After some time, the APK will be available in the `app/build/outputs/apk/debug` directory, have fun!
 
+## Reporting bugs
+Only report bugs related to the plain app in this repository, other Blokkok builtin IDE functionalities should be posted on the [blokkok-modules](https://github.com/blokkok/blokkok-modules) issues page since that's where the functionalities live in.
+
 ## Contributing
 You can read the [CONTRIBUTING.md](https://github.com/Blokkok/blokkok/tree/main/CONTRIBUTING.md) file for details on this project's code of conduct, and the process for submitting pull requests to this project, good luck!
 
@@ -32,3 +35,21 @@ This project uses [semver](https://semver.org/) for versioning, you can head on 
 
 ## License
 This project is licensed under the [GNU GPLv3 LICENSE](https://www.gnu.org/licenses/gpl-3.0.en.html), check the [LICENSE](https://github.com/Blokkok/blokkok/tree/main/LICENSE) file for details
+
+## Contact
+ - Contact page: https://blokkok.ga/contact <!-- update this -->
+ - Discord server: https://discord.gg/putthislater <!-- update this -->
+ - Email: blokkoksocial@pm.me
+
+## Acknowledgements
+ - Modular communication API was inspired from the Linux kernel
+ - Blokkok is a rewrite of the dead OpenBlocks
+ - How OpenBlocks was born from knowing that Sketchware users like to modify Sketchware to make their own features, so then it's better if the app itself is modular so people doesn't need to know a lot about reverse engineering to modify it
+ - Thank you TheClashFruit for leading the team and making a website for blokkok
+ - Thank you Iyxan23 for programming the app and it's module library
+ - Thank you Sketchub for being a partner with us since the beginning
+ - Thank you for the old openblocks community being supportive about this project
+ - Thank you for the Sketchware Pro server for providing us with knowledge in android build system
+ - Thank you for tyron for making his ApkBuilder to be open-source 
+ - Thank you others who have contributed in this project in the past
+ - And finally, Thank YOU for being interested in blokkok!
