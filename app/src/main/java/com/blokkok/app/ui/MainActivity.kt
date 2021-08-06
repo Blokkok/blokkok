@@ -60,8 +60,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         ModuleManager.executeCommunications {
-            createFunction("getMainDrawerMenu") {
+            claimFlag(ON_NAV_SELECTED_FLAG)
+
+            createFunction("main_drawer_menu") {
                 return@createFunction drawerNavView.menu
+            }
+
+            createFunction("support_fragment_manager") {
+                return@createFunction supportFragmentManager
+            }
+
+//            createFunction("main_fragment_container_id") {
+//                return@createFunction R.id.fragmentContainer
+//            }
+
+            createFunction("drawer_fragment_container_id") {
+                return@createFunction R.id.fragmentContainer
             }
         }
     }
@@ -208,8 +222,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 return true
             }
-        }
 
-        return false
+            // check other modules that have implemented onNavigationItemSelected
+            else -> {
+                var processed = false
+
+                ModuleManager.executeCommunications {
+                    // Check every modules that has this flag
+                    val namespaces = getFlagNamespaces(ON_NAV_SELECTED_FLAG)
+
+                    for (namespace in namespaces) {
+                        // Check if they have the function
+                        if (getCommunication(namespace, "onNavigationItemSelected") == null)
+                            continue
+
+                        // Invoke it
+                        val args = mapOf(
+                            "menu_item" to item
+                        )
+
+                        val res = invokeFunction(namespace, "onNavigationItemSelected", args)
+                        if (res !is Boolean) continue
+
+                        // Check if it returns true (it processed something)
+                        if (res) {
+                            processed = true
+                            return@executeCommunications
+                        }
+                    }
+                }
+
+                return processed
+            }
+        }
     }
 }

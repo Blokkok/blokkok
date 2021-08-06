@@ -11,7 +11,6 @@ import com.blokkok.modsys.ModuleManager
 import com.blokkok.modsys.communication.objects.Broadcaster
 import kotlin.system.exitProcess
 
-
 class BlokkokApplication : Application() {
 
     override fun onCreate() {
@@ -23,11 +22,11 @@ class BlokkokApplication : Application() {
 
         // Initialize some communications
         ModuleManager.executeCommunications {
-            createFunction("getApplicationContext") {
+            createFunction("get_application_context") {
                 return@createFunction this@BlokkokApplication
             }
 
-            crashBroadcaster = createBroadcaster("onCrash")
+            crashBroadcaster = createBroadcaster("on_crash")
         }
     }
 
