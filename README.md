@@ -24,6 +24,9 @@ Cloning this repository isn't a single step process, you would need to install `
 ### Building
 Building this app is fairly simple, if you have android studio, you can open this project in it and click run. If you don't, you will need to have java installed in your machine, then run `./gradlew assembleDebug` or `.\gradlew assembleDebug` (if on windows) in the project directory. After some time, the APK will be available in the `app/build/outputs/apk/debug` directory, have fun!
 
+## Communication APIs
+If you're looking on what communication APIs this app provides, you can checkout the documentation [COMMUNICATION_APIS.md](https://github.com/Blokkok/blokkok/tree/main/COMMUNICATION_APIS.md)
+
 ## Reporting bugs
 Only report bugs related to the plain app in this repository, other Blokkok builtin IDE functionalities should be posted on the [blokkok-modules](https://github.com/blokkok/blokkok-modules) issues page since that's where the functionalities live in.
 
