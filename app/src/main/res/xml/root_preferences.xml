@@ -6,5 +6,15 @@
             android:defaultValue="false"
             android:key="dark_mode"
             android:title="Dark Mode" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Debug">
+
+        <Preference
+            android:key="dump_global_namespace"
+            android:title="Dump Global Namespace"
+            android:summary="Dumps the global namespace into the logcat"/>
+
     </PreferenceCategory>
 </PreferenceScreen>
