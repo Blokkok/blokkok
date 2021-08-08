@@ -58,11 +58,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 .commit()
         }
 
-        if (savedInstanceState != null) {
-            ModuleManager.executeCommunications {
-                createFunction("main_drawer_menu") {
-                    return@createFunction drawerNavView.menu
-                }
+        ModuleManager.executeCommunications {
+            createFunction("main_drawer_menu") {
+                return@createFunction drawerNavView.menu
             }
         }
     }

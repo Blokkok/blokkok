@@ -22,21 +22,19 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.main_fragment_container, MainFragment())
             .commit()
 
-        if (savedInstanceState != null) {
-            ModuleManager.executeCommunications {
-                claimFlag(ON_NAV_SELECTED_FLAG)
+        ModuleManager.executeCommunications {
+            claimFlag(ON_NAV_SELECTED_FLAG)
 
-                createFunction("support_fragment_manager") {
-                    return@createFunction supportFragmentManager
-                }
+            createFunction("support_fragment_manager") {
+                return@createFunction supportFragmentManager
+            }
 
-                createFunction("main_fragment_container_id") {
-                    return@createFunction R.id.main_fragment_container
-                }
+            createFunction("main_fragment_container_id") {
+                return@createFunction R.id.main_fragment_container
+            }
 
-                createFunction("drawer_fragment_container_id") {
-                    return@createFunction R.id.fragmentContainer
-                }
+            createFunction("drawer_fragment_container_id") {
+                return@createFunction R.id.fragmentContainer
             }
         }
     }
