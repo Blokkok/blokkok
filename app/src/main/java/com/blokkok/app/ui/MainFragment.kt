@@ -62,6 +62,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             createFunction("main_drawer_menu") {
                 return@createFunction drawerNavView.menu
             }
+
+            createFunction("drawer_menu_main_group_id") {
+                return@createFunction R.id.drawer_menu_main_group
+            }
+
+            createFunction("drawer_menu_social_group_id") {
+                return@createFunction R.id.drawer_menu_social_group
+            }
         }
     }
 
