@@ -3,49 +3,69 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group
-        android:id="@+id/group1"
+        android:id="@+id/drawer_menu_main_group"
         android:checkableBehavior="single">
+
         <item
             android:id="@+id/home_item"
             android:checked="true"
+            android:orderInCategory="0"
             android:icon="@drawable/ic_home"
             android:title="Home" />
+
         <item
             android:id="@+id/modules"
+            android:orderInCategory="25"
             android:icon="@drawable/ic_round_extension"
             android:title="Modules" />
+
         <item
             android:id="@+id/store"
+            android:orderInCategory="50"
             android:icon="@drawable/ic_round_shopping"
             android:title="Store" />
-        <item
-            android:id="@+id/about"
-            android:icon="@drawable/ic_round_alternate_email"
-            android:title="About" />
-        <item
-            android:id="@+id/license"
-            android:icon="@drawable/ic_round_insert_drive_file"
-            android:title="License" />
+
         <item
             android:id="@+id/settings"
+            android:orderInCategory="900"
             android:icon="@drawable/ic_round_settings"
             android:title="Settings" />
+
+        <item
+            android:id="@+id/license"
+            android:orderInCategory="1000"
+            android:icon="@drawable/ic_round_insert_drive_file"
+            android:title="License" />
+
+        <item
+            android:id="@+id/about"
+            android:orderInCategory="1000"
+            android:icon="@drawable/ic_round_alternate_email"
+            android:title="About" />
     </group>
+
     <group
-        android:id="@+id/group2"
+        android:id="@+id/drawer_menu_social_group"
+        android:orderInCategory="1001"
         android:checkableBehavior="none">
+
         <item android:title="Social">
             <menu>
                 <item
                     android:id="@+id/web"
+                    android:orderInCategory="0"
                     android:icon="@drawable/ic_round_language"
                     android:title="Website" />
+
                 <item
                     android:id="@+id/dc"
+                    android:orderInCategory="0"
                     android:icon="@drawable/dcord"
                     android:title="Discord" />
+
                 <item
                     android:id="@+id/gh"
+                    android:orderInCategory="0"
                     android:icon="@drawable/ghub"
                     android:title="GitHub" />
             </menu>
