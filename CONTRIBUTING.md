@@ -28,4 +28,7 @@ Please do try to follow the commiting style if you wanted to contribute, it make
    - `chore` When you do fixed something but it doesn't affect the app in terms of functionality
    - `refactor` When you refactored the code, like cleaning up the code
 
+## Writing a documentation
+If you're planning to write a documentation for blokkok, try to be as friendly as possible and try to explain some technical terms the reader might not understand yet.
+
 Again, Thanks for having the interest in contributing on blokkok, we would like to see your first contribution!
