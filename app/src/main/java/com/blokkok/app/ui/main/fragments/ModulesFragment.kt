@@ -60,7 +60,7 @@ class ModulesFragment : Fragment(R.layout.fragment_modules) {
             unloadModules.isEnabled = !it
         }
 
-        viewModel.modules.observe(viewLifecycleOwner) { modulesAdapter.updateView(it) }
+        viewModel.modules.observe(viewLifecycleOwner) { modulesAdapter.updateView(ArrayList(it)) }
         viewModel.listModules()
     }
 
