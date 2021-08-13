@@ -40,9 +40,9 @@ This project uses [semver](https://semver.org/) for versioning, you can head on 
 This project is licensed under the [GNU GPLv3 LICENSE](https://www.gnu.org/licenses/gpl-3.0.en.html), check the [LICENSE](https://github.com/Blokkok/blokkok/tree/main/LICENSE) file for details
 
 ## Contact
- - Contact page: https://blokkok.ga/contact <!-- update this -->
- - Discord server: https://discord.gg/putthislater <!-- update this -->
- - Email: blokkoksocial@pm.me
+ - Contact page: https://blokkok.ga/#contact <!-- update this -->
+ - Discord server: https://discord.gg/auNNjt7wVd <!-- update this -->
+ - Email: blokkokofficial@gmail.com
 
 ## Acknowledgements
  - Modular communication API was inspired from the Linux kernel
