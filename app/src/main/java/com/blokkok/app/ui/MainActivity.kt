@@ -25,17 +25,9 @@ class MainActivity : AppCompatActivity() {
         ModuleManager.executeCommunications {
             claimFlag(ON_NAV_SELECTED_FLAG)
 
-            createFunction("support_fragment_manager") {
-                return@createFunction supportFragmentManager
-            }
-
-            createFunction("main_fragment_container_id") {
-                return@createFunction R.id.main_fragment_container
-            }
-
-            createFunction("drawer_fragment_container_id") {
-                return@createFunction R.id.fragmentContainer
-            }
+            createFunction("support_fragment_manager")     { supportFragmentManager }
+            createFunction("main_fragment_container_id")   { R.id.main_fragment_container }
+            createFunction("drawer_fragment_container_id") { R.id.fragmentContainer }
         }
     }
 }

@@ -22,9 +22,7 @@ class BlokkokApplication : Application() {
 
         // Initialize some communications
         ModuleManager.executeCommunications {
-            createFunction("get_application_context") {
-                return@createFunction this@BlokkokApplication
-            }
+            createFunction("get_application_context") { this@BlokkokApplication }
 
             crashBroadcaster = createBroadcaster("on_crash")
         }
