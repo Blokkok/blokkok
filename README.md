@@ -1,4 +1,6 @@
 # Blokkok
+[![Hits-of-Code](https://hitsofcode.com/github/Blokkok/blokkok?branch=stripped-modular)](https://hitsofcode.com/github/Blokkok/blokkok/view?branch=stripped-modular)
+
 Blokkok is an open-source modular Android App IDE for Android. Every components of the IDE are separated from each other by modules, every modules work together to create an IDE interface for the user to use. Since the plain blokkok app is well, just plain, you can create anything you like with it by modules.
 
 ## Getting started
