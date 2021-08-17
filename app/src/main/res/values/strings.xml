@@ -1,6 +1,6 @@
 <resources>
     <!-- App descriptor -->
     <string name="app_name">Blokkok</string>
-    <string name="version">v0.1-alpha</string>
+    <string name="version">unreleased dev build</string>
     <string name="welcome_text">Welcome to blokkok! Start importing modules by clicking the button below, Have fun!</string>
 </resources>
