@@ -24,21 +24,19 @@ class AboutViewModel : ViewModel() {
 
     fun fetchContributors() {
         viewModelScope.launch {
-            // TODO: 7/31/21 Replace these with Blokkok once it's open sourced
             contributorsMutable.value =
                 GitHubService.getContributors(
-                    "OpenBlocksTeam",
-                    "openblocks-app"
+                    "Blokkok",
+                    "blokkok"
                 )
         }
     }
 
     fun fetchTeam() {
         viewModelScope.launch {
-            // TODO: 7/31/21 Replace these with Blokkok once it's open sourced
             membersMutable.value =
                 GitHubService.getOrgMembers(
-                    "OpenBlocksTeam"
+                    "Blokkok"
                 )
         }
     }
