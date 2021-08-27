@@ -16,7 +16,7 @@ These steps will show you on how to build blokkok on your own
 
 ### Cloning
 Cloning this repository isn't a single step process, you would need to install `git-lfs` since we've used it to version large files such as `android.jar`, `ecj.jar`, etc.
- - First, as I've already mentioned above, you need to install the `git-lfs` git extension. You can see it's page [here](https://git-lfs.github.com/). If you use Arch Linux, it's avaliable in the community repository as `git-lfs`, so you could just use pacman to install it directly.
+ - First, as I've already mentioned above, you need to install the `git-lfs` git extension. You can see it's page [here](https://git-lfs.github.com/).
 
  - Second, clone this repository as how you do it normally 
    ```console
@@ -62,7 +62,7 @@ This project is licensed under the [GNU GPLv3 LICENSE](https://www.gnu.org/licen
  - Thank you Iyxan23 for programming the app and it's module library
  - Thank you Sketchub for being a partner with us since the beginning
  - Thank you for the old openblocks community being supportive about this project
- - Thank you for the Sketchware Pro server for providing us with knowledge in android build system
- - Thank you for tyron for making his ApkBuilder to be open-source 
+ - Thank you for the Sketchware Pro server for providing us with knowledge in the android build system
+ - Thank you to tyron for making his [ApkBuilder](https://github.com/tyron12233/ApkBuilder) open-source
  - Thank you others who have contributed in this project in the past
  - And finally, Thank YOU for being interested in blokkok!
