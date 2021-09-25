@@ -120,22 +120,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 return true
             } */
 
-            R.id.store -> {
-                drawerNavView.setCheckedItem(R.id.store);
-
-                toolbar.subtitle = "Store";
-
-                val storeFragment = StoreFragment();
-
-                drawerFragmentTransaction
-                    .replace(R.id.fragmentContainer, storeFragment)
-                    .commit();
-
-                drawerLayout.closeDrawer(GravityCompat.START);
-
-                return true;
-            }
-
             R.id.about -> {
                 drawerNavView.setCheckedItem(R.id.about)
 

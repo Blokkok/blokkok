@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.7">
-      <module name="Blokkok.app" target="11" />
-      <module name="Blokkok.module-system" target="11" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.7" />
   </component>
 </project>
