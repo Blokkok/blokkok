@@ -11,6 +11,8 @@
 
 Blokkok is an open-source modular Android App IDE for Android. Every components of the IDE are separated from each other by modules, every modules work together to create an IDE interface for the user to use. Since the plain blokkok app is well, just plain, you can create anything you like with it by modules.
 
+**ATTENTION: SEE [#5](https://github.com/Blokkok/blokkok/issues/5)** - TL;DR - Blokkok is discontinued due to a restriction in android 10+, any workaround is appreciated
+
 ## Getting started
 These steps will show you on how to build blokkok on your own
 
